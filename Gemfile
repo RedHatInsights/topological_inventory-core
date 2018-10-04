@@ -16,6 +16,7 @@ gem "puma", "~> 3.0"
 gem "jbuilder", "~> 2.5"
 # Use ActiveModel has_secure_password
 gem "bcrypt", "~> 3.1.7"
+gem "topological_inventory", :path => "~/src/topological_inventory/topological_inventory"
 gem "inventory_refresh", :git => "https://github.com/ManageIQ/inventory_refresh", :branch => "master"
 gem "manageiq-messaging", :git => "https://github.com/ManageIQ/manageiq-messaging", :branch => "master"
 gem "manageiq-gems-pending", :git => "https://github.com/ManageIQ/manageiq-gems-pending"
