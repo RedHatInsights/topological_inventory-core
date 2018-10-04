@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+
+require "bundler/setup"
+require "ar_helper"
+require "topological_inventory/persister/worker"
+
+queue_host = ENV["QUEUE_HOST"] || "localhost"
+queue_port = ENV["QUEUE_PORT"] || 9092
+
+persister_worker = TopologicalInventory::Persister::Worker.new(:host => queue_host, :port => queue_port)
+
+begin
+  Thread.new { persister_worker.run }
+
+  loop { sleep 5 }
+rescue Interrupt
+  persister_worker.stop
+end

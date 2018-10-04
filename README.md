@@ -1,24 +1,28 @@
-# README
+# TopologicalInventory
+Short description and motivation.
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Usage
+How to use my plugin.
 
-Things you may want to cover:
+## Installation
+Add this line to your application's Gemfile:
 
-* Ruby version
+```ruby
+gem 'topological_inventory'
+```
 
-* System dependencies
+And then execute:
+```bash
+$ bundle
+```
 
-* Configuration
+Or install it yourself as:
+```bash
+$ gem install topological_inventory
+```
 
-* Database creation
+## Contributing
+Contribution directions go here.
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+## License
+The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
