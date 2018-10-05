@@ -10,8 +10,11 @@ gemspec
 # Git. Remember to move these dependencies to your gemspec before releasing
 # your gem to rubygems.org.
 
-# To use a debugger
-# gem 'byebug', group: [:development, :test]
 gem "inventory_refresh", :git => "https://github.com/ManageIQ/inventory_refresh", :branch => "master"
 gem "manageiq-messaging", :git => "https://github.com/ManageIQ/manageiq-messaging", :branch => "master"
 gem "manageiq-gems-pending", :git => "https://github.com/ManageIQ/manageiq-gems-pending", :branch => "master"
+
+group :development, :test do
+  gem "rspec-rails"
+  gem "byebug"
+end
