@@ -16,6 +16,8 @@ module TopologicalInventory
         # Open a connection to the messaging service
         self.client = ManageIQ::Messaging::Client.open(messaging_client_opts)
 
+        log.info("Topological Inventory Persister started...")
+
         # Wait for messages to be processed
         client.subscribe_topic(queue_opts) do |_, _, payload|
           process_payload(payload)
