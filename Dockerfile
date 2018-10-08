@@ -19,6 +19,7 @@ ENV RAILS_ROOT $WORKDIR
 WORKDIR $WORKDIR
 
 COPY . $WORKDIR
+COPY docker-assets/entrypoint /usr/bin
 
 RUN source /opt/rh/rh-postgresql95/enable && \
     echo "gem: --no-document" > ~/.gemrc && \
@@ -31,4 +32,4 @@ RUN source /opt/rh/rh-postgresql95/enable && \
 RUN chgrp -R 0 $WORKDIR && \
     chmod -R g=u $WORKDIR
 
-ENTRYPOINT ["bin/topological_inventory-persister"]
+ENTRYPOINT ["entrypoint"]
