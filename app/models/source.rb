@@ -1,5 +1,7 @@
 class Source < ApplicationRecord
   has_many :endpoints, :dependent => :destroy, :autosave => true
+  belongs_to :tenant
+
   delegate :scheme, :scheme=, :host, :host=, :port, :port=, :path, :path=,
            :to => :default_endpoint, :allow_nil => true
 
