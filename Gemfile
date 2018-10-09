@@ -11,7 +11,6 @@ gemspec
 # your gem to rubygems.org.
 
 gem "inventory_refresh", :git => "https://github.com/ManageIQ/inventory_refresh", :branch => "master"
-gem "manageiq-messaging", :git => "https://github.com/ManageIQ/manageiq-messaging", :branch => "master"
 gem "manageiq-gems-pending", :git => "https://github.com/ManageIQ/manageiq-gems-pending", :branch => "master"
 
 group :development, :test do

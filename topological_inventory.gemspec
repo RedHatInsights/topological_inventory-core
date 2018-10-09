@@ -18,4 +18,5 @@ Gem::Specification.new do |s|
 
   s.add_dependency "rails", "~> 5.0.7"
   s.add_dependency "pg", "~> 0.18.2"
+  s.add_dependency "manageiq-messaging", "~> 0.1.0"
 end
