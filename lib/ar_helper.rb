@@ -3,6 +3,8 @@ require "active_record"
 app_root = File.expand_path("../", __dir__)
 $LOAD_PATH << File.join(app_root, "app", "models")
 $LOAD_PATH << File.join(app_root, "app", "models", "concerns")
+
+require "application_record"
 Dir[File.expand_path("app/models/**/*.rb", app_root)].each { |f| require f }
 
 app_env = ENV["TOPOLOGICAL_INVENTORY_ENV"] || "development"

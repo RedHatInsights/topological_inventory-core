@@ -1,4 +1,4 @@
-class ServiceOffering < ActiveRecord::Base
+class ServiceOffering < ApplicationRecord
   belongs_to :source
 
   has_many :service_instances,       :dependent => :nullify
