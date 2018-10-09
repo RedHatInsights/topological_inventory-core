@@ -1,6 +1,6 @@
 require "password_concern"
 
-class Authentication < ActiveRecord::Base
+class Authentication < ApplicationRecord
   include PasswordConcern
   encrypt_column :password
 

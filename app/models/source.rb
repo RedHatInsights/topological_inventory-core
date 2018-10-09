@@ -1,4 +1,4 @@
-class Source < ActiveRecord::Base
+class Source < ApplicationRecord
   has_many :endpoints, :dependent => :destroy, :autosave => true
   delegate :scheme, :scheme=, :host, :host=, :port, :port=, :path, :path=,
            :to => :default_endpoint, :allow_nil => true
