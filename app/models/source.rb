@@ -7,7 +7,7 @@ class Source < ApplicationRecord
 
   def default_endpoint
     default = endpoints.detect(&:default)
-    default || endpoints.build(:default => true)
+    default || endpoints.build(:default => true, :tenant => tenant)
   end
 
 
