@@ -4,26 +4,38 @@ module TopologicalInventory
   module Schema
     class Default < InventoryRefresh::Persister
       def initialize_inventory_collections
-        add_collection(:container_projects) do |builder|
-          builder.add_properties(
-            :manager_ref    => [:source_ref],
-            :secondary_refs => {:by_name => [:name]},
-          )
-          builder.add_default_values(:source_id => ->(persister) { persister.manager.id })
-        end
-
-        %i(container_groups container_nodes container_templates service_offerings service_instances service_parameters_sets).each do |model|
-          add_collection(model) do |builder|
-            builder.add_properties(
-              :manager_ref => [:source_ref],
-            )
-            builder.add_default_values(:source_id => ->(persister) { persister.manager.id })
-          end
-        end
+        add_collection(:container_groups)
+        add_collection(:container_nodes)    { |b| add_secondary_refs_name(b) }
+        add_collection(:container_projects) { |b| add_secondary_refs_name(b) }
+        add_collection(:container_templates)
+        add_collection(:service_instances)
+        add_collection(:service_offerings)
+        add_collection(:service_parameters_sets)
       end
 
       def targeted?
         true
+      end
+
+      private
+
+      def add_collection(model)
+        super do |builder|
+          add_default_properties(builder)
+          yield builder if block_given?
+        end
+      end
+
+      def add_default_properties(builder)
+        builder.add_properties(
+          :manager_ref    => [:source_ref],
+          :saver_strategy => :concurrent_safe_batch
+        )
+        builder.add_default_values(:source_id => ->(persister) { persister.manager.id })
+      end
+
+      def add_secondary_refs_name(builder)
+        builder.add_properties(:secondary_refs => {:by_name => [:name]})
       end
     end
   end
