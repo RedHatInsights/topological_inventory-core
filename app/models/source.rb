@@ -15,6 +15,7 @@ class Source < ApplicationRecord
   has_many :container_groups,    :dependent => :destroy
   has_many :container_templates, :dependent => :destroy
   has_many :container_projects,  :dependent => :destroy
+  has_many :container_nodes,     :dependent => :destroy
 
   # Service Catalog Inventory Objects
   has_many :service_offerings,       :dependent => :destroy
