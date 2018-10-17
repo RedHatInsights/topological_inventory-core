@@ -31,7 +31,11 @@ module TopologicalInventory
           :manager_ref    => [:source_ref],
           :saver_strategy => :concurrent_safe_batch
         )
-        builder.add_default_values(:source_id => ->(persister) { persister.manager.id })
+
+        builder.add_default_values(
+          :source_id => ->(persister) { persister.manager.id },
+          :tenant_id => ->(persister) { persister.manager.tenant_id },
+        )
       end
 
       def add_secondary_refs_name(builder)
