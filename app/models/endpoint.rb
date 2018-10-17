@@ -3,4 +3,6 @@ class Endpoint < ApplicationRecord
   belongs_to :source
 
   has_many   :authentications, :as => :resource
+
+  validates :role, :uniqueness => { :scope => :source_id }
 end
