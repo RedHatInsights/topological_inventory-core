@@ -10,7 +10,7 @@ module TopologicalInventory
         add_collection(:container_templates)
         add_collection(:service_instances)
         add_collection(:service_offerings)
-        add_collection(:service_parameters_sets)
+        add_collection(:service_plans)
       end
 
       def targeted?

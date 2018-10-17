@@ -1,6 +1,6 @@
 require "archived_concern"
 
-class ServiceParametersSet < ApplicationRecord
+class ServicePlan < ApplicationRecord
   include ArchivedConcern
 
   belongs_to :tenant
