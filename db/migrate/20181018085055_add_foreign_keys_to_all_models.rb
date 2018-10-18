@@ -1,6 +1,6 @@
 class AddForeignKeysToAllModels < ActiveRecord::Migration[5.1]
   def change
-    # On cascade delete
+    # On delete cascade
     add_foreign_key :container_groups,        :sources, on_delete: :cascade
     add_foreign_key :container_nodes,         :sources, on_delete: :cascade
     add_foreign_key :container_projects,      :sources, on_delete: :cascade
@@ -30,7 +30,7 @@ class AddForeignKeysToAllModels < ActiveRecord::Migration[5.1]
 
     add_foreign_key :service_parameters_sets, :service_offerings, on_delete: :cascade
 
-    # On cascade nullify
+    # On delete nullify
     add_foreign_key :service_instances, :service_offerings, on_delete: :nullify
     add_foreign_key :service_instances, :service_parameters_sets, on_delete: :nullify
   end
