@@ -1,4 +1,8 @@
+require "archived_concern"
+
 class ServiceOffering < ApplicationRecord
+  include ArchivedConcern
+
   belongs_to :tenant
   belongs_to :source
 
