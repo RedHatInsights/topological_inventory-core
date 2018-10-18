@@ -1,5 +1,5 @@
 class Source < ApplicationRecord
-  has_many :endpoints, :dependent => :destroy, :autosave => true
+  has_many :endpoints, :autosave => true
   belongs_to :tenant
 
   delegate :scheme, :scheme=, :host, :host=, :port, :port=, :path, :path=,
@@ -12,13 +12,13 @@ class Source < ApplicationRecord
 
 
   # Container Inventory Objects
-  has_many :container_groups,    :dependent => :destroy
-  has_many :container_templates, :dependent => :destroy
-  has_many :container_projects,  :dependent => :destroy
-  has_many :container_nodes,     :dependent => :destroy
+  has_many :container_groups
+  has_many :container_templates
+  has_many :container_projects
+  has_many :container_nodes
 
   # Service Catalog Inventory Objects
-  has_many :service_offerings, :dependent => :destroy
-  has_many :service_instances, :dependent => :destroy
-  has_many :service_plans,     :dependent => :destroy
+  has_many :service_offerings
+  has_many :service_instances
+  has_many :service_plans
 end
