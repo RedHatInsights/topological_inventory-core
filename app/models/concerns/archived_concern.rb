@@ -2,8 +2,8 @@ module ArchivedConcern
   extend ActiveSupport::Concern
 
   included do
-    scope :archived, -> { where.not(:source_deleted_at => nil) }
-    scope :active,   -> { where(:source_deleted_at => nil) }
+    scope :archived, -> { where.not(:archived_on => nil) }
+    scope :active,   -> { where(:archived_on => nil) }
   end
 
   def archived?
@@ -11,6 +11,6 @@ module ArchivedConcern
   end
 
   def active?
-    source_deleted_at.nil?
+    archived_on.nil?
   end
 end
