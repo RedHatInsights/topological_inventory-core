@@ -28,8 +28,9 @@ module TopologicalInventory
 
       def add_default_properties(builder)
         builder.add_properties(
-          :manager_ref    => [:source_ref],
-          :saver_strategy => :concurrent_safe_batch
+          :manager_ref        => [:source_ref],
+          :saver_strategy     => :concurrent_safe_batch,
+          :retention_strategy => :archive
         )
         builder.add_default_values(:source_id => ->(persister) { persister.manager.id })
       end
