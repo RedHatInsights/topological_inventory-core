@@ -12,13 +12,13 @@ class Source < ApplicationRecord
 
 
   # Container Inventory Objects
-  has_many :container_groups,    -> { active }, :dependent => :destroy
-  has_many :container_templates, -> { active }, :dependent => :destroy
-  has_many :container_projects,  -> { active }, :dependent => :destroy
-  has_many :container_nodes,     -> { active }, :dependent => :destroy
+  has_many :container_groups,    :dependent => :destroy
+  has_many :container_templates, :dependent => :destroy
+  has_many :container_projects,  :dependent => :destroy
+  has_many :container_nodes,     :dependent => :destroy
 
   # Service Catalog Inventory Objects
-  has_many :service_offerings,       -> { active }, :dependent => :destroy
-  has_many :service_instances,       -> { active }, :dependent => :destroy
-  has_many :service_parameters_sets, -> { active }, :dependent => :destroy
+  has_many :service_offerings,       :dependent => :destroy
+  has_many :service_instances,       :dependent => :destroy
+  has_many :service_parameters_sets, :dependent => :destroy
 end
