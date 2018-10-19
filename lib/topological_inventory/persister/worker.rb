@@ -1,26 +1,26 @@
-require "ar_helper"
 require "inventory_refresh"
 require "manageiq-messaging"
 require "topological_inventory/persister/ar_helper"
+require "topological_inventory/persister/logging"
 require "topological_inventory/schema"
 
 module TopologicalInventory
   module Persister
     class Worker
+      include Logging
+
       def initialize(messaging_client_opts = {})
-        self.log                   = Logger.new(STDOUT)
         self.messaging_client_opts = default_messaging_opts.merge(messaging_client_opts)
 
+        InventoryRefresh.logger = logger
         TopologicalInventory::Persister::ArHelper.load_environment!
-
-        InventoryRefresh.logger = log
       end
 
       def run
         # Open a connection to the messaging service
         self.client = ManageIQ::Messaging::Client.open(messaging_client_opts)
 
-        log.info("Topological Inventory Persister started...")
+        logger.info("Topological Inventory Persister started...")
 
         # Wait for messages to be processed
         client.subscribe_topic(queue_opts) do |_, _, payload|
@@ -37,7 +37,7 @@ module TopologicalInventory
 
       private
 
-      attr_accessor :log, :messaging_client_opts, :client
+      attr_accessor :messaging_client_opts, :client
 
       def process_payload(payload)
         source = Source.find_by(:uid => payload["source"])
@@ -50,7 +50,7 @@ module TopologicalInventory
         persister = schema_klass.from_hash(payload, source)
         InventoryRefresh::SaveInventory.save_inventory(source, persister.inventory_collections)
       rescue => err
-        log.error(err)
+        logger.error(err)
       end
 
       def schema_klass_name(name)
