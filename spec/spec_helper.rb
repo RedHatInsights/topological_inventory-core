@@ -14,8 +14,11 @@
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
-ENV["ENV"] ||= "test"
-raise "Specs must be run in test environment" if ENV["ENV"] != "test"
+ENV["RAILS_ENV"] ||= "test"
+raise "Specs must be run in test environment" if ENV["RAILS_ENV"] != "test"
+
+require "active_record/railtie"
+require "rspec/rails"
 
 require "topological_inventory/persister/ar_helper"
 TopologicalInventory::Persister::ArHelper.load_environment!
