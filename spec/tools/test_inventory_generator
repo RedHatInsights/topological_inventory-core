@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+
+require "json"
+
+require "topological_inventory/ingress_api/client"
+include TopologicalInventory::IngressApi::Client
+
+test_inventory_dir = File.expand_path(File.join("..", "persister", "test_inventory"), __dir__)
+
+simple_inventory = Inventory.new(
+  :name        => "OCP",
+  :source      => "9a874712-9a55-49ab-a46a-c823acc35503",
+  :schema      => Schema.new(:name => "Default"),
+  :collections => [
+    InventoryCollection.new(
+      :name => :container_projects,
+      :data => [
+        ContainerProject.new(
+          :source_ref       => "c56c6854-baaf-11e8-ba7e-d094660d31fb",
+          :name             => "default",
+          :resource_version => "42001363",
+        )
+      ]
+    ),
+  ]
+)
+
+File.write(File.join(test_inventory_dir, "simple_inventory.json"), JSON.dump(simple_inventory.to_hash))

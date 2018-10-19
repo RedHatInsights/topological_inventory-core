@@ -1,3 +1,4 @@
+require "ar_helper"
 require "inventory_refresh"
 require "manageiq-messaging"
 require "topological_inventory/persister/ar_helper"
