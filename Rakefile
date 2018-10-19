@@ -23,7 +23,7 @@ require "rspec/core/rake_task"
 require "active_record"
 
 root = Pathname.new(__dir__)
-ActiveRecord::Tasks::DatabaseTasks.env = ENV["ENV"] || "development"
+ActiveRecord::Tasks::DatabaseTasks.env = ENV["RAILS_ENV"] || "development"
 ActiveRecord::Tasks::DatabaseTasks.database_configuration = YAML.load_file(root.join("config/database.yml"))
 ActiveRecord::Tasks::DatabaseTasks.db_dir = root.join("db")
 ActiveRecord::Tasks::DatabaseTasks.migrations_paths = [root.join("db/migrate")]
