@@ -46,6 +46,17 @@ namespace :db do
   task :migrate do
     ActiveRecord::Tasks::DatabaseTasks.migrate
   end
+
+  task :setup do
+    ActiveRecord::Tasks::DatabaseTasks.create_current
+    ActiveRecord::Tasks::DatabaseTasks.load_schema_current
+  end
+
+  namespace :schema do
+    task :dump do
+      File.write(root.join("db/schema.rb"), ActiveRecord::SchemaDumper.dump)
+    end
+  end
 end
 
 # Spec related rake tasks
@@ -57,7 +68,7 @@ namespace :spec do
   end
 
   desc "Setup the database for running tests"
-  task :setup => ["initialize", "db:create"]
+  task :setup => ["initialize", "db:setup"]
 end
 
 task default: :spec
