@@ -10,3 +10,6 @@ addons:
 before_install:
 - gem install bundler -v 1.16.4
 - psql -c "CREATE USER root SUPERUSER PASSWORD 'smartvm';" -U postgres
+before_script:
+- cp config/database.dev.yml config/database.yml
+- bundle exec rake spec:setup
