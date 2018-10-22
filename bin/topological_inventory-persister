@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 
 require "bundler/setup"
-require "ar_helper"
 require "topological_inventory/persister/worker"
 
 queue_host = ENV["QUEUE_HOST"] || "localhost"

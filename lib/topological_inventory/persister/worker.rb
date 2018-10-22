@@ -1,5 +1,6 @@
 require "inventory_refresh"
 require "manageiq-messaging"
+require "topological_inventory/persister/ar_helper"
 require "topological_inventory/schema"
 
 module TopologicalInventory
@@ -8,6 +9,8 @@ module TopologicalInventory
       def initialize(messaging_client_opts = {})
         self.log                   = Logger.new(STDOUT)
         self.messaging_client_opts = default_messaging_opts.merge(messaging_client_opts)
+
+        TopologicalInventory::Persister::ArHelper.load_environment!
 
         InventoryRefresh.logger = log
       end
