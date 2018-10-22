@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require "json"
+require "pathname"
 
 require "topological_inventory/ingress_api/client"
 include TopologicalInventory::IngressApi::Client
@@ -8,7 +9,7 @@ include TopologicalInventory::IngressApi::Client
 module TopologicalInventory
   module TestInventoryGenerator
     def self.run
-      test_inventory_dir = File.expand_path(File.join("..", "persister", "test_inventory"), __dir__)
+      test_inventory_dir = Pathname.new(__dir__).join("..", "persister", "test_inventory")
 
       container_project = ContainerProject.new(
         :source_ref        => "c56c6854-baaf-11e8-ba7e-d094660d31fb",

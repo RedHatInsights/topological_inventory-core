@@ -4,6 +4,7 @@ describe TopologicalInventory::Persister::Worker do
   let(:tenant) { Tenant.find_or_create_by!(:name => "default") }
   let(:client) { double(:client) }
   let!(:source) { Source.find_or_create_by!(:name => "OCP", :uid => "9a874712-9a55-49ab-a46a-c823acc35503", :tenant => tenant) }
+  let(:test_inventory_dir) { Pathname.new(__dir__).join("test_inventory") }
 
   context "#run" do
     before do
@@ -16,7 +17,7 @@ describe TopologicalInventory::Persister::Worker do
     end
 
     context "with a simple payload" do
-      let(:inventory) { JSON.load(File.read(File.expand_path(File.join("test_inventory", "simple_inventory.json"), __dir__))) }
+      let(:inventory) { JSON.load(File.read(test_inventory_dir.join("simple_inventory.json"))) }
 
       it "saves the container group" do
         expect(source.container_projects.count).to eq(1)
@@ -34,7 +35,7 @@ describe TopologicalInventory::Persister::Worker do
     end
 
     context "with some inter-object relationships" do
-      let(:inventory) { JSON.load(File.read(File.expand_path(File.join("test_inventory", "relationships_inventory.json"), __dir__))) }
+      let(:inventory) { JSON.load(File.read(test_inventory_dir.join("relationships_inventory.json"))) }
 
       it "saves the different inventory objects" do
         expect(source.container_projects.count).to eq(1)
