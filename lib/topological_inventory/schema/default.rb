@@ -1,3 +1,4 @@
+require "inventory_refresh"
 require "inventory_refresh/persister"
 
 module TopologicalInventory
