@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181018082155) do
+ActiveRecord::Schema.define(version: 20181018141423) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -126,7 +126,7 @@ ActiveRecord::Schema.define(version: 20181018082155) do
     t.string "source_ref"
     t.string "name"
     t.bigint "service_offering_id"
-    t.bigint "service_parameters_set_id"
+    t.bigint "service_plan_id"
     t.jsonb "extra"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -136,7 +136,7 @@ ActiveRecord::Schema.define(version: 20181018082155) do
     t.datetime "archived_on"
     t.index ["archived_on"], name: "index_service_instances_on_archived_on"
     t.index ["service_offering_id"], name: "index_service_instances_on_service_offering_id"
-    t.index ["service_parameters_set_id"], name: "index_service_instances_on_service_parameters_set_id"
+    t.index ["service_plan_id"], name: "index_service_instances_on_service_plan_id"
     t.index ["source_deleted_at"], name: "index_service_instances_on_source_deleted_at"
     t.index ["source_id", "source_ref"], name: "index_service_instances_on_source_id_and_source_ref", unique: true
     t.index ["source_id"], name: "index_service_instances_on_source_id"
@@ -160,7 +160,7 @@ ActiveRecord::Schema.define(version: 20181018082155) do
     t.index ["source_id"], name: "index_service_offerings_on_source_id"
   end
 
-  create_table "service_parameters_sets", force: :cascade do |t|
+  create_table "service_plans", force: :cascade do |t|
     t.bigint "source_id"
     t.string "source_ref"
     t.string "name"
@@ -175,11 +175,11 @@ ActiveRecord::Schema.define(version: 20181018082155) do
     t.jsonb "create_json_schema"
     t.jsonb "update_json_schema"
     t.datetime "archived_on"
-    t.index ["archived_on"], name: "index_service_parameters_sets_on_archived_on"
-    t.index ["service_offering_id"], name: "index_service_parameters_sets_on_service_offering_id"
-    t.index ["source_deleted_at"], name: "index_service_parameters_sets_on_source_deleted_at"
-    t.index ["source_id", "source_ref"], name: "index_service_parameters_sets_on_source_id_and_source_ref", unique: true
-    t.index ["source_id"], name: "index_service_parameters_sets_on_source_id"
+    t.index ["archived_on"], name: "index_service_plans_on_archived_on"
+    t.index ["service_offering_id"], name: "index_service_plans_on_service_offering_id"
+    t.index ["source_deleted_at"], name: "index_service_plans_on_source_deleted_at"
+    t.index ["source_id", "source_ref"], name: "index_service_plans_on_source_id_and_source_ref", unique: true
+    t.index ["source_id"], name: "index_service_plans_on_source_id"
   end
 
   create_table "sources", force: :cascade do |t|
