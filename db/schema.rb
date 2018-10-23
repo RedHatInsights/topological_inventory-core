@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181023094055) do
+ActiveRecord::Schema.define(version: 20181023102858) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -42,6 +42,9 @@ ActiveRecord::Schema.define(version: 20181023094055) do
     t.bigint "container_node_id"
     t.datetime "source_created_at"
     t.datetime "archived_on"
+    t.datetime "resource_timestamp"
+    t.jsonb "resource_timestamps", default: {}
+    t.datetime "resource_timestamps_max"
     t.index ["archived_on"], name: "index_container_groups_on_archived_on"
     t.index ["container_node_id"], name: "index_container_groups_on_container_node_id"
     t.index ["container_project_id"], name: "index_container_groups_on_container_project_id"
@@ -63,6 +66,9 @@ ActiveRecord::Schema.define(version: 20181023094055) do
     t.datetime "source_deleted_at"
     t.datetime "source_created_at"
     t.datetime "archived_on"
+    t.datetime "resource_timestamp"
+    t.jsonb "resource_timestamps", default: {}
+    t.datetime "resource_timestamps_max"
     t.index ["archived_on"], name: "index_container_nodes_on_archived_on"
     t.index ["source_deleted_at"], name: "index_container_nodes_on_source_deleted_at"
     t.index ["source_id", "source_ref"], name: "index_container_nodes_on_source_id_and_source_ref", unique: true
@@ -82,6 +88,9 @@ ActiveRecord::Schema.define(version: 20181023094055) do
     t.bigint "tenant_id", null: false
     t.datetime "source_created_at"
     t.datetime "archived_on"
+    t.datetime "resource_timestamp"
+    t.jsonb "resource_timestamps", default: {}
+    t.datetime "resource_timestamps_max"
     t.index ["archived_on"], name: "index_container_projects_on_archived_on"
     t.index ["source_deleted_at"], name: "index_container_projects_on_source_deleted_at"
     t.index ["source_id", "source_ref"], name: "index_container_projects_on_source_id_and_source_ref", unique: true
@@ -100,6 +109,9 @@ ActiveRecord::Schema.define(version: 20181023094055) do
     t.datetime "source_created_at"
     t.string "name"
     t.datetime "archived_on"
+    t.datetime "resource_timestamp"
+    t.jsonb "resource_timestamps", default: {}
+    t.datetime "resource_timestamps_max"
     t.index ["archived_on"], name: "index_container_templates_on_archived_on"
     t.index ["container_project_id"], name: "index_container_templates_on_container_project_id"
     t.index ["source_deleted_at"], name: "index_container_templates_on_source_deleted_at"
@@ -134,6 +146,9 @@ ActiveRecord::Schema.define(version: 20181023094055) do
     t.bigint "tenant_id", null: false
     t.datetime "source_created_at"
     t.datetime "archived_on"
+    t.datetime "resource_timestamp"
+    t.jsonb "resource_timestamps", default: {}
+    t.datetime "resource_timestamps_max"
     t.index ["archived_on"], name: "index_service_instances_on_archived_on"
     t.index ["service_offering_id"], name: "index_service_instances_on_service_offering_id"
     t.index ["service_plan_id"], name: "index_service_instances_on_service_plan_id"
@@ -154,6 +169,9 @@ ActiveRecord::Schema.define(version: 20181023094055) do
     t.bigint "tenant_id", null: false
     t.datetime "source_created_at"
     t.datetime "archived_on"
+    t.datetime "resource_timestamp"
+    t.jsonb "resource_timestamps", default: {}
+    t.datetime "resource_timestamps_max"
     t.index ["archived_on"], name: "index_service_offerings_on_archived_on"
     t.index ["source_deleted_at"], name: "index_service_offerings_on_source_deleted_at"
     t.index ["source_id", "source_ref"], name: "index_service_offerings_on_source_id_and_source_ref", unique: true
@@ -175,6 +193,9 @@ ActiveRecord::Schema.define(version: 20181023094055) do
     t.jsonb "create_json_schema"
     t.jsonb "update_json_schema"
     t.datetime "archived_on"
+    t.datetime "resource_timestamp"
+    t.jsonb "resource_timestamps", default: {}
+    t.datetime "resource_timestamps_max"
     t.index ["archived_on"], name: "index_service_plans_on_archived_on"
     t.index ["service_offering_id"], name: "index_service_plans_on_service_offering_id"
     t.index ["source_deleted_at"], name: "index_service_plans_on_source_deleted_at"
