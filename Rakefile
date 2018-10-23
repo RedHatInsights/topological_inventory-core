@@ -35,6 +35,7 @@ ActiveRecord::Tasks::DatabaseTasks.migrations_paths = [root.join("db/migrate")]
 # so define a stub seed loader.
 ActiveRecord::Tasks::DatabaseTasks.seed_loader = Class.new { def self.load_seed; end }
 ActiveRecord::Tasks::DatabaseTasks.root = root
+ActiveRecord::Base.configurations = ActiveRecord::Tasks::DatabaseTasks.database_configuration
 
 namespace :db do
   task :environment do
