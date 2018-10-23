@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181018141423) do
+ActiveRecord::Schema.define(version: 20181018235055) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -198,4 +198,28 @@ ActiveRecord::Schema.define(version: 20181018141423) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "authentications", "tenants", on_delete: :cascade
+  add_foreign_key "container_groups", "container_nodes", on_delete: :cascade
+  add_foreign_key "container_groups", "container_projects", on_delete: :cascade
+  add_foreign_key "container_groups", "sources", on_delete: :cascade
+  add_foreign_key "container_groups", "tenants", on_delete: :cascade
+  add_foreign_key "container_nodes", "sources", on_delete: :cascade
+  add_foreign_key "container_nodes", "tenants", on_delete: :cascade
+  add_foreign_key "container_projects", "sources", on_delete: :cascade
+  add_foreign_key "container_projects", "tenants", on_delete: :cascade
+  add_foreign_key "container_templates", "container_projects", on_delete: :cascade
+  add_foreign_key "container_templates", "sources", on_delete: :cascade
+  add_foreign_key "container_templates", "tenants", on_delete: :cascade
+  add_foreign_key "endpoints", "sources", on_delete: :cascade
+  add_foreign_key "endpoints", "tenants", on_delete: :cascade
+  add_foreign_key "service_instances", "service_offerings", on_delete: :nullify
+  add_foreign_key "service_instances", "service_plans", on_delete: :nullify
+  add_foreign_key "service_instances", "sources", on_delete: :cascade
+  add_foreign_key "service_instances", "tenants", on_delete: :cascade
+  add_foreign_key "service_offerings", "sources", on_delete: :cascade
+  add_foreign_key "service_offerings", "tenants", on_delete: :cascade
+  add_foreign_key "service_plans", "service_offerings", on_delete: :cascade
+  add_foreign_key "service_plans", "sources", on_delete: :cascade
+  add_foreign_key "service_plans", "tenants", on_delete: :cascade
+  add_foreign_key "sources", "tenants", on_delete: :cascade
 end
