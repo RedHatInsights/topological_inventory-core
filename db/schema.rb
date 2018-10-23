@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181018235055) do
+ActiveRecord::Schema.define(version: 20181023094055) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,12 +24,12 @@ ActiveRecord::Schema.define(version: 20181018235055) do
     t.string "password"
     t.string "status"
     t.string "status_details"
-    t.bigint "tenant_id"
+    t.bigint "tenant_id", null: false
     t.index ["resource_type", "resource_id"], name: "index_authentications_on_resource_type_and_resource_id"
   end
 
   create_table "container_groups", force: :cascade do |t|
-    t.bigint "source_id"
+    t.bigint "source_id", null: false
     t.string "source_ref"
     t.string "resource_version"
     t.string "name"
@@ -38,7 +38,7 @@ ActiveRecord::Schema.define(version: 20181018235055) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "source_deleted_at"
-    t.bigint "tenant_id"
+    t.bigint "tenant_id", null: false
     t.bigint "container_node_id"
     t.datetime "source_created_at"
     t.datetime "archived_on"
@@ -51,13 +51,13 @@ ActiveRecord::Schema.define(version: 20181018235055) do
   end
 
   create_table "container_nodes", force: :cascade do |t|
-    t.bigint "source_id"
+    t.bigint "source_id", null: false
     t.string "source_ref"
     t.string "resource_version"
     t.string "name"
     t.integer "cpus"
     t.bigint "memory"
-    t.bigint "tenant_id"
+    t.bigint "tenant_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "source_deleted_at"
@@ -71,7 +71,7 @@ ActiveRecord::Schema.define(version: 20181018235055) do
   end
 
   create_table "container_projects", force: :cascade do |t|
-    t.bigint "source_id"
+    t.bigint "source_id", null: false
     t.string "source_ref"
     t.string "resource_version"
     t.string "name"
@@ -79,7 +79,7 @@ ActiveRecord::Schema.define(version: 20181018235055) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "source_deleted_at"
-    t.bigint "tenant_id"
+    t.bigint "tenant_id", null: false
     t.datetime "source_created_at"
     t.datetime "archived_on"
     t.index ["archived_on"], name: "index_container_projects_on_archived_on"
@@ -89,14 +89,14 @@ ActiveRecord::Schema.define(version: 20181018235055) do
   end
 
   create_table "container_templates", force: :cascade do |t|
-    t.bigint "source_id"
+    t.bigint "source_id", null: false
     t.string "source_ref"
     t.string "resource_version"
     t.bigint "container_project_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "source_deleted_at"
-    t.bigint "tenant_id"
+    t.bigint "tenant_id", null: false
     t.datetime "source_created_at"
     t.string "name"
     t.datetime "archived_on"
@@ -117,12 +117,12 @@ ActiveRecord::Schema.define(version: 20181018235055) do
     t.string "scheme"
     t.string "host"
     t.string "path"
-    t.bigint "tenant_id"
+    t.bigint "tenant_id", null: false
     t.index ["source_id"], name: "index_endpoints_on_source_id"
   end
 
   create_table "service_instances", force: :cascade do |t|
-    t.bigint "source_id"
+    t.bigint "source_id", null: false
     t.string "source_ref"
     t.string "name"
     t.bigint "service_offering_id"
@@ -131,7 +131,7 @@ ActiveRecord::Schema.define(version: 20181018235055) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "source_deleted_at"
-    t.bigint "tenant_id"
+    t.bigint "tenant_id", null: false
     t.datetime "source_created_at"
     t.datetime "archived_on"
     t.index ["archived_on"], name: "index_service_instances_on_archived_on"
@@ -143,7 +143,7 @@ ActiveRecord::Schema.define(version: 20181018235055) do
   end
 
   create_table "service_offerings", force: :cascade do |t|
-    t.bigint "source_id"
+    t.bigint "source_id", null: false
     t.string "source_ref"
     t.string "name"
     t.text "description"
@@ -151,7 +151,7 @@ ActiveRecord::Schema.define(version: 20181018235055) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "source_deleted_at"
-    t.bigint "tenant_id"
+    t.bigint "tenant_id", null: false
     t.datetime "source_created_at"
     t.datetime "archived_on"
     t.index ["archived_on"], name: "index_service_offerings_on_archived_on"
@@ -161,7 +161,7 @@ ActiveRecord::Schema.define(version: 20181018235055) do
   end
 
   create_table "service_plans", force: :cascade do |t|
-    t.bigint "source_id"
+    t.bigint "source_id", null: false
     t.string "source_ref"
     t.string "name"
     t.text "description"
@@ -170,7 +170,7 @@ ActiveRecord::Schema.define(version: 20181018235055) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "source_deleted_at"
-    t.bigint "tenant_id"
+    t.bigint "tenant_id", null: false
     t.datetime "source_created_at"
     t.jsonb "create_json_schema"
     t.jsonb "update_json_schema"
@@ -187,7 +187,7 @@ ActiveRecord::Schema.define(version: 20181018235055) do
     t.string "uid"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "tenant_id"
+    t.bigint "tenant_id", null: false
   end
 
   create_table "tenants", force: :cascade do |t|
