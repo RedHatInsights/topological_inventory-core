@@ -7,10 +7,12 @@ describe TopologicalInventory::Persister::Worker do
   let(:test_inventory_dir) { Pathname.new(__dir__).join("test_inventory") }
 
   context "#run" do
+    let(:messages) { [ManageIQ::Messaging::ReceivedMessage.new(nil, nil, inventory, nil)] }
+
     before do
       allow(ManageIQ::Messaging::Client).to receive(:open).and_return(client)
       allow(client).to receive(:close)
-      allow(client).to receive(:subscribe_topic).and_yield(nil, nil, inventory)
+      allow(client).to receive(:subscribe_messages).and_yield(messages)
 
       described_class.new.run
       source.reload
