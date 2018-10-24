@@ -30,6 +30,7 @@ module TopologicalInventory
       def add_default_properties(builder)
         builder.add_properties(
           :manager_ref        => [:source_ref],
+          :strategy           => :local_db_find_missing_references,
           :saver_strategy     => :concurrent_safe_batch,
           :retention_strategy => :archive
         )
