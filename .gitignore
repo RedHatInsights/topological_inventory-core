@@ -1,4 +1,5 @@
 /.bundle/
+/.idea/
 /.rspec_status
 /.ruby-gemset
 /.ruby-version
