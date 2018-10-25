@@ -8,6 +8,6 @@ class AddSourceType < ActiveRecord::Migration[5.1]
       t.index :name, :unique => true
     end
 
-    add_reference :sources, :source_type, :index => true
+    add_reference :sources, :source_type,  :index => true, :foreign_key => {:on_delete => :cascade}
   end
 end

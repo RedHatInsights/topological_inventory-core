@@ -336,6 +336,7 @@ ActiveRecord::Schema.define(version: 20181102145252) do
   add_foreign_key "service_plans", "subscriptions", on_delete: :cascade
   add_foreign_key "service_plans", "tenants", on_delete: :cascade
   add_foreign_key "source_regions", "sources", on_delete: :cascade
+  add_foreign_key "sources", "source_types", on_delete: :cascade
   add_foreign_key "sources", "tenants", on_delete: :cascade
   add_foreign_key "subscriptions", "sources", on_delete: :cascade
 end
