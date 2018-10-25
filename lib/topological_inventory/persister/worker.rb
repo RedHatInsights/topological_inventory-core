@@ -23,8 +23,8 @@ module TopologicalInventory
         logger.info("Topological Inventory Persister started...")
 
         # Wait for messages to be processed
-        client.subscribe_topic(queue_opts) do |_, _, payload|
-          process_payload(payload)
+        client.subscribe_messages(queue_opts) do |messages|
+          messages.each { |msg| process_payload(msg.payload) }
         end
       ensure
         client&.close
