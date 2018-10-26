@@ -7,4 +7,6 @@ class ServiceInstance < ApplicationRecord
   belongs_to :source
   belongs_to :service_offering
   belongs_to :service_plan
+
+  acts_as_taggable
 end

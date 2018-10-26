@@ -8,4 +8,6 @@ class ServicePlan < ApplicationRecord
   belongs_to :service_offering
 
   has_many   :service_instances
+
+  acts_as_taggable
 end

@@ -5,4 +5,6 @@ class Endpoint < ApplicationRecord
   has_many   :authentications, :as => :resource
 
   validates :role, :uniqueness => { :scope => :source_id }
+
+  acts_as_taggable
 end
