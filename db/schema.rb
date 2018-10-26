@@ -178,28 +178,6 @@ ActiveRecord::Schema.define(version: 20181023215716) do
     t.index ["source_id"], name: "index_service_offerings_on_source_id"
   end
 
-  create_table "service_parameters_sets", force: :cascade do |t|
-    t.bigint "source_id"
-    t.string "source_ref"
-    t.string "name"
-    t.text "description"
-    t.bigint "service_offering_id"
-    t.jsonb "extra"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.datetime "source_deleted_at"
-    t.bigint "tenant_id"
-    t.datetime "source_created_at"
-    t.jsonb "create_json_schema"
-    t.jsonb "update_json_schema"
-    t.datetime "archived_on"
-    t.index ["archived_on"], name: "index_service_parameters_sets_on_archived_on"
-    t.index ["service_offering_id"], name: "index_service_parameters_sets_on_service_offering_id"
-    t.index ["source_deleted_at"], name: "index_service_parameters_sets_on_source_deleted_at"
-    t.index ["source_id", "source_ref"], name: "index_service_parameters_sets_on_source_id_and_source_ref", unique: true
-    t.index ["source_id"], name: "index_service_parameters_sets_on_source_id"
-  end
-
   create_table "service_plans", force: :cascade do |t|
     t.bigint "source_id", null: false
     t.string "source_ref"
