@@ -215,6 +215,7 @@ ActiveRecord::Schema.define(version: 20181026182144) do
     t.string "name"
     t.string "status"
     t.string "state"
+    t.jsonb "context"
     t.bigint "tenant_id", null: false
     t.datetime "completed_at"
     t.datetime "created_at", null: false
