@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181023215716) do
+ActiveRecord::Schema.define(version: 20181026182144) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -209,6 +209,18 @@ ActiveRecord::Schema.define(version: 20181023215716) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "tenant_id", null: false
+  end
+
+  create_table "tasks", force: :cascade do |t|
+    t.string "name"
+    t.string "status"
+    t.string "state"
+    t.jsonb "context"
+    t.bigint "tenant_id", null: false
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tenant_id"], name: "index_tasks_on_tenant_id"
   end
 
   create_table "tenants", force: :cascade do |t|

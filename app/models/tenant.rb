@@ -8,5 +8,6 @@ class Tenant < ActiveRecord::Base
   has_many :service_offerings
   has_many :service_plans
   has_many :sources
+  has_many :tasks
 end
 
