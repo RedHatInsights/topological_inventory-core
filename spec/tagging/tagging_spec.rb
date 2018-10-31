@@ -2,11 +2,6 @@ describe "ActsAsTaggableOn" do
   let(:tenant) { Tenant.find_or_create_by!(:name => "default") }
   let(:source) { Source.find_or_create_by!(:name => "OCP", :uid => "9a874712-9a55-49ab-a46a-c823acc35503", :tenant => tenant) }
 
-  after do
-    source.tag_list = []
-    source.save!
-  end
-
   context "common tagging operations" do
     it "is taggable" do
       expect(source.is_taggable?).to be_truthy
