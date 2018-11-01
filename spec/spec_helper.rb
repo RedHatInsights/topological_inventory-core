@@ -18,12 +18,14 @@ ENV["RAILS_ENV"] ||= "test"
 raise "Specs must be run in test environment" if ENV["RAILS_ENV"] != "test"
 
 require "active_record/railtie"
-require "rspec/rails"
+require "action_controller/railtie"
+require 'rspec/rails'
 
 require "topological_inventory/persister/ar_helper"
 TopologicalInventory::Persister::ArHelper.load_environment!
 
 RSpec.configure do |config|
+  config.use_transactional_fixtures = true
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.
