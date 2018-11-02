@@ -1,8 +1,13 @@
-describe ExternalApiBroker do
+describe ServiceCatalogClient do
+  let(:subject) { described_class.new(source) }
+
+  let(:endpoint) { Endpoint.new(:host => "https://example.com", :default => true) }
+  let(:auth) { instance_double("Authentication", :password => "token") }
+  let(:source) { Source.new(:endpoints => [endpoint]) }
   let(:dummy_rest_client) { double }
   let(:headers) do
     {
-      "Authorization" => "Bearer ???",
+      "Authorization" => "Bearer token",
       "Content-Type"  => "application/json",
       "Accept"        => "application/json"
     }
@@ -12,10 +17,11 @@ describe ExternalApiBroker do
   before do
     allow(RestClient::Request).to receive(:new).with(request_options).and_return(dummy_rest_client)
     allow(dummy_rest_client).to receive(:execute).and_return(double(:body => dummy_response.to_json))
+    allow(endpoint).to receive(:authentications).and_return([auth])
   end
 
   describe "#get_catalog_name" do
-    let(:url) { URI.join("https://localhost?", "apis/servicecatalog.k8s.io/v1beta1/clusterserviceclasses").to_s }
+    let(:url) { URI.join("https://example.com", "apis/servicecatalog.k8s.io/v1beta1/clusterserviceclasses").to_s }
     let(:method) { :get }
     let(:dummy_response) { {"items" => [{"metadata" => {"name" => 123}, "spec" => {"externalName" => "foo"}}]} }
 
@@ -33,7 +39,7 @@ describe ExternalApiBroker do
   end
 
   describe "#get_plan_name" do
-    let(:url) { URI.join("https://localhost?", "apis/servicecatalog.k8s.io/v1beta1/clusterserviceplans").to_s }
+    let(:url) { URI.join("https://example.com", "apis/servicecatalog.k8s.io/v1beta1/clusterserviceplans").to_s }
     let(:method) { :get }
     let(:dummy_response) { {"items" => [{"metadata" => {"name" => 123}, "spec" => {"externalName" => "foo"}}]} }
 
@@ -52,7 +58,7 @@ describe ExternalApiBroker do
 
   describe "#order_service_plan" do
     let(:url) do
-      URI.join("https://localhost?", "apis/servicecatalog.k8s.io/v1beta1/namespaces/default/serviceinstances").to_s
+      URI.join("https://example.com", "apis/servicecatalog.k8s.io/v1beta1/namespaces/default/serviceinstances").to_s
     end
     let(:method) { :post }
     let(:post_request_options) do

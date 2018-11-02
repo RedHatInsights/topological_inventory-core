@@ -1,6 +1,10 @@
 require "rest_client"
 
-class ExternalApiBroker
+class ServiceCatalogClient
+  def initialize(source)
+    @source = source
+  end
+
   def get_catalog_name(catalog_id)
     get_object_name(catalog_id, catalog_url)
   end
@@ -16,19 +20,19 @@ class ExternalApiBroker
   private
 
   def base_url
-    "https://localhost"
+    URI.join(@source.default_endpoint.host, "apis/servicecatalog.k8s.io/v1beta1/").to_s
   end
 
   def catalog_url
-    URI.join(base_url, "apis/servicecatalog.k8s.io/v1beta1/clusterserviceclasses").to_s
+    URI.join(base_url, "clusterserviceclasses").to_s
   end
 
   def order_service_plan_url
-    URI.join(base_url, "apis/servicecatalog.k8s.io/v1beta1/namespaces/default/serviceinstances").to_s
+    URI.join(base_url, "namespaces/default/serviceinstances").to_s
   end
 
   def plan_url
-    URI.join(base_url, "apis/servicecatalog.k8s.io/v1beta1/clusterserviceplans").to_s
+    URI.join(base_url, "clusterserviceplans").to_s
   end
 
   def make_request(method:, url:, headers: generic_headers, payload: nil)
@@ -45,9 +49,8 @@ class ExternalApiBroker
   end
 
   def generic_headers
-    token = "???"
     {
-      "Authorization" => "Bearer #{token}", # Token?
+      "Authorization" => "Bearer #{@source.default_endpoint.authentications.first.password}",
       "Content-Type"  => "application/json",
       "Accept"        => "application/json"
     }

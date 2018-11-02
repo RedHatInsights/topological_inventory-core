@@ -1,5 +1,5 @@
 require "archived_concern"
-require_relative "../../lib/infrastructure/external_api_broker"
+require_relative "../../lib/infrastructure/service_catalog_client"
 
 class ServicePlan < ApplicationRecord
   include ArchivedConcern
@@ -17,16 +17,17 @@ class ServicePlan < ApplicationRecord
   def order(catalog_id, additional_parameters)
     payload = external_payload(catalog_id, additional_parameters)
 
-    response = external_api_broker.order_service_plan(payload)
+    response = service_catalog_client.order_service_plan(payload)
 
     parsed_data = JSON.parse(response.body)
-    parsed_data['metadata']['selfLink']
+    task = Task.create!(:tenant => tenant, :context => parsed_data['metadata']['selfLink'])
+    task.id
   end
 
   private
 
   def external_payload(catalog_id, parameters)
-    external_catalog_name = external_api_broker.get_catalog_name(catalog_id)
+    external_catalog_name = service_catalog_client.get_catalog_name(catalog_id)
     raise "external name not found for catalog #{catalog_id}" unless external_catalog_name
 
     {
@@ -38,7 +39,7 @@ class ServicePlan < ApplicationRecord
        },
       "spec"       => {
          "clusterServiceClassExternalName" => external_catalog_name,
-         "clusterServicePlanExternalName"  => external_api_broker.get_plan_name(id),
+         "clusterServicePlanExternalName"  => service_catalog_client.get_plan_name(id),
          "parameters"                      => catalog_parameters(parameters)
        }
     }
@@ -50,7 +51,7 @@ class ServicePlan < ApplicationRecord
     end
   end
 
-  def external_api_broker
-    @external_api_broker ||= ::ExternalApiBroker.new
+  def service_catalog_client
+    @service_catalog_client ||= ::ServiceCatalogClient.new(source)
   end
 end
