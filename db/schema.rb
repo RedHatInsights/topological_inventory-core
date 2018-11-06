@@ -217,7 +217,6 @@ ActiveRecord::Schema.define(version: 20181102145252) do
 
   create_table "source_regions", force: :cascade do |t|
     t.bigint "source_id", null: false
-    t.bigint "subscription_id"
     t.string "source_ref"
     t.string "name"
     t.string "endpoint"
@@ -227,7 +226,6 @@ ActiveRecord::Schema.define(version: 20181102145252) do
     t.index ["archived_on"], name: "index_source_regions_on_archived_on"
     t.index ["source_id", "source_ref"], name: "index_source_regions_on_source_id_and_source_ref", unique: true
     t.index ["source_id"], name: "index_source_regions_on_source_id"
-    t.index ["subscription_id"], name: "index_source_regions_on_subscription_id"
   end
 
   create_table "sources", force: :cascade do |t|
@@ -325,7 +323,6 @@ ActiveRecord::Schema.define(version: 20181102145252) do
   add_foreign_key "service_plans", "subscriptions", on_delete: :cascade
   add_foreign_key "service_plans", "tenants", on_delete: :cascade
   add_foreign_key "source_regions", "sources", on_delete: :cascade
-  add_foreign_key "source_regions", "subscriptions", on_delete: :cascade
   add_foreign_key "sources", "tenants", on_delete: :cascade
   add_foreign_key "subscriptions", "sources", on_delete: :cascade
 end

@@ -11,7 +11,6 @@ class AddRegionsAndSubscriptions < ActiveRecord::Migration[5.1]
 
     create_table "source_regions", :id => :bigserial do |t|
       t.references "source", :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
-      t.references "subscription", :type => :bigint, :index => true, :foreign_key => {:on_delete => :cascade}
       t.string     "source_ref"
       t.string     "name"
       t.string     "endpoint"
