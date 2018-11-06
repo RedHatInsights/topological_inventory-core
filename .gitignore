@@ -1,4 +1,5 @@
 /.bundle/
+/.byebug_history
 /.idea/
 /.rspec_status
 /.ruby-gemset
@@ -6,6 +7,7 @@
 /.yardoc
 /Gemfile.lock
 /_yardoc/
+/bundler.d/
 /config/database.yml
 /coverage/
 /doc/
@@ -13,5 +15,3 @@
 /pkg/
 /spec/reports/
 /tmp/
-/bundler.d/
-/.byebug_history

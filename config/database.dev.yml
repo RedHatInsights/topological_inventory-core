@@ -1,16 +1,17 @@
 default: &default
   adapter: postgresql
   encoding: utf8
-  pool: 5
-  username: root
-  wait_timeout: 5
-  min_messages: warning
   host: localhost
   port: 5432
+  username: root
+  pool: 5
+  wait_timeout: 5
+  min_messages: warning
 
 development:
   <<: *default
   database: topological_inventory_core_development
+  min_messages: notice
 
 test:
   <<: *default
