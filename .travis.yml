@@ -9,10 +9,8 @@ addons:
   postgresql: '9.5'
 env:
   global:
-  - RAILS_ENV=test
-  - DATABASE_URL="postgresql://root:smartvm@localhost:5432/topological_inventory_test?encoding=utf8&pool=5&wait_timeout=5"
+  - DATABASE_URL="postgresql://postgres:@localhost:5432/topological_inventory_core_test?encoding=utf8&pool=5&wait_timeout=5"
 before_install:
 - gem install bundler -v 1.16.4
-- psql -c "CREATE USER root SUPERUSER PASSWORD 'smartvm';" -U postgres
 before_script:
 - bundle exec rake spec:setup

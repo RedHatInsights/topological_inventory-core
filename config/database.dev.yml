@@ -3,7 +3,6 @@ default: &default
   encoding: utf8
   pool: 5
   username: root
-  password: smartvm
   wait_timeout: 5
   min_messages: warning
   host: localhost
@@ -11,17 +10,12 @@ default: &default
 
 development:
   <<: *default
-  database: topological_inventory_development
+  database: topological_inventory_core_development
 
-# Warning: The database defined as "test" will be erased and
-# re-generated from your development database when you run "rake".
-# Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: topological_inventory_test
+  database: topological_inventory_core_test
 
 production:
   <<: *default
-  database: topological_inventory_production
-  username: <%= ENV['TOPOLOGICAL_INVENTORY_DATABASE_USERNAME'] %>
-  password: <%= ENV['TOPOLOGICAL_INVENTORY_DATABASE_PASSWORD'] %>
+  database: topological_inventory_core_production
