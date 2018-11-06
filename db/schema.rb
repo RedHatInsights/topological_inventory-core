@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181026182144) do
+ActiveRecord::Schema.define(version: 20181102145252) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -149,12 +149,16 @@ ActiveRecord::Schema.define(version: 20181026182144) do
     t.datetime "resource_timestamp"
     t.jsonb "resource_timestamps", default: {}
     t.datetime "resource_timestamps_max"
+    t.bigint "source_region_id"
+    t.bigint "subscription_id"
     t.index ["archived_on"], name: "index_service_instances_on_archived_on"
     t.index ["service_offering_id"], name: "index_service_instances_on_service_offering_id"
     t.index ["service_plan_id"], name: "index_service_instances_on_service_plan_id"
     t.index ["source_deleted_at"], name: "index_service_instances_on_source_deleted_at"
     t.index ["source_id", "source_ref"], name: "index_service_instances_on_source_id_and_source_ref", unique: true
     t.index ["source_id"], name: "index_service_instances_on_source_id"
+    t.index ["source_region_id"], name: "index_service_instances_on_source_region_id"
+    t.index ["subscription_id"], name: "index_service_instances_on_subscription_id"
   end
 
   create_table "service_offerings", force: :cascade do |t|
@@ -172,10 +176,14 @@ ActiveRecord::Schema.define(version: 20181026182144) do
     t.datetime "resource_timestamp"
     t.jsonb "resource_timestamps", default: {}
     t.datetime "resource_timestamps_max"
+    t.bigint "source_region_id"
+    t.bigint "subscription_id"
     t.index ["archived_on"], name: "index_service_offerings_on_archived_on"
     t.index ["source_deleted_at"], name: "index_service_offerings_on_source_deleted_at"
     t.index ["source_id", "source_ref"], name: "index_service_offerings_on_source_id_and_source_ref", unique: true
     t.index ["source_id"], name: "index_service_offerings_on_source_id"
+    t.index ["source_region_id"], name: "index_service_offerings_on_source_region_id"
+    t.index ["subscription_id"], name: "index_service_offerings_on_subscription_id"
   end
 
   create_table "service_plans", force: :cascade do |t|
@@ -196,11 +204,28 @@ ActiveRecord::Schema.define(version: 20181026182144) do
     t.datetime "resource_timestamp"
     t.jsonb "resource_timestamps", default: {}
     t.datetime "resource_timestamps_max"
+    t.bigint "source_region_id"
+    t.bigint "subscription_id"
     t.index ["archived_on"], name: "index_service_plans_on_archived_on"
     t.index ["service_offering_id"], name: "index_service_plans_on_service_offering_id"
     t.index ["source_deleted_at"], name: "index_service_plans_on_source_deleted_at"
     t.index ["source_id", "source_ref"], name: "index_service_plans_on_source_id_and_source_ref", unique: true
     t.index ["source_id"], name: "index_service_plans_on_source_id"
+    t.index ["source_region_id"], name: "index_service_plans_on_source_region_id"
+    t.index ["subscription_id"], name: "index_service_plans_on_subscription_id"
+  end
+
+  create_table "source_regions", force: :cascade do |t|
+    t.bigint "source_id", null: false
+    t.string "source_ref"
+    t.string "name"
+    t.string "endpoint"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "archived_on"
+    t.index ["archived_on"], name: "index_source_regions_on_archived_on"
+    t.index ["source_id", "source_ref"], name: "index_source_regions_on_source_id_and_source_ref", unique: true
+    t.index ["source_id"], name: "index_source_regions_on_source_id"
   end
 
   create_table "sources", force: :cascade do |t|
@@ -209,6 +234,18 @@ ActiveRecord::Schema.define(version: 20181026182144) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "tenant_id", null: false
+  end
+
+  create_table "subscriptions", force: :cascade do |t|
+    t.bigint "source_id", null: false
+    t.string "source_ref"
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "archived_on"
+    t.index ["archived_on"], name: "index_subscriptions_on_archived_on"
+    t.index ["source_id", "source_ref"], name: "index_subscriptions_on_source_id_and_source_ref", unique: true
+    t.index ["source_id"], name: "index_subscriptions_on_source_id"
   end
 
   create_table "taggings", id: :serial, force: :cascade do |t|
@@ -272,12 +309,20 @@ ActiveRecord::Schema.define(version: 20181026182144) do
   add_foreign_key "endpoints", "tenants", on_delete: :cascade
   add_foreign_key "service_instances", "service_offerings", on_delete: :nullify
   add_foreign_key "service_instances", "service_plans", on_delete: :nullify
+  add_foreign_key "service_instances", "source_regions", on_delete: :cascade
   add_foreign_key "service_instances", "sources", on_delete: :cascade
+  add_foreign_key "service_instances", "subscriptions", on_delete: :cascade
   add_foreign_key "service_instances", "tenants", on_delete: :cascade
+  add_foreign_key "service_offerings", "source_regions", on_delete: :cascade
   add_foreign_key "service_offerings", "sources", on_delete: :cascade
+  add_foreign_key "service_offerings", "subscriptions", on_delete: :cascade
   add_foreign_key "service_offerings", "tenants", on_delete: :cascade
   add_foreign_key "service_plans", "service_offerings", on_delete: :cascade
+  add_foreign_key "service_plans", "source_regions", on_delete: :cascade
   add_foreign_key "service_plans", "sources", on_delete: :cascade
+  add_foreign_key "service_plans", "subscriptions", on_delete: :cascade
   add_foreign_key "service_plans", "tenants", on_delete: :cascade
+  add_foreign_key "source_regions", "sources", on_delete: :cascade
   add_foreign_key "sources", "tenants", on_delete: :cascade
+  add_foreign_key "subscriptions", "sources", on_delete: :cascade
 end
