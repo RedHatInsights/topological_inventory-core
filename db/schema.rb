@@ -230,12 +230,23 @@ ActiveRecord::Schema.define(version: 20181102145252) do
     t.index ["source_id"], name: "index_source_regions_on_source_id"
   end
 
+  create_table "source_types", force: :cascade do |t|
+    t.string "name"
+    t.string "product_name"
+    t.string "vendor"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_source_types_on_name", unique: true
+  end
+
   create_table "sources", force: :cascade do |t|
     t.string "name"
     t.string "uid"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "tenant_id", null: false
+    t.bigint "source_type_id"
+    t.index ["source_type_id"], name: "index_sources_on_source_type_id"
   end
 
   create_table "subscriptions", force: :cascade do |t|
@@ -325,6 +336,7 @@ ActiveRecord::Schema.define(version: 20181102145252) do
   add_foreign_key "service_plans", "subscriptions", on_delete: :cascade
   add_foreign_key "service_plans", "tenants", on_delete: :cascade
   add_foreign_key "source_regions", "sources", on_delete: :cascade
+  add_foreign_key "sources", "source_types", on_delete: :cascade
   add_foreign_key "sources", "tenants", on_delete: :cascade
   add_foreign_key "subscriptions", "sources", on_delete: :cascade
 end

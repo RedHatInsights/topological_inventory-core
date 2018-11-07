@@ -1,5 +1,6 @@
 class Source < ApplicationRecord
   has_many :endpoints, :autosave => true
+  belongs_to :source_type
   belongs_to :tenant
 
   delegate :scheme, :scheme=, :host, :host=, :port, :port=, :path, :path=,

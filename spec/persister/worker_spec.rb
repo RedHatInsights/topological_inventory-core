@@ -2,9 +2,17 @@ require "topological_inventory/persister/worker"
 
 describe TopologicalInventory::Persister::Worker do
   let(:tenant) { Tenant.find_or_create_by!(:name => "default") }
+  let(:source_type) { SourceType.find_or_create_by(:name => "openshift") }
   let(:client) { double(:client) }
-  let!(:source) { Source.find_or_create_by!(:name => "OCP", :uid => "9a874712-9a55-49ab-a46a-c823acc35503", :tenant => tenant) }
   let(:test_inventory_dir) { Pathname.new(__dir__).join("test_inventory") }
+  let!(:source) do
+    Source.find_or_create_by!(
+      :tenant      => tenant,
+      :source_type => source_type,
+      :name        => "OCP",
+      :uid         => "9a874712-9a55-49ab-a46a-c823acc35503",
+    )
+  end
 
   context "#run" do
     let(:messages) { [ManageIQ::Messaging::ReceivedMessage.new(nil, nil, inventory, nil)] }
