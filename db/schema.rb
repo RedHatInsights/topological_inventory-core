@@ -130,6 +130,8 @@ ActiveRecord::Schema.define(version: 20181102145252) do
     t.string "host"
     t.string "path"
     t.bigint "tenant_id", null: false
+    t.boolean "verify_ssl"
+    t.text "certificate_authority"
     t.index ["source_id"], name: "index_endpoints_on_source_id"
   end
 
