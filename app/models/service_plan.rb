@@ -1,5 +1,5 @@
 require "archived_concern"
-require_relative "../../lib/infrastructure/service_catalog_client"
+require "topological_inventory/core/service_catalog_client"
 
 class ServicePlan < ApplicationRecord
   include ArchivedConcern
@@ -32,6 +32,6 @@ class ServicePlan < ApplicationRecord
   private
 
   def service_catalog_client
-    @service_catalog_client ||= ::ServiceCatalogClient.new(source)
+    @service_catalog_client ||= TopologicalInventory::Core::ServiceCatalogClient.new(source)
   end
 end
