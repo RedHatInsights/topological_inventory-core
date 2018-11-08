@@ -14,8 +14,8 @@ class ServicePlan < ApplicationRecord
 
   acts_as_taggable
 
-  def order(catalog_id, additional_parameters)
-    parsed_response = service_catalog_client.order_service_plan(id, catalog_id, additional_parameters)
+  def order(additional_parameters)
+    parsed_response = service_catalog_client.order_service_plan(name, service_offering.name, additional_parameters)
 
     task = Task.create!(
       :tenant => tenant,
