@@ -19,6 +19,7 @@ class Source < ApplicationRecord
   has_many :container_templates
   has_many :container_projects
   has_many :container_nodes
+  has_many :containers, :through => :container_groups
 
   # Service Catalog Inventory Objects
   has_many :service_offerings

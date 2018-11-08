@@ -119,6 +119,28 @@ ActiveRecord::Schema.define(version: 20181108113645) do
     t.index ["source_id"], name: "index_container_templates_on_source_id"
   end
 
+  create_table "containers", force: :cascade do |t|
+    t.bigint "tenant_id", null: false
+    t.bigint "container_group_id", null: false
+    t.string "name"
+    t.float "cpu_limit"
+    t.float "cpu_request"
+    t.bigint "memory_limit"
+    t.bigint "memory_request"
+    t.datetime "resource_timestamp"
+    t.jsonb "resource_timestamps", default: {}
+    t.datetime "resource_timestamps_max"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "source_created_at"
+    t.datetime "source_deleted_at"
+    t.datetime "archived_on"
+    t.index ["archived_on"], name: "index_containers_on_archived_on"
+    t.index ["container_group_id", "name"], name: "index_containers_on_container_group_id_and_name", unique: true
+    t.index ["container_group_id"], name: "index_containers_on_container_group_id"
+    t.index ["tenant_id"], name: "index_containers_on_tenant_id"
+  end
+
   create_table "endpoints", force: :cascade do |t|
     t.string "role"
     t.integer "port"
@@ -225,7 +247,7 @@ ActiveRecord::Schema.define(version: 20181108113645) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "archived_on"
-    t.bigint "tenant_id"
+    t.bigint "tenant_id", null: false
     t.index ["archived_on"], name: "index_source_regions_on_archived_on"
     t.index ["source_id", "source_ref"], name: "index_source_regions_on_source_id_and_source_ref", unique: true
     t.index ["source_id"], name: "index_source_regions_on_source_id"
@@ -258,7 +280,7 @@ ActiveRecord::Schema.define(version: 20181108113645) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "archived_on"
-    t.bigint "tenant_id"
+    t.bigint "tenant_id", null: false
     t.index ["archived_on"], name: "index_subscriptions_on_archived_on"
     t.index ["source_id", "source_ref"], name: "index_subscriptions_on_source_id_and_source_ref", unique: true
     t.index ["source_id"], name: "index_subscriptions_on_source_id"
@@ -322,6 +344,8 @@ ActiveRecord::Schema.define(version: 20181108113645) do
   add_foreign_key "container_templates", "container_projects", on_delete: :cascade
   add_foreign_key "container_templates", "sources", on_delete: :cascade
   add_foreign_key "container_templates", "tenants", on_delete: :cascade
+  add_foreign_key "containers", "container_groups", on_delete: :cascade
+  add_foreign_key "containers", "tenants", on_delete: :cascade
   add_foreign_key "endpoints", "sources", on_delete: :cascade
   add_foreign_key "endpoints", "tenants", on_delete: :cascade
   add_foreign_key "service_instances", "service_offerings", on_delete: :nullify
