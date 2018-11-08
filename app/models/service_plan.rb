@@ -15,41 +15,21 @@ class ServicePlan < ApplicationRecord
   acts_as_taggable
 
   def order(catalog_id, additional_parameters)
-    payload = external_payload(catalog_id, additional_parameters)
+    parsed_response = service_catalog_client.order_service_plan(id, catalog_id, additional_parameters)
 
-    response = service_catalog_client.order_service_plan(payload)
-
-    parsed_data = JSON.parse(response.body)
-    task = Task.create!(:tenant => tenant, :context => parsed_data['metadata']['selfLink'])
+    task = Task.create!(
+      :tenant => tenant,
+      :context => {
+        :service_instance => {
+          :source_id  => source.id,
+          :source_ref => parsed_response['metadata']['selfLink']
+        }
+      }
+    )
     task.id
   end
 
   private
-
-  def external_payload(catalog_id, parameters)
-    external_catalog_name = service_catalog_client.get_catalog_name(catalog_id)
-    raise "external name not found for catalog #{catalog_id}" unless external_catalog_name
-
-    {
-      "apiVersion" => "servicecatalog.k8s.io/v1beta1",
-      "kind"       => "ServiceInstance",
-      "metadata"   => {
-        "name"      => "#{external_catalog_name}-#{SecureRandom.uuid}",
-        "namespace" => "default"
-       },
-      "spec"       => {
-         "clusterServiceClassExternalName" => external_catalog_name,
-         "clusterServicePlanExternalName"  => service_catalog_client.get_plan_name(id),
-         "parameters"                      => catalog_parameters(parameters)
-       }
-    }
-  end
-
-  def catalog_parameters(parameters)
-    parameters.each_with_object({}) do |item, hash|
-      hash[item['name']] = item['value']
-    end
-  end
 
   def service_catalog_client
     @service_catalog_client ||= ::ServiceCatalogClient.new(source)

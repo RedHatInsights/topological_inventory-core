@@ -1,7 +1,7 @@
 describe ServiceCatalogClient do
   let(:subject) { described_class.new(source) }
 
-  let(:endpoint) { Endpoint.new(:host => "https://example.com", :default => true) }
+  let(:endpoint) { Endpoint.new(:host => "https://example.com", :default => true, :verify_ssl => true) }
   let(:auth) { instance_double("Authentication", :password => "token") }
   let(:source) { Source.new(:endpoints => [endpoint]) }
   let(:dummy_rest_client) { double }
@@ -61,23 +61,51 @@ describe ServiceCatalogClient do
       URI.join("https://example.com", "apis/servicecatalog.k8s.io/v1beta1/namespaces/default/serviceinstances").to_s
     end
     let(:method) { :post }
-    let(:post_request_options) do
+    let(:get_request_options) do
       {
         :method     => method,
         :url        => url,
         :headers    => headers,
-        :verify_ssl => true,
-        :payload    => "payload"
+        :verify_ssl => true
       }
     end
+    let(:post_request_options) { get_request_options.merge(:payload => "payload") }
+    let(:dummy_get_rest_client) { double }
     let(:dummy_response) { {"metadata" => {"selfLink" => "foo"}} }
+    let(:dummy_get_response) do
+      {
+        "items" => [
+          {
+            "metadata" => {"name" => 123}, "spec" => {"externalName" => "external_catalog_name"},
+          },
+          {
+            "metadata" => {"name" => 321}, "spec" => {"externalName" => "external_plan_name"},
+          }
+        ]
+      }
+    end
+    let(:catalog_parameters) { [{"name" => "foo", "value" => "bar"}, {"name" => "baz", "value" => "qux"}] }
 
     before do
       allow(RestClient::Request).to receive(:new).with(post_request_options).and_return(dummy_rest_client)
+      allow(RestClient::Request).to receive(:new).with(get_request_options).and_return(dummy_get_rest_client)
+      allow(dummy_get_rest_client).to receive(:execute).and_return(double(:body => dummy_get_response.to_json))
+      allow(ServicePlanClient).to receive(:new).and_return(service_plan_client)
+      allow(service_plan_client).to receive(:build_payload).with(
+        "external_catalog_name", "external_plan_name", {"foo" => "bar", "baz" => "qux"}
+      ).and_return("payload")
+    end
+
+    it "builds the payload" do
+      expect(service_plan_client).to receive(:build_payload).with(
+        "external_catalog_name", "external_plan_name", {"foo" => "bar", "baz" => "qux"}
+      )
+
+      subject.order_service_plan(321, 123, catalog_parameters)
     end
 
     it "returns the expected response" do
-      expect(subject.order_service_plan("payload").body).to eq(dummy_response.to_json)
+      expect(subject.order_service_plan(321, 123, catalog_parameters)).to eq(dummy_response)
     end
   end
 end

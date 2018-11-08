@@ -13,8 +13,11 @@ class ServiceCatalogClient
     get_object_name(plan_id, plan_url)
   end
 
-  def order_service_plan(payload)
-    make_request(method: :post, url: order_service_plan_url, payload: payload)
+  # TODO? Move this to a module in the API repo
+  def order_service_plan(plan_id, catalog_id, additional_parameters)
+    payload = build_service_plan_payload(plan_id, catalog_id, additional_parameters)
+    response = make_request(method: :post, url: order_service_plan_url, payload: payload)
+    JSON.parse(response.body)
   end
 
   private
@@ -40,7 +43,7 @@ class ServiceCatalogClient
       :method     => method,
       :url        => url,
       :headers    => headers,
-      :verify_ssl => true
+      :verify_ssl => @source.default_endpoint.verify_ssl
     }
 
     request_options.merge(:payload => payload) if payload.present?
@@ -62,5 +65,22 @@ class ServiceCatalogClient
     parsed_data = JSON.parse(response.body)
     entry = parsed_data['items'].each.detect { |item| object_id == item['metadata']['name'] }
     entry ? entry['spec']['externalName'] : nil
+  end
+
+  def build_service_plan_payload(plan_id, catalog_id, additional_parameters)
+    external_catalog_name = get_catalog_name(catalog_id)
+    raise "external name not found for catalog #{catalog_id}" unless external_catalog_name
+    external_service_plan_name = get_plan_name(plan_id)
+    catalog_parameters(additional_parameters)
+
+    ServicePlanClient.new.build_payload(
+      external_catalog_name, external_service_plan_name, catalog_parameters(additional_parameters)
+    )
+  end
+
+  def catalog_parameters(parameters)
+    parameters.each_with_object({}) do |item, hash|
+      hash[item['name']] = item['value']
+    end
   end
 end
