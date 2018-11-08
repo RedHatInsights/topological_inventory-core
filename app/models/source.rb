@@ -24,4 +24,6 @@ class Source < ApplicationRecord
   has_many :service_offerings
   has_many :service_instances
   has_many :service_plans
+  has_many :source_regions
+  has_many :subscriptions
 end
