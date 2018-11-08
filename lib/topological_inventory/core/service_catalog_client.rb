@@ -36,7 +36,7 @@ module TopologicalInventory
           :payload    => payload
         }
 
-        request_options.merge!(:payload => payload) if payload.present?
+        request_options[:payload] = payload if payload.present?
 
         RestClient::Request.new(request_options).execute
       end

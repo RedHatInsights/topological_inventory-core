@@ -1,8 +1,7 @@
 describe ServicePlan do
   describe "#order" do
     let(:service_plan) do
-      described_class.new(:id               => 456,
-                          :source           => source,
+      described_class.new(:source           => source,
                           :tenant           => tenant,
                           :name             => "plan_name",
                           :service_offering => service_offering)
