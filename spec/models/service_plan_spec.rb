@@ -1,14 +1,16 @@
 describe ServicePlan do
   describe "#order" do
     let(:service_plan) do
-      described_class.new(:source           => source,
-                          :tenant           => tenant,
-                          :name             => "plan_name",
-                          :service_offering => service_offering)
+      described_class.create!(:source           => source,
+                              :tenant           => tenant,
+                              :name             => "plan_name",
+                              :service_offering => service_offering)
     end
-    let(:source) { Source.new(:id => 654) }
-    let(:service_offering) { ServiceOffering.new(:name => "service_offering") }
-    let(:tenant) { Tenant.new }
+    let(:source) { Source.create!(:tenant => tenant) }
+    let(:service_offering) do
+      ServiceOffering.create!(:source => source, :tenant => tenant, :name => "service_offering")
+    end
+    let(:tenant) { Tenant.create! }
 
     let(:service_catalog_client) { instance_double("ServiceCatalogClient") }
     let(:parameters) { "parameters" }
@@ -32,7 +34,7 @@ describe ServicePlan do
     it "creates a task with context information" do
       service_plan.order(parameters)
       expect(Task.last.context).to eq(
-        {:service_instance => {:source_id => 654, :source_ref => 321}}.with_indifferent_access
+        {:service_instance => {:source_id => source.id, :source_ref => 321}}.with_indifferent_access
       )
     end
 
