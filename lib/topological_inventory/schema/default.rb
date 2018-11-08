@@ -12,6 +12,8 @@ module TopologicalInventory
         add_collection(:service_instances)
         add_collection(:service_offerings)
         add_collection(:service_plans)
+        add_collection(:source_regions)
+        add_collection(:subscriptions)
       end
 
       def targeted?

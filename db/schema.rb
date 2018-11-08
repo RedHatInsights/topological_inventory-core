@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181102145252) do
+ActiveRecord::Schema.define(version: 20181108113645) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -225,9 +225,11 @@ ActiveRecord::Schema.define(version: 20181102145252) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "archived_on"
+    t.bigint "tenant_id"
     t.index ["archived_on"], name: "index_source_regions_on_archived_on"
     t.index ["source_id", "source_ref"], name: "index_source_regions_on_source_id_and_source_ref", unique: true
     t.index ["source_id"], name: "index_source_regions_on_source_id"
+    t.index ["tenant_id"], name: "index_source_regions_on_tenant_id"
   end
 
   create_table "source_types", force: :cascade do |t|
@@ -256,9 +258,11 @@ ActiveRecord::Schema.define(version: 20181102145252) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "archived_on"
+    t.bigint "tenant_id"
     t.index ["archived_on"], name: "index_subscriptions_on_archived_on"
     t.index ["source_id", "source_ref"], name: "index_subscriptions_on_source_id_and_source_ref", unique: true
     t.index ["source_id"], name: "index_subscriptions_on_source_id"
+    t.index ["tenant_id"], name: "index_subscriptions_on_tenant_id"
   end
 
   create_table "taggings", id: :serial, force: :cascade do |t|
@@ -336,7 +340,9 @@ ActiveRecord::Schema.define(version: 20181102145252) do
   add_foreign_key "service_plans", "subscriptions", on_delete: :cascade
   add_foreign_key "service_plans", "tenants", on_delete: :cascade
   add_foreign_key "source_regions", "sources", on_delete: :cascade
+  add_foreign_key "source_regions", "tenants", on_delete: :cascade
   add_foreign_key "sources", "source_types", on_delete: :cascade
   add_foreign_key "sources", "tenants", on_delete: :cascade
   add_foreign_key "subscriptions", "sources", on_delete: :cascade
+  add_foreign_key "subscriptions", "tenants", on_delete: :cascade
 end
