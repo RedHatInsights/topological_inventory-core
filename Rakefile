@@ -25,8 +25,7 @@ require "yaml"
 load "active_record/railties/databases.rake"
 
 namespace :db do
-  task :environment do
-    ENV["RAILS_ENV"] ||= "development"
+  task :environment => :prepare_active_record do
     ActiveRecord::Base.establish_connection(ENV["RAILS_ENV"].to_sym)
   end
 
