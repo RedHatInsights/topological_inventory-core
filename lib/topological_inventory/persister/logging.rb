@@ -5,7 +5,7 @@ module TopologicalInventory
     end
 
     def self.logger
-      @logger ||= Logger.new(STDOUT, :level => Logger::ERROR)
+      @logger ||= Logger.new(STDOUT, :level => Logger::INFO)
     end
 
     module Logging
