@@ -2,7 +2,7 @@ require "topological_inventory/persister/worker"
 
 describe TopologicalInventory::Persister::Worker do
   let(:tenant) { Tenant.find_or_create_by!(:name => "default") }
-  let(:source_type) { SourceType.find_or_create_by(:name => "openshift") }
+  let(:source_type) { SourceType.find_or_create_by(:name => "openshift", :product_name => "OpenShift", :vendor => "Red Hat") }
   let(:client) { double(:client) }
   let(:test_inventory_dir) { Pathname.new(__dir__).join("test_inventory") }
   let!(:source) do
