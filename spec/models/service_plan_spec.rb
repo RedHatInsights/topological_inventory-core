@@ -33,9 +33,7 @@ describe ServicePlan do
 
     it "creates a task with context information" do
       service_plan.order(parameters)
-      expect(Task.last.context).to eq(
-        {:service_instance => {:source_id => source.id, :source_ref => 321}}.with_indifferent_access
-      )
+      expect(Task.last.context).to eq({"service_instance" => {"source_id" => source.id, "source_ref" => 321}})
     end
 
     it "returns the task id" do

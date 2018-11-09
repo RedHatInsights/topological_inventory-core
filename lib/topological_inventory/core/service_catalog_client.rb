@@ -13,7 +13,7 @@ module TopologicalInventory
         payload = ServicePlanClient.new.build_payload(
           plan_name, service_offering_name, catalog_parameters(additional_parameters)
         )
-        response = make_request(method: :post, url: order_service_plan_url, payload: payload)
+        response = make_request(:post, order_service_plan_url, payload)
         JSON.parse(response.body)
       end
 
@@ -27,7 +27,7 @@ module TopologicalInventory
         URI.join(base_url, "namespaces/default/serviceinstances").to_s
       end
 
-      def make_request(method:, url:, headers: generic_headers, payload: nil)
+      def make_request(method, url, payload, headers = generic_headers)
         request_options = {
           :method     => method,
           :url        => url,
@@ -35,8 +35,6 @@ module TopologicalInventory
           :verify_ssl => @source.default_endpoint.verify_ssl,
           :payload    => payload
         }
-
-        request_options[:payload] = payload if payload.present?
 
         RestClient::Request.new(request_options).execute
       end
