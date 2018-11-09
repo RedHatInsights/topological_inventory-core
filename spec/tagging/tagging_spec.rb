@@ -1,6 +1,7 @@
 describe "ActsAsTaggableOn" do
   let(:tenant) { Tenant.find_or_create_by!(:name => "default") }
-  let(:source) { Source.find_or_create_by!(:name => "OCP", :uid => "9a874712-9a55-49ab-a46a-c823acc35503", :tenant => tenant, :source_type => SourceType.find_or_create_by!(:name => "openshift")) }
+  let(:source) { Source.find_or_create_by!(:name => "OCP", :uid => "9a874712-9a55-49ab-a46a-c823acc35503", :tenant => tenant, :source_type => source_type) }
+  let(:source_type) { SourceType.find_or_create_by!(:name => "openshift", :product_name => "OpenShift", :vendor => "Red Hat") }
 
   context "common tagging operations" do
     it "is taggable" do
