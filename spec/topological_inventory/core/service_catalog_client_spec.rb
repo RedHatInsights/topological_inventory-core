@@ -21,7 +21,6 @@ module TopologicalInventory
           }
         end
         let(:dummy_response) { {"metadata" => {"selfLink" => "foo"}} }
-        let(:dummy_rest_client) { double }
         let(:headers) do
           {
             "Authorization" => "Bearer token",
@@ -39,8 +38,9 @@ module TopologicalInventory
             "plan_name", "service_offering_name", {"foo" => "bar", "baz" => "qux"}
           ).and_return("payload")
 
-          allow(RestClient::Request).to receive(:new).with(post_request_options).and_return(dummy_rest_client)
-          allow(dummy_rest_client).to receive(:execute).and_return(double(:body => dummy_response.to_json))
+          stub_request(:post, url).with(:body => "payload", :headers => headers).
+            to_return(:body => dummy_response.to_json)
+
           allow(endpoint).to receive(:authentications).and_return([auth])
         end
 

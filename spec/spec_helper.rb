@@ -9,6 +9,7 @@ raise "Specs must be run in test environment" if ENV["RAILS_ENV"] != "test"
 require "active_record/railtie"
 require "action_controller/railtie"
 require 'rspec/rails'
+require "webmock/rspec"
 
 require "topological_inventory/persister/ar_helper"
 TopologicalInventory::Persister::ArHelper.load_environment!
