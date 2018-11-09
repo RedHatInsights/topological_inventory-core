@@ -58,7 +58,7 @@ module TopologicalInventory
             :data => [
               ContainerGroup.new(
                 :source_ref        => "a40e2927-77b8-487e-92bb-63f32989b015",
-                :name              => "pod",
+                :name              => "kafka-1-hqtjh",
                 :resource_version  => "1432020",
                 :container_project => InventoryObjectLazy.new(
                   :inventory_collection_name => :container_projects,
@@ -72,6 +72,35 @@ module TopologicalInventory
                 )
               )
             ]
+          ),
+          InventoryCollection.new(
+            :name => :containers,
+            :data => [
+              Container.new(
+                :container_group => InventoryObjectLazy.new(
+                  :inventory_collection_name => :container_groups,
+                  :reference                 => {:source_ref => "a40e2927-77b8-487e-92bb-63f32989b015"},
+                  :ref                       => :manager_ref
+                ),
+                :name => "kafka",
+                :cpu_limit => nil,
+                :cpu_request => 0.1,
+                :memory_limit => nil,
+                :memory_request => 536870912,
+              ),
+              Container.new(
+                :container_group => InventoryObjectLazy.new(
+                  :inventory_collection_name => :container_groups,
+                  :reference                 => {:source_ref => "a40e2927-77b8-487e-92bb-63f32989b015"},
+                  :ref                       => :manager_ref
+                ),
+                :name => "zookeeper",
+                :cpu_limit => nil,
+                :cpu_request => nil,
+                :memory_limit => nil,
+                :memory_request => nil,
+              ),
+            ],
           ),
         ]
       )

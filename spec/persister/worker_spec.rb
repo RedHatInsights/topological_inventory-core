@@ -51,6 +51,7 @@ describe TopologicalInventory::Persister::Worker do
         expect(source.container_projects.count).to eq(1)
         expect(source.container_nodes.count).to    eq(1)
         expect(source.container_groups.count).to   eq(1)
+        expect(source.containers.count).to         eq(2)
       end
 
       it "saves the relationships between objects" do
@@ -60,6 +61,7 @@ describe TopologicalInventory::Persister::Worker do
 
         expect(container_group.container_project).to eq(container_project)
         expect(container_group.container_node).to eq(container_node)
+        expect(container_group.containers.count).to eq(2)
       end
     end
   end
