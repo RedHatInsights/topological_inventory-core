@@ -132,12 +132,9 @@ ActiveRecord::Schema.define(version: 20181108113645) do
     t.datetime "resource_timestamps_max"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.datetime "source_created_at"
-    t.datetime "source_deleted_at"
     t.datetime "archived_on"
     t.index ["archived_on"], name: "index_containers_on_archived_on"
     t.index ["container_group_id", "name"], name: "index_containers_on_container_group_id_and_name", unique: true
-    t.index ["container_group_id"], name: "index_containers_on_container_group_id"
     t.index ["tenant_id"], name: "index_containers_on_tenant_id"
   end
 

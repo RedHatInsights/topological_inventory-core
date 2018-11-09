@@ -2,7 +2,7 @@ class AddContainers < ActiveRecord::Migration[5.1]
   def change
     create_table :containers do |t|
       t.references :tenant,          :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
-      t.references :container_group, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
+      t.references :container_group, :type => :bigint, :index => false, :null => false, :foreign_key => {:on_delete => :cascade}
 
       t.string :name
 
@@ -17,8 +17,6 @@ class AddContainers < ActiveRecord::Migration[5.1]
       t.datetime :resource_timestamps_max
 
       t.timestamps
-      t.datetime :source_created_at
-      t.datetime :source_deleted_at
       t.datetime :archived_on, :index => true
       t.index [:container_group_id, :name], :unique => true
     end
