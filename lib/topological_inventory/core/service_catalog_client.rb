@@ -19,12 +19,8 @@ module TopologicalInventory
 
       private
 
-      def base_url
-        URI.join(@source.default_endpoint.host, "apis/servicecatalog.k8s.io/v1beta1/").to_s
-      end
-
       def order_service_plan_url
-        URI.join(base_url, "namespaces/default/serviceinstances").to_s
+        URI.join(@source.default_endpoint.base_url_path, "apis/servicecatalog.k8s.io/v1beta1/namespaces/default/serviceinstances").to_s
       end
 
       def make_request(method, url, payload, headers = generic_headers)
@@ -32,7 +28,7 @@ module TopologicalInventory
           :method     => method,
           :url        => url,
           :headers    => headers,
-          :verify_ssl => @source.default_endpoint.verify_ssl,
+          :verify_ssl => verify_ssl_mode,
           :payload    => payload
         }
 
@@ -45,6 +41,10 @@ module TopologicalInventory
           "Content-Type"  => "application/json",
           "Accept"        => "application/json"
         }
+      end
+
+      def verify_ssl_mode
+        @source.default_endpoint.verify_ssl ? OpenSSL::SSL::VERIFY_PEER : OpenSSL::SSL::VERIFY_NONE
       end
 
       def catalog_parameters(parameters)
