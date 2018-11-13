@@ -29,5 +29,6 @@ class Source < ApplicationRecord
   has_many :subscriptions
 
   # Infra/Cloud
+  has_many :orchestration_stacks
   has_many :vms
 end
