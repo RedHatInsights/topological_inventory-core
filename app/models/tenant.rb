@@ -12,6 +12,7 @@ class Tenant < ActiveRecord::Base
   has_many :sources
   has_many :subscriptions
   has_many :tasks
+  has_many :vms
 
   acts_as_taggable
 end

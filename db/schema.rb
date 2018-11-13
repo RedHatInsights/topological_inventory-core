@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181113145803) do
+ActiveRecord::Schema.define(version: 20181113182615) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -331,6 +331,29 @@ ActiveRecord::Schema.define(version: 20181113145803) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "vms", force: :cascade do |t|
+    t.bigint "tenant_id", null: false
+    t.bigint "source_id", null: false
+    t.string "source_ref"
+    t.string "uuid"
+    t.string "vendor"
+    t.string "name"
+    t.string "hostname"
+    t.string "description"
+    t.string "power_state"
+    t.bigint "cpus"
+    t.bigint "memory"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "archived_at"
+    t.datetime "source_created_at"
+    t.datetime "source_deleted_at"
+    t.index ["archived_at"], name: "index_vms_on_archived_at"
+    t.index ["source_id", "source_ref"], name: "index_vms_on_source_id_and_source_ref", unique: true
+    t.index ["source_id"], name: "index_vms_on_source_id"
+    t.index ["tenant_id"], name: "index_vms_on_tenant_id"
+  end
+
   add_foreign_key "authentications", "tenants", on_delete: :cascade
   add_foreign_key "container_groups", "container_nodes", on_delete: :cascade
   add_foreign_key "container_groups", "container_projects", on_delete: :cascade
@@ -368,4 +391,6 @@ ActiveRecord::Schema.define(version: 20181113145803) do
   add_foreign_key "sources", "tenants", on_delete: :cascade
   add_foreign_key "subscriptions", "sources", on_delete: :cascade
   add_foreign_key "subscriptions", "tenants", on_delete: :cascade
+  add_foreign_key "vms", "sources", on_delete: :cascade
+  add_foreign_key "vms", "tenants", on_delete: :cascade
 end

@@ -27,4 +27,7 @@ class Source < ApplicationRecord
   has_many :service_plans
   has_many :source_regions
   has_many :subscriptions
+
+  # Infra/Cloud
+  has_many :vms
 end
