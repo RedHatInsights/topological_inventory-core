@@ -167,10 +167,10 @@ ActiveRecord::Schema.define(version: 20181113190507) do
     t.datetime "resource_timestamps_max"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.datetime "archived_at"
+    t.datetime "archived_on"
     t.datetime "source_created_at"
     t.datetime "source_deleted_at"
-    t.index ["archived_at"], name: "index_orchestration_stacks_on_archived_at"
+    t.index ["archived_on"], name: "index_orchestration_stacks_on_archived_on"
     t.index ["source_id", "source_ref"], name: "index_orchestration_stacks_on_source_id_and_source_ref", unique: true
     t.index ["source_id"], name: "index_orchestration_stacks_on_source_id"
     t.index ["tenant_id"], name: "index_orchestration_stacks_on_tenant_id"
@@ -368,11 +368,11 @@ ActiveRecord::Schema.define(version: 20181113190507) do
     t.datetime "resource_timestamps_max"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.datetime "archived_at"
+    t.datetime "archived_on"
     t.datetime "source_created_at"
     t.datetime "source_deleted_at"
     t.bigint "orchestration_stack_id"
-    t.index ["archived_at"], name: "index_vms_on_archived_at"
+    t.index ["archived_on"], name: "index_vms_on_archived_on"
     t.index ["orchestration_stack_id"], name: "index_vms_on_orchestration_stack_id"
     t.index ["source_id", "source_ref"], name: "index_vms_on_source_id_and_source_ref", unique: true
     t.index ["source_id"], name: "index_vms_on_source_id"

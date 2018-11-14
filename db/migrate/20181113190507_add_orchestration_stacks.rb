@@ -13,12 +13,12 @@ class AddOrchestrationStacks < ActiveRecord::Migration[5.1]
       t.datetime :resource_timestamps_max
 
       t.timestamps
-      t.datetime :archived_at
+      t.datetime :archived_on
       t.datetime :source_created_at
       t.datetime :source_deleted_at
 
       t.index [:source_id, :source_ref], :unique => true
-      t.index :archived_at
+      t.index :archived_on
     end
 
     add_reference :vms, :orchestration_stack, :index => true, :foreign_key => {:on_delete => :nullify}
