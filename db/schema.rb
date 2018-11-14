@@ -162,6 +162,9 @@ ActiveRecord::Schema.define(version: 20181113190507) do
     t.string "source_ref"
     t.string "name"
     t.string "description"
+    t.datetime "resource_timestamp"
+    t.jsonb "resource_timestamps", default: {}
+    t.datetime "resource_timestamps_max"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "archived_at"
@@ -360,6 +363,9 @@ ActiveRecord::Schema.define(version: 20181113190507) do
     t.string "power_state"
     t.bigint "cpus"
     t.bigint "memory"
+    t.datetime "resource_timestamp"
+    t.jsonb "resource_timestamps", default: {}
+    t.datetime "resource_timestamps_max"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "archived_at"

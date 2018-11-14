@@ -8,6 +8,10 @@ class AddOrchestrationStacks < ActiveRecord::Migration[5.1]
       t.string :name
       t.string :description
 
+      t.datetime :resource_timestamp
+      t.jsonb    :resource_timestamps, default: {}
+      t.datetime :resource_timestamps_max
+
       t.timestamps
       t.datetime :archived_at
       t.datetime :source_created_at
