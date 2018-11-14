@@ -377,6 +377,7 @@ ActiveRecord::Schema.define(version: 20181113190507) do
     t.index ["source_id", "source_ref"], name: "index_vms_on_source_id_and_source_ref", unique: true
     t.index ["source_id"], name: "index_vms_on_source_id"
     t.index ["tenant_id"], name: "index_vms_on_tenant_id"
+    t.index ["uuid"], name: "index_vms_on_uuid"
   end
 
   add_foreign_key "authentications", "tenants", on_delete: :cascade

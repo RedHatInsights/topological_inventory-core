@@ -26,6 +26,7 @@ class AddVmsTable < ActiveRecord::Migration[5.1]
 
       t.index [:source_id, :source_ref], :unique => true
       t.index :archived_on
+      t.index :uuid
     end
   end
 end
