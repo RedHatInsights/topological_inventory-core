@@ -3,7 +3,9 @@ class ApplicationRecord < ActiveRecord::Base
 
   self.abstract_class = true
 
-  def as_json(options = nil)
-    super.tap { |h| h["id"] = h["id"].to_s }
+  def as_json(options = {})
+    options[:except] ||= []
+    options[:except] << :tag_list
+    super
   end
 end
