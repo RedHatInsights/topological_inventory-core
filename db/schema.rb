@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181113145803) do
+ActiveRecord::Schema.define(version: 20181113190507) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -154,6 +154,26 @@ ActiveRecord::Schema.define(version: 20181113145803) do
     t.boolean "verify_ssl"
     t.text "certificate_authority"
     t.index ["source_id"], name: "index_endpoints_on_source_id"
+  end
+
+  create_table "orchestration_stacks", force: :cascade do |t|
+    t.bigint "tenant_id", null: false
+    t.bigint "source_id", null: false
+    t.string "source_ref"
+    t.string "name"
+    t.string "description"
+    t.datetime "resource_timestamp"
+    t.jsonb "resource_timestamps", default: {}
+    t.datetime "resource_timestamps_max"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "archived_on"
+    t.datetime "source_created_at"
+    t.datetime "source_deleted_at"
+    t.index ["archived_on"], name: "index_orchestration_stacks_on_archived_on"
+    t.index ["source_id", "source_ref"], name: "index_orchestration_stacks_on_source_id_and_source_ref", unique: true
+    t.index ["source_id"], name: "index_orchestration_stacks_on_source_id"
+    t.index ["tenant_id"], name: "index_orchestration_stacks_on_tenant_id"
   end
 
   create_table "service_instances", force: :cascade do |t|
@@ -331,6 +351,35 @@ ActiveRecord::Schema.define(version: 20181113145803) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "vms", force: :cascade do |t|
+    t.bigint "tenant_id", null: false
+    t.bigint "source_id", null: false
+    t.string "source_ref"
+    t.string "uid_ems"
+    t.string "name"
+    t.string "hostname"
+    t.string "description"
+    t.string "power_state"
+    t.bigint "cpus"
+    t.bigint "memory"
+    t.jsonb "extra"
+    t.datetime "resource_timestamp"
+    t.jsonb "resource_timestamps", default: {}
+    t.datetime "resource_timestamps_max"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "archived_on"
+    t.datetime "source_created_at"
+    t.datetime "source_deleted_at"
+    t.bigint "orchestration_stack_id"
+    t.index ["archived_on"], name: "index_vms_on_archived_on"
+    t.index ["orchestration_stack_id"], name: "index_vms_on_orchestration_stack_id"
+    t.index ["source_id", "source_ref"], name: "index_vms_on_source_id_and_source_ref", unique: true
+    t.index ["source_id"], name: "index_vms_on_source_id"
+    t.index ["tenant_id"], name: "index_vms_on_tenant_id"
+    t.index ["uid_ems"], name: "index_vms_on_uid_ems"
+  end
+
   add_foreign_key "authentications", "tenants", on_delete: :cascade
   add_foreign_key "container_groups", "container_nodes", on_delete: :cascade
   add_foreign_key "container_groups", "container_projects", on_delete: :cascade
@@ -347,6 +396,8 @@ ActiveRecord::Schema.define(version: 20181113145803) do
   add_foreign_key "containers", "tenants", on_delete: :cascade
   add_foreign_key "endpoints", "sources", on_delete: :cascade
   add_foreign_key "endpoints", "tenants", on_delete: :cascade
+  add_foreign_key "orchestration_stacks", "sources", on_delete: :cascade
+  add_foreign_key "orchestration_stacks", "tenants", on_delete: :cascade
   add_foreign_key "service_instances", "service_offerings", on_delete: :nullify
   add_foreign_key "service_instances", "service_plans", on_delete: :nullify
   add_foreign_key "service_instances", "source_regions", on_delete: :cascade
@@ -368,4 +419,7 @@ ActiveRecord::Schema.define(version: 20181113145803) do
   add_foreign_key "sources", "tenants", on_delete: :cascade
   add_foreign_key "subscriptions", "sources", on_delete: :cascade
   add_foreign_key "subscriptions", "tenants", on_delete: :cascade
+  add_foreign_key "vms", "orchestration_stacks", on_delete: :nullify
+  add_foreign_key "vms", "sources", on_delete: :cascade
+  add_foreign_key "vms", "tenants", on_delete: :cascade
 end
