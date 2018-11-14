@@ -13,6 +13,8 @@ class AddVmsTable < ActiveRecord::Migration[5.1]
       t.bigint :cpus
       t.bigint :memory
 
+      t.jsonb :extra
+
       t.datetime :resource_timestamp
       t.jsonb    :resource_timestamps, default: {}
       t.datetime :resource_timestamps_max

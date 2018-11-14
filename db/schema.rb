@@ -362,6 +362,7 @@ ActiveRecord::Schema.define(version: 20181113190507) do
     t.string "power_state"
     t.bigint "cpus"
     t.bigint "memory"
+    t.jsonb "extra"
     t.datetime "resource_timestamp"
     t.jsonb "resource_timestamps", default: {}
     t.datetime "resource_timestamps_max"
