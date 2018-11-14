@@ -6,7 +6,6 @@ class AddVmsTable < ActiveRecord::Migration[5.1]
 
       t.string :source_ref
       t.string :uuid
-      t.string :vendor
       t.string :name
       t.string :hostname
       t.string :description
