@@ -355,7 +355,7 @@ ActiveRecord::Schema.define(version: 20181113190507) do
     t.bigint "tenant_id", null: false
     t.bigint "source_id", null: false
     t.string "source_ref"
-    t.string "uuid"
+    t.string "uid_ems"
     t.string "name"
     t.string "hostname"
     t.string "description"
@@ -377,7 +377,7 @@ ActiveRecord::Schema.define(version: 20181113190507) do
     t.index ["source_id", "source_ref"], name: "index_vms_on_source_id_and_source_ref", unique: true
     t.index ["source_id"], name: "index_vms_on_source_id"
     t.index ["tenant_id"], name: "index_vms_on_tenant_id"
-    t.index ["uuid"], name: "index_vms_on_uuid"
+    t.index ["uid_ems"], name: "index_vms_on_uid_ems"
   end
 
   add_foreign_key "authentications", "tenants", on_delete: :cascade

@@ -5,7 +5,7 @@ class AddVmsTable < ActiveRecord::Migration[5.1]
       t.references :source, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
 
       t.string :source_ref
-      t.string :uuid
+      t.string :uid_ems
       t.string :name
       t.string :hostname
       t.string :description
@@ -26,7 +26,7 @@ class AddVmsTable < ActiveRecord::Migration[5.1]
 
       t.index [:source_id, :source_ref], :unique => true
       t.index :archived_on
-      t.index :uuid
+      t.index :uid_ems
     end
   end
 end
