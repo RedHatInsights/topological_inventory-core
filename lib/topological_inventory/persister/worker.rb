@@ -22,7 +22,18 @@ module TopologicalInventory
 
         # Wait for messages to be processed
         client.subscribe_messages(queue_opts) do |messages|
-          messages.each { |msg| process_payload(msg.payload) }
+          messages.each do |msg|
+            processed = process_payload(msg.payload)
+
+            if processed == false
+              logger.info("Message not processed, re-queuing...")
+              client.publish_message(
+                :service => "topological_inventory-persister",
+                :message => "save_inventory",
+                :payload => msg.payload,
+              )
+            end
+          end
         end
       ensure
         client&.close
@@ -46,7 +57,7 @@ module TopologicalInventory
         raise "Invalid schema #{schema_name}" if schema_klass.nil?
 
         persister = schema_klass.from_hash(payload, source)
-        InventoryRefresh::SaveInventory.save_inventory(source, persister.inventory_collections)
+        persister.persist!
       rescue => err
         logger.error(err)
       end
