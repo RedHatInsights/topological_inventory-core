@@ -13,6 +13,9 @@ class Source < ApplicationRecord
     default || endpoints.build(:default => true, :tenant => tenant)
   end
 
+  # Refresh tracker
+  has_many :refresh_states
+  has_many :refresh_state_parts, :through => :refresh_states
 
   # Container Inventory Objects
   has_many :container_groups
