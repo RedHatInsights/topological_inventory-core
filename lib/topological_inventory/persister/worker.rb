@@ -58,8 +58,10 @@ module TopologicalInventory
 
         persister = schema_klass.from_hash(payload, source)
         persister.persist!
-      rescue => err
-        logger.error(err)
+      rescue => e
+        logger.error(e)
+        logger.error(e.backtrace)
+        nil
       end
 
       def schema_klass_name(name)
