@@ -21,11 +21,11 @@ module TopologicalInventory
         logger.info("Topological Inventory Persister started...")
 
         # Wait for messages to be processed
-        client.subscribe_messages(queue_opts) do |messages|
+        client.subscribe_messages(queue_opts.merge(:max_bytes => 500000)) do |messages|
           messages.each do |msg|
-            processed = process_payload(msg.payload)
+            requeue = process_payload(msg.payload)
 
-            if processed == false
+            if requeue
               logger.info("Message not processed, re-queuing...")
               client.publish_message(
                 :service => "topological_inventory-persister",
