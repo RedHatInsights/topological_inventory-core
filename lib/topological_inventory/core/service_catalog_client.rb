@@ -10,9 +10,7 @@ module TopologicalInventory
 
       # TODO? Move this to a module in the API repo
       def order_service_plan(plan_name, service_offering_name, additional_parameters)
-        payload = ServicePlanClient.new.build_payload(
-          plan_name, service_offering_name, catalog_parameters(additional_parameters)
-        )
+        payload = ServicePlanClient.new.build_payload(plan_name, service_offering_name, additional_parameters)
         response = make_request(:post, order_service_plan_url, payload)
         JSON.parse(response.body)
       end
@@ -45,12 +43,6 @@ module TopologicalInventory
 
       def verify_ssl_mode
         @source.default_endpoint.verify_ssl ? OpenSSL::SSL::VERIFY_PEER : OpenSSL::SSL::VERIFY_NONE
-      end
-
-      def catalog_parameters(parameters)
-        parameters.each_with_object({}) do |item, hash|
-          hash[item['name']] = item['value']
-        end
       end
     end
   end

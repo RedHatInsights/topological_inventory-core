@@ -14,7 +14,7 @@ module TopologicalInventory
             "clusterServicePlanExternalName"  => service_plan_name,
             "parameters"                      => catalog_parameters
           }
-        }
+        }.to_json
       end
     end
   end
