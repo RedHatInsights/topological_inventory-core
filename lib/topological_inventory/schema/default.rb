@@ -10,11 +10,13 @@ module TopologicalInventory
         add_default_collection(:container_nodes)    { |b| add_secondary_refs_name(b) }
         add_default_collection(:container_projects) { |b| add_secondary_refs_name(b) }
         add_default_collection(:container_templates)
+        add_default_collection(:orchestration_stacks)
         add_default_collection(:service_instances)
         add_default_collection(:service_offerings)
         add_default_collection(:service_plans)
         add_default_collection(:source_regions)
         add_default_collection(:subscriptions)
+        add_default_collection(:vms)
       end
 
       def targeted?
