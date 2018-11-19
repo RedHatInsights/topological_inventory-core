@@ -106,6 +106,27 @@ module TopologicalInventory
       )
 
       File.write(File.join(test_inventory_dir, "relationships_inventory.json"), JSON.dump(relationships_inventory.to_hash))
+
+      container_node_xref = container_node.dup
+      container_node_xref.lives_on = InventoryObjectLazy.new(
+        :inventory_collection_name => :cross_link_vm,
+        :reference                 => {:uid_ems => "6fd5b322-e333-4bb7-bf70-b74bdf13d4c6"},
+        :ref                       => :by_uid_ems,
+      )
+
+      relationships_inventory = Inventory.new(
+        :name        => "OCP",
+        :source      => "9a874712-9a55-49ab-a46a-c823acc35503",
+        :schema      => Schema.new(:name => "Default"),
+        :collections => [
+          InventoryCollection.new(
+            :name => :container_nodes,
+            :data => [container_node_xref],
+          ),
+        ]
+      )
+
+      File.write(File.join(test_inventory_dir, "cross_ref_inventory.json"), JSON.dump(relationships_inventory.to_hash))
     end
   end
 end

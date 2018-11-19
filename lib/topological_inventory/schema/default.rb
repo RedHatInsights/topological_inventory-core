@@ -17,6 +17,7 @@ module TopologicalInventory
         add_default_collection(:source_regions)
         add_default_collection(:subscriptions)
         add_default_collection(:vms)
+        add_cross_link_vm
       end
 
       def targeted?
@@ -53,10 +54,25 @@ module TopologicalInventory
         builder.add_properties(:secondary_refs => {:by_name => [:name]})
       end
 
+      def add_secondary_refs_uid_ems(builder)
+        builder.add_properties(:secondary_refs => {:by_uid_ems => [:uid_ems]})
+      end
+
       def add_containers
         add_collection(:containers) do |builder|
           add_default_properties(builder, manager_ref: [:container_group, :name])
           builder.add_default_values(:tenant_id => ->(persister) { persister.manager.tenant_id })
+        end
+      end
+
+      def add_cross_link_vm
+        add_collection(:cross_link_vm) do |builder|
+          builder.add_properties(
+            :arel           => Vm,
+            :model_class    => Vm,
+            :manager_ref    => [:source_ref],
+            :secondary_refs => {:by_uid_ems => [:uid_ems]},
+          )
         end
       end
     end
