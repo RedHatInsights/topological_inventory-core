@@ -2,15 +2,23 @@ require "topological_inventory/persister/worker"
 
 describe TopologicalInventory::Persister::Worker do
   let(:tenant) { Tenant.find_or_create_by!(:name => "default") }
-  let(:source_type) { SourceType.find_or_create_by(:name => "openshift", :product_name => "OpenShift", :vendor => "Red Hat") }
+  let(:vm_uuid) { "6fd5b322-e333-4bb7-bf70-b74bdf13d4c6" }
+  let!(:vm) { Vm.find_or_create_by!(:tenant => tenant, :source_ref => "vm-1", :uid_ems => vm_uuid, :source => source_aws) }
+  let(:ocp_source_type) { SourceType.find_or_create_by(:name => "openshift", :product_name => "OpenShift", :vendor => "Red Hat") }
+  let(:aws_source_type) { SourceType.find_or_create_by(:name => "amazon", :product_name => "Amazon Web Services", :vendor => "Amazon") }
   let(:client) { double(:client) }
   let(:test_inventory_dir) { Pathname.new(__dir__).join("test_inventory") }
   let!(:source) do
     Source.find_or_create_by!(
       :tenant      => tenant,
-      :source_type => source_type,
+      :source_type => ocp_source_type,
       :name        => "OCP",
       :uid         => "9a874712-9a55-49ab-a46a-c823acc35503",
+    )
+  end
+  let(:source_aws) do
+    Source.find_or_create_by!(
+      :tenant => tenant, :source_type => aws_source_type, :name => "AWS", :uid => "189d944b-93c3-4aea-87f8-846a8e7573de"
     )
   end
 
@@ -62,6 +70,15 @@ describe TopologicalInventory::Persister::Worker do
         expect(container_group.container_project).to eq(container_project)
         expect(container_group.container_node).to eq(container_node)
         expect(container_group.containers.count).to eq(2)
+      end
+    end
+
+    context "with cross reference" do
+      let(:inventory) { JSON.load(File.read(test_inventory_dir.join("cross_ref_inventory.json"))) }
+
+      it "links the container node with the vm" do
+        container_node = source.container_nodes.first
+        expect(container_node.lives_on).not_to be_nil
       end
     end
   end
