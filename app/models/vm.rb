@@ -5,7 +5,7 @@ class Vm < ApplicationRecord
 
   belongs_to :tenant
   belongs_to :source
-  belongs_to :orchestration_stack
+  belongs_to :orchestration_stack, :optional => true
 
   acts_as_taggable
 end
