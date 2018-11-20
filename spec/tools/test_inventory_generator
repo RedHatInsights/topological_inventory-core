@@ -109,9 +109,9 @@ module TopologicalInventory
 
       container_node_xref = container_node.dup
       container_node_xref.lives_on = InventoryObjectLazy.new(
-        :inventory_collection_name => :cross_link_vm,
+        :inventory_collection_name => :cross_link_vms,
         :reference                 => {:uid_ems => "6fd5b322-e333-4bb7-bf70-b74bdf13d4c6"},
-        :ref                       => :by_uid_ems,
+        :ref                       => :manager_ref,
       )
 
       relationships_inventory = Inventory.new(
