@@ -65,6 +65,7 @@ module TopologicalInventory
         add_collection(:cross_link_vms) do |builder|
           builder.add_properties(
             :arel        => Vm.where(:tenant => manager.tenant),
+            :association => nil,
             :model_class => Vm,
             :name        => :cross_link_vms,
             :manager_ref => [:uid_ems],
