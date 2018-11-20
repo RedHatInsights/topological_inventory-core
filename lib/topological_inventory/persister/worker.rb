@@ -21,7 +21,9 @@ module TopologicalInventory
         logger.info("Topological Inventory Persister started...")
 
         # Wait for messages to be processed
-        client.subscribe_messages(queue_opts.merge(:max_bytes => 500000)) do |messages|
+        # TODO(lsmola) do: client.subscribe_messages(queue_opts.merge(:max_bytes => 500000))
+        # Once this is merged and released: https://github.com/ManageIQ/manageiq-messaging/pull/35
+        client.subscribe_messages do |messages|
           messages.each do |msg|
             requeue = process_payload(msg.payload)
 
