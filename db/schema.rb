@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181114115416) do
+ActiveRecord::Schema.define(version: 20181119173228) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -71,12 +71,12 @@ ActiveRecord::Schema.define(version: 20181114115416) do
     t.datetime "resource_timestamp"
     t.jsonb "resource_timestamps", default: {}
     t.datetime "resource_timestamps_max"
+    t.datetime "last_seen_at"
     t.string "lives_on_type"
     t.bigint "lives_on_id"
-    t.datetime "last_seen_at"
-    t.index ["lives_on_type", "lives_on_id"], name: "index_container_nodes_on_lives_on_type_and_lives_on_id"
     t.index ["archived_on"], name: "index_container_nodes_on_archived_on"
     t.index ["last_seen_at"], name: "index_container_nodes_on_last_seen_at"
+    t.index ["lives_on_type", "lives_on_id"], name: "index_container_nodes_on_lives_on_type_and_lives_on_id"
     t.index ["name"], name: "index_container_nodes_on_name"
     t.index ["source_deleted_at"], name: "index_container_nodes_on_source_deleted_at"
     t.index ["source_id", "source_ref"], name: "index_container_nodes_on_source_id_and_source_ref", unique: true
