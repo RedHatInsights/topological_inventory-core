@@ -191,12 +191,14 @@ ActiveRecord::Schema.define(version: 20181119173228) do
 
   create_table "refresh_state_parts", force: :cascade do |t|
     t.bigint "refresh_state_id", null: false
+    t.bigint "tenant_id", null: false
     t.uuid "uuid", null: false
     t.string "status"
     t.string "error_message"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["refresh_state_id", "uuid"], name: "index_refresh_state_parts_on_refresh_state_id_and_uuid", unique: true
+    t.index ["tenant_id"], name: "index_refresh_state_parts_on_tenant_id"
   end
 
   create_table "refresh_states", force: :cascade do |t|
@@ -449,6 +451,7 @@ ActiveRecord::Schema.define(version: 20181119173228) do
   add_foreign_key "orchestration_stacks", "sources", on_delete: :cascade
   add_foreign_key "orchestration_stacks", "tenants", on_delete: :cascade
   add_foreign_key "refresh_state_parts", "refresh_states", on_delete: :cascade
+  add_foreign_key "refresh_state_parts", "tenants", on_delete: :cascade
   add_foreign_key "refresh_states", "sources", on_delete: :cascade
   add_foreign_key "refresh_states", "tenants", on_delete: :cascade
   add_foreign_key "service_instances", "service_offerings", on_delete: :nullify
