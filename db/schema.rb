@@ -45,9 +45,11 @@ ActiveRecord::Schema.define(version: 20181119173228) do
     t.datetime "resource_timestamp"
     t.jsonb "resource_timestamps", default: {}
     t.datetime "resource_timestamps_max"
+    t.datetime "last_seen_at"
     t.index ["archived_on"], name: "index_container_groups_on_archived_on"
     t.index ["container_node_id"], name: "index_container_groups_on_container_node_id"
     t.index ["container_project_id"], name: "index_container_groups_on_container_project_id"
+    t.index ["last_seen_at"], name: "index_container_groups_on_last_seen_at"
     t.index ["source_deleted_at"], name: "index_container_groups_on_source_deleted_at"
     t.index ["source_id", "source_ref"], name: "index_container_groups_on_source_id_and_source_ref", unique: true
     t.index ["source_id"], name: "index_container_groups_on_source_id"
@@ -69,9 +71,11 @@ ActiveRecord::Schema.define(version: 20181119173228) do
     t.datetime "resource_timestamp"
     t.jsonb "resource_timestamps", default: {}
     t.datetime "resource_timestamps_max"
+    t.datetime "last_seen_at"
     t.string "lives_on_type"
     t.bigint "lives_on_id"
     t.index ["archived_on"], name: "index_container_nodes_on_archived_on"
+    t.index ["last_seen_at"], name: "index_container_nodes_on_last_seen_at"
     t.index ["lives_on_type", "lives_on_id"], name: "index_container_nodes_on_lives_on_type_and_lives_on_id"
     t.index ["name"], name: "index_container_nodes_on_name"
     t.index ["source_deleted_at"], name: "index_container_nodes_on_source_deleted_at"
@@ -95,7 +99,9 @@ ActiveRecord::Schema.define(version: 20181119173228) do
     t.datetime "resource_timestamp"
     t.jsonb "resource_timestamps", default: {}
     t.datetime "resource_timestamps_max"
+    t.datetime "last_seen_at"
     t.index ["archived_on"], name: "index_container_projects_on_archived_on"
+    t.index ["last_seen_at"], name: "index_container_projects_on_last_seen_at"
     t.index ["name"], name: "index_container_projects_on_name"
     t.index ["source_deleted_at"], name: "index_container_projects_on_source_deleted_at"
     t.index ["source_id", "source_ref"], name: "index_container_projects_on_source_id_and_source_ref", unique: true
@@ -117,8 +123,10 @@ ActiveRecord::Schema.define(version: 20181119173228) do
     t.datetime "resource_timestamp"
     t.jsonb "resource_timestamps", default: {}
     t.datetime "resource_timestamps_max"
+    t.datetime "last_seen_at"
     t.index ["archived_on"], name: "index_container_templates_on_archived_on"
     t.index ["container_project_id"], name: "index_container_templates_on_container_project_id"
+    t.index ["last_seen_at"], name: "index_container_templates_on_last_seen_at"
     t.index ["source_deleted_at"], name: "index_container_templates_on_source_deleted_at"
     t.index ["source_id", "source_ref"], name: "index_container_templates_on_source_id_and_source_ref", unique: true
     t.index ["source_id"], name: "index_container_templates_on_source_id"
@@ -173,10 +181,39 @@ ActiveRecord::Schema.define(version: 20181119173228) do
     t.datetime "archived_on"
     t.datetime "source_created_at"
     t.datetime "source_deleted_at"
+    t.datetime "last_seen_at"
     t.index ["archived_on"], name: "index_orchestration_stacks_on_archived_on"
+    t.index ["last_seen_at"], name: "index_orchestration_stacks_on_last_seen_at"
     t.index ["source_id", "source_ref"], name: "index_orchestration_stacks_on_source_id_and_source_ref", unique: true
     t.index ["source_id"], name: "index_orchestration_stacks_on_source_id"
     t.index ["tenant_id"], name: "index_orchestration_stacks_on_tenant_id"
+  end
+
+  create_table "refresh_state_parts", force: :cascade do |t|
+    t.bigint "refresh_state_id", null: false
+    t.bigint "tenant_id", null: false
+    t.uuid "uuid", null: false
+    t.string "status"
+    t.string "error_message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["refresh_state_id", "uuid"], name: "index_refresh_state_parts_on_refresh_state_id_and_uuid", unique: true
+    t.index ["tenant_id"], name: "index_refresh_state_parts_on_tenant_id"
+  end
+
+  create_table "refresh_states", force: :cascade do |t|
+    t.bigint "source_id", null: false
+    t.bigint "tenant_id", null: false
+    t.uuid "uuid", null: false
+    t.string "status"
+    t.integer "total_parts"
+    t.jsonb "sweep_scope"
+    t.integer "sweep_retry_count", default: 0
+    t.string "error_message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["source_id", "uuid"], name: "index_refresh_states_on_source_id_and_uuid", unique: true
+    t.index ["tenant_id"], name: "index_refresh_states_on_tenant_id"
   end
 
   create_table "service_instances", force: :cascade do |t|
@@ -197,7 +234,9 @@ ActiveRecord::Schema.define(version: 20181119173228) do
     t.datetime "resource_timestamps_max"
     t.bigint "source_region_id"
     t.bigint "subscription_id"
+    t.datetime "last_seen_at"
     t.index ["archived_on"], name: "index_service_instances_on_archived_on"
+    t.index ["last_seen_at"], name: "index_service_instances_on_last_seen_at"
     t.index ["service_offering_id"], name: "index_service_instances_on_service_offering_id"
     t.index ["service_plan_id"], name: "index_service_instances_on_service_plan_id"
     t.index ["source_deleted_at"], name: "index_service_instances_on_source_deleted_at"
@@ -224,7 +263,9 @@ ActiveRecord::Schema.define(version: 20181119173228) do
     t.datetime "resource_timestamps_max"
     t.bigint "source_region_id"
     t.bigint "subscription_id"
+    t.datetime "last_seen_at"
     t.index ["archived_on"], name: "index_service_offerings_on_archived_on"
+    t.index ["last_seen_at"], name: "index_service_offerings_on_last_seen_at"
     t.index ["source_deleted_at"], name: "index_service_offerings_on_source_deleted_at"
     t.index ["source_id", "source_ref"], name: "index_service_offerings_on_source_id_and_source_ref", unique: true
     t.index ["source_id"], name: "index_service_offerings_on_source_id"
@@ -252,7 +293,9 @@ ActiveRecord::Schema.define(version: 20181119173228) do
     t.datetime "resource_timestamps_max"
     t.bigint "source_region_id"
     t.bigint "subscription_id"
+    t.datetime "last_seen_at"
     t.index ["archived_on"], name: "index_service_plans_on_archived_on"
+    t.index ["last_seen_at"], name: "index_service_plans_on_last_seen_at"
     t.index ["service_offering_id"], name: "index_service_plans_on_service_offering_id"
     t.index ["source_deleted_at"], name: "index_service_plans_on_source_deleted_at"
     t.index ["source_id", "source_ref"], name: "index_service_plans_on_source_id_and_source_ref", unique: true
@@ -270,7 +313,9 @@ ActiveRecord::Schema.define(version: 20181119173228) do
     t.datetime "updated_at", null: false
     t.datetime "archived_on"
     t.bigint "tenant_id", null: false
+    t.datetime "last_seen_at"
     t.index ["archived_on"], name: "index_source_regions_on_archived_on"
+    t.index ["last_seen_at"], name: "index_source_regions_on_last_seen_at"
     t.index ["source_id", "source_ref"], name: "index_source_regions_on_source_id_and_source_ref", unique: true
     t.index ["source_id"], name: "index_source_regions_on_source_id"
     t.index ["tenant_id"], name: "index_source_regions_on_tenant_id"
@@ -303,7 +348,9 @@ ActiveRecord::Schema.define(version: 20181119173228) do
     t.datetime "updated_at", null: false
     t.datetime "archived_on"
     t.bigint "tenant_id", null: false
+    t.datetime "last_seen_at"
     t.index ["archived_on"], name: "index_subscriptions_on_archived_on"
+    t.index ["last_seen_at"], name: "index_subscriptions_on_last_seen_at"
     t.index ["source_id", "source_ref"], name: "index_subscriptions_on_source_id_and_source_ref", unique: true
     t.index ["source_id"], name: "index_subscriptions_on_source_id"
     t.index ["tenant_id"], name: "index_subscriptions_on_tenant_id"
@@ -375,7 +422,9 @@ ActiveRecord::Schema.define(version: 20181119173228) do
     t.datetime "source_created_at"
     t.datetime "source_deleted_at"
     t.bigint "orchestration_stack_id"
+    t.datetime "last_seen_at"
     t.index ["archived_on"], name: "index_vms_on_archived_on"
+    t.index ["last_seen_at"], name: "index_vms_on_last_seen_at"
     t.index ["orchestration_stack_id"], name: "index_vms_on_orchestration_stack_id"
     t.index ["source_id", "source_ref"], name: "index_vms_on_source_id_and_source_ref", unique: true
     t.index ["source_id"], name: "index_vms_on_source_id"
@@ -401,6 +450,10 @@ ActiveRecord::Schema.define(version: 20181119173228) do
   add_foreign_key "endpoints", "tenants", on_delete: :cascade
   add_foreign_key "orchestration_stacks", "sources", on_delete: :cascade
   add_foreign_key "orchestration_stacks", "tenants", on_delete: :cascade
+  add_foreign_key "refresh_state_parts", "refresh_states", on_delete: :cascade
+  add_foreign_key "refresh_state_parts", "tenants", on_delete: :cascade
+  add_foreign_key "refresh_states", "sources", on_delete: :cascade
+  add_foreign_key "refresh_states", "tenants", on_delete: :cascade
   add_foreign_key "service_instances", "service_offerings", on_delete: :nullify
   add_foreign_key "service_instances", "service_plans", on_delete: :nullify
   add_foreign_key "service_instances", "source_regions", on_delete: :cascade

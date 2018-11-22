@@ -15,6 +15,9 @@ class Tenant < ActiveRecord::Base
   has_many :tasks
   has_many :vms
 
+  has_many :refresh_states
+  has_many :refresh_state_parts, :through => :refresh_states
+
   acts_as_taggable
 end
 
