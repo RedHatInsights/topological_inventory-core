@@ -13,17 +13,18 @@ module TopologicalInventory
       end
 
       def execute!
-        persist_collections!
-
         if total_parts
           sweep_inactive_records!
+        else
+          persist_collections!
         end
       end
 
       private
 
-      attr_reader :persister, :messaging_client
-      delegate :manager,
+      attr_reader :persister, :messaging_client, :payload
+      delegate :inventory_collections,
+               :manager,
                :persist!,
                :refresh_state_uuid,
                :refresh_state_part_uuid,
@@ -167,7 +168,7 @@ module TopologicalInventory
 
       def requeue_sweeping!
         logger.info("Re-queuing sweeping job...")
-        client.publish_message(
+        messaging_client.publish_message(
           :service => "topological_inventory-persister",
           :message => "save_inventory",
           :payload => payload,
