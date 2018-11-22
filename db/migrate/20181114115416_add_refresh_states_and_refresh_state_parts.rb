@@ -15,6 +15,7 @@ class AddRefreshStatesAndRefreshStateParts < ActiveRecord::Migration[5.1]
 
     create_table "refresh_state_parts", :id => :bigserial do |t|
       t.references "refresh_state", :type => :bigint, :index => false, :null => false, :foreign_key => {:on_delete => :cascade}
+      t.references "tenant", :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
       t.uuid       "uuid", :null => false
       t.string     "status"
       t.string     "error_message"
