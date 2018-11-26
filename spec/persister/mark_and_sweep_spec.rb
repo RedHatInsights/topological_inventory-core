@@ -14,7 +14,7 @@ describe TopologicalInventory::Persister::Worker do
       :source_type => ocp_source_type,
       :name        => "OCP",
       :uid         => "9a874712-9a55-49ab-a46a-c823acc35503",
-      )
+    )
   end
   let(:source_aws) do
     Source.find_or_create_by!(
@@ -166,7 +166,7 @@ describe TopologicalInventory::Persister::Worker do
 
       # Send persister with total_parts = XY, that will cause sweeping all tables having :last_seen_on column
       refresh(client, ["mark_and_sweep", "sweep_container_groups.json"])
-      
+
       refresh_state = source.refresh_states.find_by(:uuid => refresh_state_uuid)
       expect(refresh_state.status).to(eq("error"))
       expect(refresh_state.error_message).to(eq("Error when saving one or more parts, sweeping can't be done."))
@@ -233,7 +233,7 @@ describe TopologicalInventory::Persister::Worker do
   end
 
   def refresh(client, path)
-    inventory = JSON.load(File.read(test_inventory_dir.join(*path)))
+    inventory = JSON.parse(File.read(test_inventory_dir.join(*path)))
     messages = [ManageIQ::Messaging::ReceivedMessage.new(nil, nil, inventory, nil)]
 
     allow(client).to receive(:subscribe_messages).and_yield(messages)

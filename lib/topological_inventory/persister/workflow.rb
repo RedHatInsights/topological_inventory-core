@@ -89,7 +89,7 @@ module TopologicalInventory
       def build_refresh_state_part(refresh_states_ic, refresh_state_parts_ic, status, error_message)
         return unless status
 
-        refresh_state_part_data                 = {
+        refresh_state_part_data = {
           :uuid          => refresh_state_part_uuid,
           :refresh_state => refresh_states_ic.lazy_find(:uuid => refresh_state_uuid),
           :status        => status
