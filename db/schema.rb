@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181119173228) do
+ActiveRecord::Schema.define(version: 20181127191451) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -53,6 +53,28 @@ ActiveRecord::Schema.define(version: 20181119173228) do
     t.index ["source_deleted_at"], name: "index_container_groups_on_source_deleted_at"
     t.index ["source_id", "source_ref"], name: "index_container_groups_on_source_id_and_source_ref", unique: true
     t.index ["source_id"], name: "index_container_groups_on_source_id"
+  end
+
+  create_table "container_images", force: :cascade do |t|
+    t.bigint "tenant_id", null: false
+    t.bigint "source_id", null: false
+    t.string "source_ref"
+    t.string "resource_version"
+    t.string "name"
+    t.string "tag"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "archived_on"
+    t.datetime "last_seen_at"
+    t.datetime "source_deleted_at"
+    t.datetime "source_created_at"
+    t.datetime "resource_timestamp"
+    t.jsonb "resource_timestamps", default: {}
+    t.datetime "resource_timestamps_max"
+    t.index ["archived_on"], name: "index_container_images_on_archived_on"
+    t.index ["source_id", "source_ref"], name: "index_container_images_on_source_id_and_source_ref", unique: true
+    t.index ["source_id"], name: "index_container_images_on_source_id"
+    t.index ["tenant_id"], name: "index_container_images_on_tenant_id"
   end
 
   create_table "container_nodes", force: :cascade do |t|
@@ -146,8 +168,10 @@ ActiveRecord::Schema.define(version: 20181119173228) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "archived_on"
+    t.bigint "container_image_id"
     t.index ["archived_on"], name: "index_containers_on_archived_on"
     t.index ["container_group_id", "name"], name: "index_containers_on_container_group_id_and_name", unique: true
+    t.index ["container_image_id"], name: "index_containers_on_container_image_id"
     t.index ["tenant_id"], name: "index_containers_on_tenant_id"
   end
 
@@ -437,6 +461,8 @@ ActiveRecord::Schema.define(version: 20181119173228) do
   add_foreign_key "container_groups", "container_projects", on_delete: :cascade
   add_foreign_key "container_groups", "sources", on_delete: :cascade
   add_foreign_key "container_groups", "tenants", on_delete: :cascade
+  add_foreign_key "container_images", "sources", on_delete: :cascade
+  add_foreign_key "container_images", "tenants", on_delete: :cascade
   add_foreign_key "container_nodes", "sources", on_delete: :cascade
   add_foreign_key "container_nodes", "tenants", on_delete: :cascade
   add_foreign_key "container_projects", "sources", on_delete: :cascade
@@ -445,6 +471,7 @@ ActiveRecord::Schema.define(version: 20181119173228) do
   add_foreign_key "container_templates", "sources", on_delete: :cascade
   add_foreign_key "container_templates", "tenants", on_delete: :cascade
   add_foreign_key "containers", "container_groups", on_delete: :cascade
+  add_foreign_key "containers", "container_images", on_delete: :nullify
   add_foreign_key "containers", "tenants", on_delete: :cascade
   add_foreign_key "endpoints", "sources", on_delete: :cascade
   add_foreign_key "endpoints", "tenants", on_delete: :cascade
