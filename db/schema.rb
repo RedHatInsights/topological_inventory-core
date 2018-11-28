@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181127191451) do
+ActiveRecord::Schema.define(version: 20181128101451) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -189,6 +189,25 @@ ActiveRecord::Schema.define(version: 20181127191451) do
     t.boolean "verify_ssl"
     t.text "certificate_authority"
     t.index ["source_id"], name: "index_endpoints_on_source_id"
+  end
+
+  create_table "flavors", force: :cascade do |t|
+    t.bigint "tenant_id", null: false
+    t.bigint "source_id", null: false
+    t.string "source_ref"
+    t.string "name"
+    t.jsonb "extra"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "archived_on"
+    t.datetime "last_seen_at"
+    t.datetime "resource_timestamp"
+    t.jsonb "resource_timestamps", default: {}
+    t.datetime "resource_timestamps_max"
+    t.index ["archived_on"], name: "index_flavors_on_archived_on"
+    t.index ["source_id", "source_ref"], name: "index_flavors_on_source_id_and_source_ref", unique: true
+    t.index ["source_id"], name: "index_flavors_on_source_id"
+    t.index ["tenant_id"], name: "index_flavors_on_tenant_id"
   end
 
   create_table "orchestration_stacks", force: :cascade do |t|
@@ -447,7 +466,9 @@ ActiveRecord::Schema.define(version: 20181127191451) do
     t.datetime "source_deleted_at"
     t.bigint "orchestration_stack_id"
     t.datetime "last_seen_at"
+    t.bigint "flavor_id"
     t.index ["archived_on"], name: "index_vms_on_archived_on"
+    t.index ["flavor_id"], name: "index_vms_on_flavor_id"
     t.index ["last_seen_at"], name: "index_vms_on_last_seen_at"
     t.index ["orchestration_stack_id"], name: "index_vms_on_orchestration_stack_id"
     t.index ["source_id", "source_ref"], name: "index_vms_on_source_id_and_source_ref", unique: true
@@ -475,6 +496,8 @@ ActiveRecord::Schema.define(version: 20181127191451) do
   add_foreign_key "containers", "tenants", on_delete: :cascade
   add_foreign_key "endpoints", "sources", on_delete: :cascade
   add_foreign_key "endpoints", "tenants", on_delete: :cascade
+  add_foreign_key "flavors", "sources", on_delete: :cascade
+  add_foreign_key "flavors", "tenants", on_delete: :cascade
   add_foreign_key "orchestration_stacks", "sources", on_delete: :cascade
   add_foreign_key "orchestration_stacks", "tenants", on_delete: :cascade
   add_foreign_key "refresh_state_parts", "refresh_states", on_delete: :cascade
@@ -502,6 +525,7 @@ ActiveRecord::Schema.define(version: 20181127191451) do
   add_foreign_key "sources", "tenants", on_delete: :cascade
   add_foreign_key "subscriptions", "sources", on_delete: :cascade
   add_foreign_key "subscriptions", "tenants", on_delete: :cascade
+  add_foreign_key "vms", "flavors", on_delete: :nullify
   add_foreign_key "vms", "orchestration_stacks", on_delete: :nullify
   add_foreign_key "vms", "sources", on_delete: :cascade
   add_foreign_key "vms", "tenants", on_delete: :cascade
