@@ -11,8 +11,6 @@ class AddFlavors < ActiveRecord::Migration[5.1]
       t.timestamps
       t.datetime   :archived_on
       t.datetime   :last_seen_at
-      t.datetime   :source_deleted_at
-      t.datetime   :source_created_at
 
       t.datetime   :resource_timestamp
       t.jsonb      :resource_timestamps, :default => {}
