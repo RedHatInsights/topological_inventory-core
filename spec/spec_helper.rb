@@ -11,8 +11,8 @@ require "action_controller/railtie"
 require 'rspec/rails'
 require "webmock/rspec"
 
-require "topological_inventory/persister/ar_helper"
-TopologicalInventory::Persister::ArHelper.load_environment!
+require "topological_inventory/core/ar_helper"
+TopologicalInventory::Core::ArHelper.load_environment!
 
 RSpec.configure do |config|
   config.use_transactional_fixtures = true

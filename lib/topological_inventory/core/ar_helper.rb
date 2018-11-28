@@ -1,5 +1,5 @@
 module TopologicalInventory
-  module Persister
+  module Core
     module ArHelper
       def self.load_environment!
         ENV["RAILS_ENV"] ||= "development"

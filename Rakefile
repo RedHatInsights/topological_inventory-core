@@ -26,8 +26,8 @@ load "active_record/railties/databases.rake"
 
 namespace :db do
   task :environment do
-    require "topological_inventory/persister/ar_helper"
-    TopologicalInventory::Persister::ArHelper.load_environment!
+    require "topological_inventory/core/ar_helper"
+    TopologicalInventory::Core::ArHelper.load_environment!
   end
   Rake::Task["db:load_config"].enhance(["db:environment"])
 end
