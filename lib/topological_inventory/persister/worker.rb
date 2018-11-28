@@ -1,6 +1,7 @@
 require "inventory_refresh"
 require "manageiq-messaging"
 require "topological_inventory/persister/logging"
+require "topological_inventory/persister/workflow"
 require "topological_inventory/schema"
 
 module TopologicalInventory
@@ -21,8 +22,10 @@ module TopologicalInventory
         logger.info("Topological Inventory Persister started...")
 
         # Wait for messages to be processed
+        # TODO(lsmola) do: client.subscribe_messages(queue_opts.merge(:max_bytes => 500000))
+        # Once this is merged and released: https://github.com/ManageIQ/manageiq-messaging/pull/35
         client.subscribe_messages(queue_opts) do |messages|
-          messages.each { |msg| process_payload(msg.payload) }
+          messages.each { |msg| process_message(client, msg) }
         end
       ensure
         client&.close
@@ -37,7 +40,15 @@ module TopologicalInventory
 
       attr_accessor :messaging_client_opts, :client
 
-      def process_payload(payload)
+      def process_message(client, msg)
+        TopologicalInventory::Persister::Workflow.new(load_persister(msg.payload), client, msg.payload).execute!
+      rescue => e
+        logger.error(e.message)
+        logger.error(e.backtrace.join("\n"))
+        nil
+      end
+
+      def load_persister(payload)
         source = Source.find_by(:uid => payload["source"])
         raise "Couldn't find source with uid #{payload["source"]}" if source.nil?
 
@@ -45,10 +56,7 @@ module TopologicalInventory
         schema_klass = schema_klass_name(schema_name).safe_constantize
         raise "Invalid schema #{schema_name}" if schema_klass.nil?
 
-        persister = schema_klass.from_hash(payload, source)
-        InventoryRefresh::SaveInventory.save_inventory(source, persister.inventory_collections)
-      rescue => err
-        logger.error(err)
+        schema_klass.from_hash(payload, source)
       end
 
       def schema_klass_name(name)

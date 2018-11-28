@@ -1,0 +1,35 @@
+{
+  "name": "OCP",
+  "schema": {
+    "name": "Default"
+  },
+  "source": "9a874712-9a55-49ab-a46a-c823acc35503",
+  "refresh_state_uuid": "3022848a-b70f-46a3-9c7a-ee7f8009e90a",
+  "refresh_state_part_uuid": "a79d1649-da17-440e-882e-13150cec192a",
+  "collections": [
+    {
+      "name": "container_groups",
+      "data": [
+        {
+          "source_ref": "b40e2927-77b8-487e-92bb-63f32989b015",
+          "name": "kafka-2-hqtjh",
+          "resource_version": "1432020",
+          "container_project": {
+            "inventory_collection_name": "container_projects",
+            "reference": {
+              "name": "default"
+            },
+            "ref": "by_name"
+          },
+          "container_node": {
+            "inventory_collection_name": "container_nodes",
+            "reference": {
+              "name": "node"
+            },
+            "ref": "by_name"
+          }
+        }
+      ]
+    }
+  ]
+}
