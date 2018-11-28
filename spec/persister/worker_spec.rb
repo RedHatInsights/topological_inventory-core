@@ -57,6 +57,7 @@ describe TopologicalInventory::Persister::Worker do
 
       it "saves the different inventory objects" do
         expect(source.container_projects.count).to eq(1)
+        expect(source.container_images.count).to   eq(1)
         expect(source.container_nodes.count).to    eq(1)
         expect(source.container_groups.count).to   eq(1)
         expect(source.containers.count).to         eq(2)
@@ -64,12 +65,16 @@ describe TopologicalInventory::Persister::Worker do
 
       it "saves the relationships between objects" do
         container_group = source.container_groups.first
+        container_image = source.container_images.first
         container_project = source.container_projects.first
         container_node = source.container_nodes.first
 
         expect(container_group.container_project).to eq(container_project)
         expect(container_group.container_node).to eq(container_node)
         expect(container_group.containers.count).to eq(2)
+
+        container = container_group.containers.first
+        expect(container.container_image).to eq(container_image)
       end
     end
 

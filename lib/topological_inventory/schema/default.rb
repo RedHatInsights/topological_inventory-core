@@ -7,6 +7,7 @@ module TopologicalInventory
       def initialize_inventory_collections
         add_containers
         add_default_collection(:container_groups)
+        add_default_collection(:container_images)
         add_default_collection(:container_nodes)    { |b| add_secondary_refs_name(b) }
         add_default_collection(:container_projects) { |b| add_secondary_refs_name(b) }
         add_default_collection(:container_templates)

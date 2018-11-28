@@ -2,6 +2,7 @@ class Tenant < ActiveRecord::Base
   has_many :authentications
   has_many :containers
   has_many :container_groups
+  has_many :container_images
   has_many :container_projects
   has_many :container_templates
   has_many :endpoints

@@ -74,12 +74,25 @@ module TopologicalInventory
             ]
           ),
           InventoryCollection.new(
+            :name => :container_images,
+            :data => [
+              ContainerImage.new(
+                :source_ref => '50ab1222-b018-4f74-859f-83fae027e2ec',
+              )
+            ]
+          ),
+          InventoryCollection.new(
             :name => :containers,
             :data => [
               Container.new(
                 :container_group => InventoryObjectLazy.new(
                   :inventory_collection_name => :container_groups,
                   :reference                 => {:source_ref => "a40e2927-77b8-487e-92bb-63f32989b015"},
+                  :ref                       => :manager_ref
+                ),
+                :container_image => InventoryObjectLazy.new(
+                  :inventory_collection_name => :container_images,
+                  :reference                 => {:source_ref => "50ab1222-b018-4f74-859f-83fae027e2ec"},
                   :ref                       => :manager_ref
                 ),
                 :name => "kafka",
@@ -92,6 +105,11 @@ module TopologicalInventory
                 :container_group => InventoryObjectLazy.new(
                   :inventory_collection_name => :container_groups,
                   :reference                 => {:source_ref => "a40e2927-77b8-487e-92bb-63f32989b015"},
+                  :ref                       => :manager_ref
+                ),
+                :container_image => InventoryObjectLazy.new(
+                  :inventory_collection_name => :container_images,
+                  :reference                 => {:source_ref => "50ab1222-b018-4f74-859f-83fae027e2ec"},
                   :ref                       => :manager_ref
                 ),
                 :name => "zookeeper",
