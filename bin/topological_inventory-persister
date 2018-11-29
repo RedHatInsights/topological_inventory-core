@@ -2,12 +2,12 @@
 
 require "bundler/setup"
 require "topological_inventory/persister/worker"
-require "topological_inventory/persister/ar_helper"
+require "topological_inventory/core/ar_helper"
 
 queue_host = ENV["QUEUE_HOST"] || "localhost"
 queue_port = ENV["QUEUE_PORT"] || 9092
 
-TopologicalInventory::Persister::ArHelper.load_environment!
+TopologicalInventory::Core::ArHelper.load_environment!
 persister_worker = TopologicalInventory::Persister::Worker.new(:host => queue_host, :port => queue_port)
 
 begin
