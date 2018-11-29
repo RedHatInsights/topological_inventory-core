@@ -20,6 +20,7 @@ module TopologicalInventory
         add_default_collection(:subscriptions)
         add_default_collection(:vms)
         add_cross_link_vms
+        add_tags
       end
 
       def targeted?
@@ -29,7 +30,7 @@ module TopologicalInventory
       private
 
       def add_default_collection(model)
-        add_collection(model) do |builder|
+        add_collection(model, InventoryRefresh::InventoryCollection::Builder, :attributes_blacklist => [:tags]) do |builder|
           add_default_properties(builder)
           add_default_values(builder)
           yield builder if block_given?
@@ -72,6 +73,38 @@ module TopologicalInventory
             :name        => :cross_link_vms,
             :manager_ref => [:uid_ems],
             :strategy    => :local_db_find_references,
+          )
+        end
+      end
+
+      def add_tags
+        builder_klass    = InventoryRefresh::InventoryCollection::Builder
+        extra_properties = {}
+        settings         = {
+          :without_model_class       => true,
+          :auto_inventory_attributes => false,
+          :association               => nil,
+        }
+
+        add_collection(:tags, builder_klass, extra_properties, settings) do |builder|
+          builder.add_dependency_attributes(
+            :service_offerings => [collections[:service_offerings]],
+          )
+          builder.add_properties(
+            :custom_save_block => lambda do |_source, inventory_collection|
+              inventory_collection.dependency_attributes.each_value do |collections|
+                inventory_collection = collections.first
+
+                inventory_objects_index = inventory_collection.data.index_by(&:id)
+                inventory_collection.model_class.find(inventory_collection.data.map(&:id)).each do |record|
+                  tags = inventory_objects_index[record.id][:tags]
+                  next if tags.nil?
+
+                  record.tag_list = tags.join(",")
+                  record.save!
+                end
+              end
+            end
           )
         end
       end
