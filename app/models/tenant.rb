@@ -5,6 +5,7 @@ class Tenant < ActiveRecord::Base
   has_many :container_images
   has_many :container_projects
   has_many :container_templates
+  has_many :flavors
   has_many :endpoints
   has_many :orchestration_stacks
   has_many :service_instances
