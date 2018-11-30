@@ -1,11 +1,18 @@
 module TopologicalInventory
   module Core
     module ArHelper
+      def self.database_yaml_path
+        @database_yaml_path ||= root.join("config", "database.yml")
+      end
+
+      def self.database_yaml_path=(path)
+        @database_yaml_path = path
+      end
+
       def self.load_environment!
         ENV["RAILS_ENV"] ||= "development"
 
         require "yaml"
-        database_yaml_path = root.join("config", "database.yml")
         database_yaml = YAML.load_file(database_yaml_path) if database_yaml_path.exist?
 
         require "active_record"
