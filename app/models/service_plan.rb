@@ -18,7 +18,7 @@ class ServicePlan < ApplicationRecord
     parsed_response = service_catalog_client.order_service_plan(name, service_offering.name, additional_parameters)
 
     task = Task.create!(
-      :tenant => tenant,
+      :tenant  => tenant,
       :context => {
         :service_instance => {
           :source_id  => source.id,
