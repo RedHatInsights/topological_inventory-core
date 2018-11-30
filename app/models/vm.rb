@@ -8,5 +8,8 @@ class Vm < ApplicationRecord
   belongs_to :orchestration_stack, :optional => true
   belongs_to :flavor, :optional => true
 
-  acts_as_taggable
+  has_many :taggings, :as => :taggable
+  has_many :tags, :through => :taggings
+
+  #acts_as_taggable
 end
