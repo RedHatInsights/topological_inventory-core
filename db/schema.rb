@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181128141221) do
+ActiveRecord::Schema.define(version: 20181129150215) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,12 +41,12 @@ ActiveRecord::Schema.define(version: 20181128141221) do
     t.bigint "tenant_id", null: false
     t.bigint "container_node_id"
     t.datetime "source_created_at"
-    t.datetime "archived_on"
+    t.datetime "archived_at"
     t.datetime "resource_timestamp"
     t.jsonb "resource_timestamps", default: {}
     t.datetime "resource_timestamps_max"
     t.datetime "last_seen_at"
-    t.index ["archived_on"], name: "index_container_groups_on_archived_on"
+    t.index ["archived_at"], name: "index_container_groups_on_archived_at"
     t.index ["container_node_id"], name: "index_container_groups_on_container_node_id"
     t.index ["container_project_id"], name: "index_container_groups_on_container_project_id"
     t.index ["last_seen_at"], name: "index_container_groups_on_last_seen_at"
@@ -64,14 +64,14 @@ ActiveRecord::Schema.define(version: 20181128141221) do
     t.string "tag"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.datetime "archived_on"
+    t.datetime "archived_at"
     t.datetime "last_seen_at"
     t.datetime "source_deleted_at"
     t.datetime "source_created_at"
     t.datetime "resource_timestamp"
     t.jsonb "resource_timestamps", default: {}
     t.datetime "resource_timestamps_max"
-    t.index ["archived_on"], name: "index_container_images_on_archived_on"
+    t.index ["archived_at"], name: "index_container_images_on_archived_at"
     t.index ["source_id", "source_ref"], name: "index_container_images_on_source_id_and_source_ref", unique: true
     t.index ["source_id"], name: "index_container_images_on_source_id"
     t.index ["tenant_id"], name: "index_container_images_on_tenant_id"
@@ -89,14 +89,14 @@ ActiveRecord::Schema.define(version: 20181128141221) do
     t.datetime "updated_at", null: false
     t.datetime "source_deleted_at"
     t.datetime "source_created_at"
-    t.datetime "archived_on"
+    t.datetime "archived_at"
     t.datetime "resource_timestamp"
     t.jsonb "resource_timestamps", default: {}
     t.datetime "resource_timestamps_max"
     t.datetime "last_seen_at"
     t.string "lives_on_type"
     t.bigint "lives_on_id"
-    t.index ["archived_on"], name: "index_container_nodes_on_archived_on"
+    t.index ["archived_at"], name: "index_container_nodes_on_archived_at"
     t.index ["last_seen_at"], name: "index_container_nodes_on_last_seen_at"
     t.index ["lives_on_type", "lives_on_id"], name: "index_container_nodes_on_lives_on_type_and_lives_on_id"
     t.index ["name"], name: "index_container_nodes_on_name"
@@ -117,12 +117,12 @@ ActiveRecord::Schema.define(version: 20181128141221) do
     t.datetime "source_deleted_at"
     t.bigint "tenant_id", null: false
     t.datetime "source_created_at"
-    t.datetime "archived_on"
+    t.datetime "archived_at"
     t.datetime "resource_timestamp"
     t.jsonb "resource_timestamps", default: {}
     t.datetime "resource_timestamps_max"
     t.datetime "last_seen_at"
-    t.index ["archived_on"], name: "index_container_projects_on_archived_on"
+    t.index ["archived_at"], name: "index_container_projects_on_archived_at"
     t.index ["last_seen_at"], name: "index_container_projects_on_last_seen_at"
     t.index ["name"], name: "index_container_projects_on_name"
     t.index ["source_deleted_at"], name: "index_container_projects_on_source_deleted_at"
@@ -141,12 +141,12 @@ ActiveRecord::Schema.define(version: 20181128141221) do
     t.bigint "tenant_id", null: false
     t.datetime "source_created_at"
     t.string "name"
-    t.datetime "archived_on"
+    t.datetime "archived_at"
     t.datetime "resource_timestamp"
     t.jsonb "resource_timestamps", default: {}
     t.datetime "resource_timestamps_max"
     t.datetime "last_seen_at"
-    t.index ["archived_on"], name: "index_container_templates_on_archived_on"
+    t.index ["archived_at"], name: "index_container_templates_on_archived_at"
     t.index ["container_project_id"], name: "index_container_templates_on_container_project_id"
     t.index ["last_seen_at"], name: "index_container_templates_on_last_seen_at"
     t.index ["source_deleted_at"], name: "index_container_templates_on_source_deleted_at"
@@ -167,9 +167,9 @@ ActiveRecord::Schema.define(version: 20181128141221) do
     t.datetime "resource_timestamps_max"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.datetime "archived_on"
+    t.datetime "archived_at"
     t.bigint "container_image_id"
-    t.index ["archived_on"], name: "index_containers_on_archived_on"
+    t.index ["archived_at"], name: "index_containers_on_archived_at"
     t.index ["container_group_id", "name"], name: "index_containers_on_container_group_id_and_name", unique: true
     t.index ["container_image_id"], name: "index_containers_on_container_image_id"
     t.index ["tenant_id"], name: "index_containers_on_tenant_id"
@@ -199,12 +199,12 @@ ActiveRecord::Schema.define(version: 20181128141221) do
     t.jsonb "extra"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.datetime "archived_on"
+    t.datetime "archived_at"
     t.datetime "last_seen_at"
     t.datetime "resource_timestamp"
     t.jsonb "resource_timestamps", default: {}
     t.datetime "resource_timestamps_max"
-    t.index ["archived_on"], name: "index_flavors_on_archived_on"
+    t.index ["archived_at"], name: "index_flavors_on_archived_at"
     t.index ["source_id", "source_ref"], name: "index_flavors_on_source_id_and_source_ref", unique: true
     t.index ["source_id"], name: "index_flavors_on_source_id"
     t.index ["tenant_id"], name: "index_flavors_on_tenant_id"
@@ -221,11 +221,11 @@ ActiveRecord::Schema.define(version: 20181128141221) do
     t.datetime "resource_timestamps_max"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.datetime "archived_on"
+    t.datetime "archived_at"
     t.datetime "source_created_at"
     t.datetime "source_deleted_at"
     t.datetime "last_seen_at"
-    t.index ["archived_on"], name: "index_orchestration_stacks_on_archived_on"
+    t.index ["archived_at"], name: "index_orchestration_stacks_on_archived_at"
     t.index ["last_seen_at"], name: "index_orchestration_stacks_on_last_seen_at"
     t.index ["source_id", "source_ref"], name: "index_orchestration_stacks_on_source_id_and_source_ref", unique: true
     t.index ["source_id"], name: "index_orchestration_stacks_on_source_id"
@@ -271,14 +271,14 @@ ActiveRecord::Schema.define(version: 20181128141221) do
     t.datetime "source_deleted_at"
     t.bigint "tenant_id", null: false
     t.datetime "source_created_at"
-    t.datetime "archived_on"
+    t.datetime "archived_at"
     t.datetime "resource_timestamp"
     t.jsonb "resource_timestamps", default: {}
     t.datetime "resource_timestamps_max"
     t.bigint "source_region_id"
     t.bigint "subscription_id"
     t.datetime "last_seen_at"
-    t.index ["archived_on"], name: "index_service_instances_on_archived_on"
+    t.index ["archived_at"], name: "index_service_instances_on_archived_at"
     t.index ["last_seen_at"], name: "index_service_instances_on_last_seen_at"
     t.index ["service_offering_id"], name: "index_service_instances_on_service_offering_id"
     t.index ["service_plan_id"], name: "index_service_instances_on_service_plan_id"
@@ -300,14 +300,14 @@ ActiveRecord::Schema.define(version: 20181128141221) do
     t.datetime "source_deleted_at"
     t.bigint "tenant_id", null: false
     t.datetime "source_created_at"
-    t.datetime "archived_on"
+    t.datetime "archived_at"
     t.datetime "resource_timestamp"
     t.jsonb "resource_timestamps", default: {}
     t.datetime "resource_timestamps_max"
     t.bigint "source_region_id"
     t.bigint "subscription_id"
     t.datetime "last_seen_at"
-    t.index ["archived_on"], name: "index_service_offerings_on_archived_on"
+    t.index ["archived_at"], name: "index_service_offerings_on_archived_at"
     t.index ["last_seen_at"], name: "index_service_offerings_on_last_seen_at"
     t.index ["source_deleted_at"], name: "index_service_offerings_on_source_deleted_at"
     t.index ["source_id", "source_ref"], name: "index_service_offerings_on_source_id_and_source_ref", unique: true
@@ -330,14 +330,14 @@ ActiveRecord::Schema.define(version: 20181128141221) do
     t.datetime "source_created_at"
     t.jsonb "create_json_schema"
     t.jsonb "update_json_schema"
-    t.datetime "archived_on"
+    t.datetime "archived_at"
     t.datetime "resource_timestamp"
     t.jsonb "resource_timestamps", default: {}
     t.datetime "resource_timestamps_max"
     t.bigint "source_region_id"
     t.bigint "subscription_id"
     t.datetime "last_seen_at"
-    t.index ["archived_on"], name: "index_service_plans_on_archived_on"
+    t.index ["archived_at"], name: "index_service_plans_on_archived_at"
     t.index ["last_seen_at"], name: "index_service_plans_on_last_seen_at"
     t.index ["service_offering_id"], name: "index_service_plans_on_service_offering_id"
     t.index ["source_deleted_at"], name: "index_service_plans_on_source_deleted_at"
@@ -354,10 +354,10 @@ ActiveRecord::Schema.define(version: 20181128141221) do
     t.string "endpoint"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.datetime "archived_on"
+    t.datetime "archived_at"
     t.bigint "tenant_id", null: false
     t.datetime "last_seen_at"
-    t.index ["archived_on"], name: "index_source_regions_on_archived_on"
+    t.index ["archived_at"], name: "index_source_regions_on_archived_at"
     t.index ["last_seen_at"], name: "index_source_regions_on_last_seen_at"
     t.index ["source_id", "source_ref"], name: "index_source_regions_on_source_id_and_source_ref", unique: true
     t.index ["source_id"], name: "index_source_regions_on_source_id"
@@ -390,10 +390,10 @@ ActiveRecord::Schema.define(version: 20181128141221) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.datetime "archived_on"
+    t.datetime "archived_at"
     t.bigint "tenant_id", null: false
     t.datetime "last_seen_at"
-    t.index ["archived_on"], name: "index_subscriptions_on_archived_on"
+    t.index ["archived_at"], name: "index_subscriptions_on_archived_at"
     t.index ["last_seen_at"], name: "index_subscriptions_on_last_seen_at"
     t.index ["source_id", "source_ref"], name: "index_subscriptions_on_source_id_and_source_ref", unique: true
     t.index ["source_id"], name: "index_subscriptions_on_source_id"
@@ -462,13 +462,13 @@ ActiveRecord::Schema.define(version: 20181128141221) do
     t.datetime "resource_timestamps_max"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.datetime "archived_on"
+    t.datetime "archived_at"
     t.datetime "source_created_at"
     t.datetime "source_deleted_at"
     t.bigint "orchestration_stack_id"
     t.datetime "last_seen_at"
     t.bigint "flavor_id"
-    t.index ["archived_on"], name: "index_vms_on_archived_on"
+    t.index ["archived_at"], name: "index_vms_on_archived_at"
     t.index ["flavor_id"], name: "index_vms_on_flavor_id"
     t.index ["last_seen_at"], name: "index_vms_on_last_seen_at"
     t.index ["orchestration_stack_id"], name: "index_vms_on_orchestration_stack_id"
