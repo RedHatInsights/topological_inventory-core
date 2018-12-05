@@ -8,4 +8,5 @@ class ContainerTemplate < ApplicationRecord
   belongs_to :container_project
 
   acts_as_taggable
+  acts_as_tenant(:tenant)
 end

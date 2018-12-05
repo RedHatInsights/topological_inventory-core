@@ -9,4 +9,5 @@ class ContainerNode < ApplicationRecord
   has_many   :container_groups
 
   acts_as_taggable
+  acts_as_tenant(:tenant)
 end

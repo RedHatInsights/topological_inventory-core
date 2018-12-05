@@ -13,6 +13,7 @@ class ServicePlan < ApplicationRecord
   has_many   :service_instances
 
   acts_as_taggable
+  acts_as_tenant(:tenant)
 
   def order(additional_parameters)
     parsed_response = service_catalog_client.order_service_plan(name, service_offering.name, additional_parameters)

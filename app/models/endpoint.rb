@@ -7,6 +7,7 @@ class Endpoint < ApplicationRecord
   validates :role, :uniqueness => { :scope => :source_id }
 
   acts_as_taggable
+  acts_as_tenant(:tenant)
 
   def base_url_path
     URI::Generic.build(:scheme => scheme, :host => host, :port => port, :path => path).to_s

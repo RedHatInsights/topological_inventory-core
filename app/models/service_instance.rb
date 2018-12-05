@@ -11,4 +11,5 @@ class ServiceInstance < ApplicationRecord
   belongs_to :subscription
 
   acts_as_taggable
+  acts_as_tenant(:tenant)
 end

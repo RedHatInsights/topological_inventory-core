@@ -1,5 +1,6 @@
 class ApplicationRecord < ActiveRecord::Base
   require 'acts-as-taggable-on'
+  require 'acts_as_tenant'
 
   self.abstract_class = true
 
