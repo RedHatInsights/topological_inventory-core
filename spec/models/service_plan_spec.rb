@@ -6,7 +6,7 @@ describe ServicePlan do
                               :name             => "plan_name",
                               :service_offering => service_offering)
     end
-    let(:source) { Source.create!(:tenant => tenant) }
+    let(:source) { Source.create!(:tenant => tenant, :uid => SecureRandom.uuid) }
     let(:service_offering) do
       ServiceOffering.create!(:source => source, :tenant => tenant, :name => "service_offering")
     end
