@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181129150215) do
+ActiveRecord::Schema.define(version: 20181205142648) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -376,12 +376,13 @@ ActiveRecord::Schema.define(version: 20181129150215) do
 
   create_table "sources", force: :cascade do |t|
     t.string "name"
-    t.string "uid"
+    t.string "uid", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "tenant_id", null: false
     t.bigint "source_type_id"
     t.index ["source_type_id"], name: "index_sources_on_source_type_id"
+    t.index ["uid"], name: "index_sources_on_uid", unique: true
   end
 
   create_table "subscriptions", force: :cascade do |t|
