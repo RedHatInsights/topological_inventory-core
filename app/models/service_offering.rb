@@ -1,9 +1,7 @@
 require "archived_concern"
-require "taggable"
 
 class ServiceOffering < ApplicationRecord
   include ArchivedConcern
-  include Taggable
 
   belongs_to :tenant
   belongs_to :source
@@ -12,4 +10,6 @@ class ServiceOffering < ApplicationRecord
 
   has_many   :service_instances
   has_many   :service_plans
+
+  acts_as_taggable
 end
