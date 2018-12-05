@@ -31,7 +31,7 @@ module TopologicalInventory
       private
 
       def add_default_collection(model)
-        add_collection(model, InventoryRefresh::InventoryCollection::Builder, :attributes_blacklist => [:tags]) do |builder|
+        add_collection(model) do |builder|
           add_default_properties(builder)
           add_default_values(builder)
           yield builder if block_given?
@@ -82,7 +82,10 @@ module TopologicalInventory
         add_collection(:taggings) do |builder|
           builder.add_properties(
             :manager_ref => [:taggable, :tag],
+            :strategy           => :local_db_find_missing_references,
+            :saver_strategy     => :concurrent_safe_batch,
           )
+          add_default_values(builder)
         end
       end
 
@@ -90,8 +93,10 @@ module TopologicalInventory
         add_collection(:tags) do |builder|
           builder.add_properties(
             :manager_ref => [:name],
-            :parent_inventory_collections => [:taggings],
+            :strategy           => :local_db_find_missing_references,
+            :saver_strategy     => :concurrent_safe_batch,
           )
+          add_default_values(builder)
         end
       end
     end

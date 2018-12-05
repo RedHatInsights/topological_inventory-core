@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181205142648) do
+ActiveRecord::Schema.define(version: 20181205193526) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -409,7 +409,10 @@ ActiveRecord::Schema.define(version: 20181205142648) do
     t.integer "tagger_id"
     t.string "context", limit: 128
     t.datetime "created_at"
+    t.bigint "tenant_id"
+    t.bigint "source_id"
     t.index ["context"], name: "index_taggings_on_context"
+    t.index ["source_id"], name: "index_taggings_on_source_id"
     t.index ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true
     t.index ["tag_id"], name: "index_taggings_on_tag_id"
     t.index ["taggable_id", "taggable_type", "context"], name: "index_taggings_on_taggable_id_and_taggable_type_and_context"
@@ -418,12 +421,17 @@ ActiveRecord::Schema.define(version: 20181205142648) do
     t.index ["taggable_type"], name: "index_taggings_on_taggable_type"
     t.index ["tagger_id", "tagger_type"], name: "index_taggings_on_tagger_id_and_tagger_type"
     t.index ["tagger_id"], name: "index_taggings_on_tagger_id"
+    t.index ["tenant_id"], name: "index_taggings_on_tenant_id"
   end
 
   create_table "tags", id: :serial, force: :cascade do |t|
     t.string "name"
     t.integer "taggings_count", default: 0
+    t.bigint "tenant_id"
+    t.bigint "source_id"
     t.index ["name"], name: "index_tags_on_name", unique: true
+    t.index ["source_id"], name: "index_tags_on_source_id"
+    t.index ["tenant_id"], name: "index_tags_on_tenant_id"
   end
 
   create_table "tasks", force: :cascade do |t|
@@ -527,6 +535,10 @@ ActiveRecord::Schema.define(version: 20181205142648) do
   add_foreign_key "sources", "tenants", on_delete: :cascade
   add_foreign_key "subscriptions", "sources", on_delete: :cascade
   add_foreign_key "subscriptions", "tenants", on_delete: :cascade
+  add_foreign_key "taggings", "sources", on_delete: :cascade
+  add_foreign_key "taggings", "tenants", on_delete: :cascade
+  add_foreign_key "tags", "sources", on_delete: :cascade
+  add_foreign_key "tags", "tenants", on_delete: :cascade
   add_foreign_key "vms", "flavors", on_delete: :nullify
   add_foreign_key "vms", "orchestration_stacks", on_delete: :nullify
   add_foreign_key "vms", "sources", on_delete: :cascade

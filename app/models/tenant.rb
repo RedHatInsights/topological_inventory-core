@@ -14,6 +14,8 @@ class Tenant < ActiveRecord::Base
   has_many :source_regions
   has_many :sources
   has_many :subscriptions
+  has_many :taggings
+  has_many :tags
   has_many :tasks
   has_many :vms
 
