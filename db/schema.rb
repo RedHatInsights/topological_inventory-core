@@ -479,6 +479,59 @@ ActiveRecord::Schema.define(version: 20181205142648) do
     t.index ["uid_ems"], name: "index_vms_on_uid_ems"
   end
 
+  create_table "volume_attachments", force: :cascade do |t|
+    t.bigint "tenant_id", null: false
+    t.bigint "vm_id", null: false
+    t.bigint "volume_id", null: false
+    t.string "device"
+    t.string "state"
+    t.index ["tenant_id"], name: "index_volume_attachments_on_tenant_id"
+    t.index ["vm_id", "volume_id"], name: "index_volume_attachments_on_vm_id_and_volume_id", unique: true
+    t.index ["volume_id"], name: "index_volume_attachments_on_volume_id"
+  end
+
+  create_table "volume_types", force: :cascade do |t|
+    t.bigint "tenant_id", null: false
+    t.bigint "source_id", null: false
+    t.string "source_ref"
+    t.string "name"
+    t.text "description"
+    t.jsonb "extra"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "archived_at"
+    t.datetime "last_seen_at"
+    t.index ["archived_at"], name: "index_volume_types_on_archived_at"
+    t.index ["source_id", "source_ref"], name: "index_volume_types_on_source_id_and_source_ref", unique: true
+    t.index ["tenant_id"], name: "index_volume_types_on_tenant_id"
+  end
+
+  create_table "volumes", force: :cascade do |t|
+    t.bigint "tenant_id", null: false
+    t.bigint "source_id", null: false
+    t.bigint "source_region_id"
+    t.bigint "volume_type_id"
+    t.string "source_ref"
+    t.string "name"
+    t.string "state"
+    t.bigint "size"
+    t.jsonb "extra"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "archived_at"
+    t.datetime "last_seen_at"
+    t.datetime "source_deleted_at"
+    t.datetime "source_created_at"
+    t.datetime "resource_timestamp"
+    t.jsonb "resource_timestamps", default: {}
+    t.datetime "resource_timestamps_max"
+    t.index ["archived_at"], name: "index_volumes_on_archived_at"
+    t.index ["source_id", "source_ref"], name: "index_volumes_on_source_id_and_source_ref", unique: true
+    t.index ["source_region_id"], name: "index_volumes_on_source_region_id"
+    t.index ["tenant_id"], name: "index_volumes_on_tenant_id"
+    t.index ["volume_type_id"], name: "index_volumes_on_volume_type_id"
+  end
+
   add_foreign_key "authentications", "tenants", on_delete: :cascade
   add_foreign_key "container_groups", "container_nodes", on_delete: :cascade
   add_foreign_key "container_groups", "container_projects", on_delete: :cascade
@@ -531,4 +584,13 @@ ActiveRecord::Schema.define(version: 20181205142648) do
   add_foreign_key "vms", "orchestration_stacks", on_delete: :nullify
   add_foreign_key "vms", "sources", on_delete: :cascade
   add_foreign_key "vms", "tenants", on_delete: :cascade
+  add_foreign_key "volume_attachments", "tenants", on_delete: :cascade
+  add_foreign_key "volume_attachments", "vms", on_delete: :cascade
+  add_foreign_key "volume_attachments", "volumes", on_delete: :cascade
+  add_foreign_key "volume_types", "sources", on_delete: :cascade
+  add_foreign_key "volume_types", "tenants", on_delete: :cascade
+  add_foreign_key "volumes", "source_regions", on_delete: :cascade
+  add_foreign_key "volumes", "sources", on_delete: :cascade
+  add_foreign_key "volumes", "tenants", on_delete: :cascade
+  add_foreign_key "volumes", "volume_types", on_delete: :cascade
 end
