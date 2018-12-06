@@ -19,6 +19,9 @@ module TopologicalInventory
         add_default_collection(:source_regions)
         add_default_collection(:subscriptions)
         add_default_collection(:vms)
+        add_default_collection(:volumes)
+        add_volume_attachments
+        add_default_collection(:volume_types)
         add_cross_link_vms
       end
 
@@ -59,6 +62,13 @@ module TopologicalInventory
       def add_containers
         add_collection(:containers) do |builder|
           add_default_properties(builder, manager_ref: [:container_group, :name])
+          builder.add_default_values(:tenant_id => ->(persister) { persister.manager.tenant_id })
+        end
+      end
+
+      def add_volume_attachments
+        add_collection(:volume_attachments) do |builder|
+          add_default_properties(builder, manager_ref: [:volume, :vm])
           builder.add_default_values(:tenant_id => ->(persister) { persister.manager.tenant_id })
         end
       end
