@@ -36,4 +36,9 @@ class Source < ApplicationRecord
   has_many :flavors
   has_many :orchestration_stacks
   has_many :vms
+
+  # Storage
+  has_many :volumes
+  has_many :volume_attachments, :through => :volumes
+  has_many :volume_types
 end

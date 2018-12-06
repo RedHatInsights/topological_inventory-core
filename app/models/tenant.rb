@@ -16,6 +16,9 @@ class Tenant < ActiveRecord::Base
   has_many :subscriptions
   has_many :tasks
   has_many :vms
+  has_many :volumes
+  has_many :volume_attachments
+  has_many :volume_types
 
   has_many :refresh_states
   has_many :refresh_state_parts, :through => :refresh_states
