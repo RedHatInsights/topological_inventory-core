@@ -35,6 +35,9 @@ module TopologicalInventory
         $LOAD_PATH << root.join("app", "models")
         $LOAD_PATH << root.join("app", "models", "concerns")
 
+        ActiveSupport::Dependencies.autoload_paths << root.join("app", "models")
+        ActiveSupport::Dependencies.autoload_paths << root.join("app", "models", "concenrs")
+
         require "application_record"
         Dir[root.join("app/models/**/*.rb")].each { |f| require f }
       end
