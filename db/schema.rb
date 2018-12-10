@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181205142648) do
+ActiveRecord::Schema.define(version: 20181210164829) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -204,6 +204,10 @@ ActiveRecord::Schema.define(version: 20181205142648) do
     t.datetime "resource_timestamp"
     t.jsonb "resource_timestamps", default: {}
     t.datetime "resource_timestamps_max"
+    t.bigint "disk_size"
+    t.bigint "memory"
+    t.integer "disk_count"
+    t.integer "cpus"
     t.index ["archived_at"], name: "index_flavors_on_archived_at"
     t.index ["source_id", "source_ref"], name: "index_flavors_on_source_id_and_source_ref", unique: true
     t.index ["source_id"], name: "index_flavors_on_source_id"
