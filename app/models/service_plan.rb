@@ -18,16 +18,12 @@ class ServicePlan < ApplicationRecord
   def order(additional_parameters)
     parsed_response = service_catalog_client.order_service_plan(name, service_offering.name, additional_parameters)
 
-    task = Task.create!(
-      :tenant  => tenant,
-      :context => {
-        :service_instance => {
-          :source_id  => source.id,
-          :source_ref => parsed_response['metadata']['selfLink']
-        }
+    {
+      :service_instance => {
+        :source_id  => source.id,
+        :source_ref => parsed_response['metadata']['selfLink']
       }
-    )
-    task.id
+    }
   end
 
   private

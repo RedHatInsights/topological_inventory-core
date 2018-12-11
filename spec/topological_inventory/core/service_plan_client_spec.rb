@@ -10,7 +10,7 @@ module TopologicalInventory
             :provider_control_parameters => {:namespace => "namespace"}
           }
         end
-        let(:service_parameters) { "service_parameters" }
+        let(:service_parameters) { {"DB_NAME" => "TEST_DB", "namespace" => "TEST_DB_NAMESPACE"} }
         let(:expected_payload) do
           {
             "apiVersion" => "servicecatalog.k8s.io/v1beta1",

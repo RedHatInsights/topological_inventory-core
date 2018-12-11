@@ -31,13 +31,10 @@ describe ServicePlan do
       service_plan.order(parameters)
     end
 
-    it "creates a task with context information" do
-      service_plan.order(parameters)
-      expect(Task.last.context).to eq("service_instance" => {"source_id" => source.id, "source_ref" => 321})
-    end
-
-    it "returns the task id" do
-      expect(service_plan.order(parameters)).to eq(Task.last.id)
+    it "returns a hash with context information" do
+      expect(service_plan.order(parameters)).to eq(
+        :service_instance => {:source_id => source.id, :source_ref => 321}
+      )
     end
   end
 end
