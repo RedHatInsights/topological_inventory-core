@@ -7,6 +7,7 @@ class Source < ApplicationRecord
            :to => :default_endpoint, :allow_nil => true
 
   acts_as_taggable
+  acts_as_tenant(:tenant)
 
   def default_endpoint
     default = endpoints.detect(&:default)

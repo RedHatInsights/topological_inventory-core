@@ -7,4 +7,6 @@ class ContainerImage < ApplicationRecord
   belongs_to :source
 
   has_many :containers
+
+  acts_as_tenant(:tenant)
 end

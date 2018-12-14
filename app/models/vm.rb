@@ -12,4 +12,5 @@ class Vm < ApplicationRecord
   has_many :volume_attachments
 
   acts_as_taggable
+  acts_as_tenant(:tenant)
 end
