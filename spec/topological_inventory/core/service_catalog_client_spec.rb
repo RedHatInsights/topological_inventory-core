@@ -3,15 +3,10 @@ module TopologicalInventory
     describe ServiceCatalogClient do
       let(:subject) { described_class.new(source) }
 
-      let(:endpoint) do
-        # TODO: Use real Authentication
-        # Endpoint.new(:default => true, :verify_ssl => true, :authentications => [auth])
-        Endpoint.new(:default => true, :verify_ssl => verify_ssl)
-      end
-      # TODO: Use real Authentication
-      # let(:auth) { Authentication.create!(:password => "token") }
-      let(:auth) { instance_double("Authentication", :password => "token") }
+      let(:endpoint) { Endpoint.new(:default => true, :verify_ssl => verify_ssl, :authentications => [auth]) }
+      let(:auth) { Authentication.create!(:tenant => tenant, :password => "token") }
       let(:source) { Source.new(:endpoints => [endpoint]) }
+      let(:tenant) { Tenant.create! }
 
       describe "#order_service_plan" do
         let(:url) do
@@ -34,8 +29,8 @@ module TopologicalInventory
             "plan_name", "service_offering_name", additional_parameters
           ).and_return("payload")
 
-          stub_request(:post, url).with(:body => "payload", :headers => headers).
-            to_return(:body => dummy_response.to_json)
+          stub_request(:post, url).with(:body => "payload", :headers => headers)
+            .to_return(:body => dummy_response.to_json)
 
           allow(endpoint).to receive(:authentications).and_return([auth])
           allow(endpoint).to receive(:base_url_path).and_return("https://example.com")
@@ -51,7 +46,7 @@ module TopologicalInventory
 
           it "builds the payload" do
             expect(service_plan_client).to receive(:build_payload).with(
-              "plan_name", "service_offering_name", {"foo" => "bar", "baz" => "qux"}
+              "plan_name", "service_offering_name", "foo" => "bar", "baz" => "qux"
             )
 
             subject.order_service_plan("plan_name", "service_offering_name", additional_parameters)
@@ -74,7 +69,7 @@ module TopologicalInventory
 
           it "builds the payload" do
             expect(service_plan_client).to receive(:build_payload).with(
-              "plan_name", "service_offering_name", {"foo" => "bar", "baz" => "qux"}
+              "plan_name", "service_offering_name", "foo" => "bar", "baz" => "qux"
             )
 
             subject.order_service_plan("plan_name", "service_offering_name", additional_parameters)
