@@ -11,7 +11,6 @@ gemspec
 # your gem to rubygems.org.
 
 gem "inventory_refresh", :git => "https://github.com/ManageIQ/inventory_refresh", :branch => "master"
-gem "manageiq-password", :git => "https://github.com/ManageIQ/manageiq-password", :branch => "master"
 
 #
 # Custom Gemfile modifications
