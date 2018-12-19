@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency "acts-as-taggable-on", '~> 6.0'
   s.add_runtime_dependency "acts_as_tenant"
   s.add_runtime_dependency "manageiq-messaging", "~> 0.1.0"
+  s.add_runtime_dependency "manageiq-password",  "~> 0.1.0"
   s.add_runtime_dependency "pg", "> 0"
   s.add_runtime_dependency "rails", "~> 5.2.1.1"
   s.add_runtime_dependency "rest-client", ">= 1.8.0"
