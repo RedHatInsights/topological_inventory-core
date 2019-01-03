@@ -7,9 +7,6 @@ class AddTaggingsForAllTaggableTables < ActiveRecord::Migration[5.1]
       t.text "description"
       t.boolean "active", :default => true, :null => false
 
-      # TODO what is human readable name? Will we use it for searching? How will we search with translated field?
-      t.string "display_name"
-
       # TODO the queries like "starts_with" won't be consistent across platform, if we'll model separately vs. encoded
       # as namespace/name. Or we'll have to do query transformations, will we do that?
       t.string "namespace"
