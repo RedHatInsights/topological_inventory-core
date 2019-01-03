@@ -25,30 +25,20 @@ class AddTaggingsForAllTaggableTables < ActiveRecord::Migration[5.1]
       t.index ["tenant_id", "name"], :where  => "namespace IS NULL", :unique => true
     end
 
-    create_table "tag_values", id: :serial, force: :cascade do |t|
-      t.references :tenant, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
-      t.references :tag, :type => :bigint, :index => false, :null => false, :foreign_key => {:on_delete => :cascade}
-
-      t.string "value", :null => false
-
-      t.index ["tag_id", "value"], :unique => true
-    end
-
     create_table "vms_tags", id: :serial, force: :cascade do |t|
       t.references :tenant, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
       t.references :source, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
-
       t.references :tag, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
+
+      # TODO should we support both NULL and empty string? We could just default to empty string and we can have only
+      # 1 unique index. Also graph refresh won't probably allow to store both "" and NULL combination
+      t.string "value"
 
       # TODO should we name the relation according to the table it relates to? Or just always taggable_id?
       t.references :vm, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
 
-      # TODO might be better to always have association to value? Where the value could be NULL or empty string? That
-      # way we can make sure the value is always set. Otherwise we could have nil here, if the value is actually required.
-      t.references :tag_value, :type => :bigint, :index => true, :null => true, :foreign_key => {:on_delete => :cascade}
-
-      t.index ["tag_id", "vm_id", "tag_value_id"], :unique => true
-      t.index ["tag_id", "vm_id"], :where  => "tag_value_id IS NULL", :unique => true
+      t.index ["tag_id", "vm_id", "value"], :unique => true
+      t.index ["tag_id", "vm_id"], :where  => "value IS NULL", :unique => true
     end
 
     # TODO add similar mapping tables for all other entities, containers_tags, container_images_tags, etc.
