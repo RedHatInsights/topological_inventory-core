@@ -5,6 +5,8 @@ class AddTaggingsForAllTaggableTables < ActiveRecord::Migration[5.1]
 
       t.string "name", :null => false
       t.text "description"
+
+      # TODO maybe rather archived_at?
       t.boolean "active", :default => true, :null => false
 
       # TODO the queries like "starts_with" won't be consistent across platform, if we'll model separately vs. encoded
@@ -30,9 +32,9 @@ class AddTaggingsForAllTaggableTables < ActiveRecord::Migration[5.1]
       t.string "value", :null => false, :default => ''
 
       # TODO should we name the relation according to the table it relates to? Or just always taggable_id?
-      t.references :vm, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
+      t.references :vm, :type => :bigint, :index => false, :null => false, :foreign_key => {:on_delete => :cascade}
 
-      t.index ["tag_id", "vm_id", "value"], :unique => true
+      t.index ["vm_id", "tag_id", "value"], :unique => true
     end
 
     # TODO add similar mapping tables for all other entities, containers_tags, container_images_tags, etc.
