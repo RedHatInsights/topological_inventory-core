@@ -30,15 +30,12 @@ class AddTaggingsForAllTaggableTables < ActiveRecord::Migration[5.1]
       t.references :source, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
       t.references :tag, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
 
-      # TODO should we support both NULL and empty string? We could just default to empty string and we can have only
-      # 1 unique index. Also graph refresh won't probably allow to store both "" and NULL combination
-      t.string "value"
+      t.string "value", :null => false, :default => ''
 
       # TODO should we name the relation according to the table it relates to? Or just always taggable_id?
       t.references :vm, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
 
       t.index ["tag_id", "vm_id", "value"], :unique => true
-      t.index ["tag_id", "vm_id"], :where  => "value IS NULL", :unique => true
     end
 
     # TODO add similar mapping tables for all other entities, containers_tags, container_images_tags, etc.
