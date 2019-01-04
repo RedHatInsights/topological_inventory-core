@@ -9,19 +9,11 @@ class AddTaggingsForAllTaggableTables < ActiveRecord::Migration[5.1]
       # TODO maybe rather archived_at?
       t.boolean "active", :default => true, :null => false
 
-      # TODO the queries like "starts_with" won't be consistent across platform, if we'll model separately vs. encoded
-      # as namespace/name. Or we'll have to do query transformations, will we do that?
-      t.string "namespace"
-
       # TODO how to model 'Whether this tag can accept zero, one, or multiple associated values', should be just
       # 'multiple' boolean and allow it only if there are values to be associated?
       t.boolean "multiple", :default => false, :null => false
 
-      t.index ["tenant_id", "name", "namespace"],
-              :name => "index_tags_on_tenant_id_name_and_namespace",
-              :unique => true
-
-      t.index ["tenant_id", "name"], :where  => "namespace IS NULL", :unique => true
+      t.index ["tenant_id", "name"], :unique => true
     end
 
     create_table "vms_tags", id: :serial, force: :cascade do |t|
