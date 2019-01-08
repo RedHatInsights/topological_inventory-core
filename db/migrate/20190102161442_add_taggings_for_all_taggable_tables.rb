@@ -12,7 +12,7 @@ class AddTaggingsForAllTaggableTables < ActiveRecord::Migration[5.1]
       t.index ["tenant_id", "name"], :unique => true
     end
 
-    create_table "vms_tags", id: :serial, force: :cascade do |t|
+    create_table "vm_tags", id: :serial, force: :cascade do |t|
       t.references :tenant, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
       t.references :source, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
       t.references :tag, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
@@ -24,7 +24,7 @@ class AddTaggingsForAllTaggableTables < ActiveRecord::Migration[5.1]
       t.index ["vm_id", "tag_id", "value"], :name => "uniq_index_on_vm_id_tag_id_and_value", :unique => true
     end
 
-    create_table "container_groups_tags", id: :serial, force: :cascade do |t|
+    create_table "container_group_tags", id: :serial, force: :cascade do |t|
       t.references :tenant, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
       t.references :source, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
       t.references :tag, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
@@ -36,6 +36,16 @@ class AddTaggingsForAllTaggableTables < ActiveRecord::Migration[5.1]
       t.index ["container_group_id", "tag_id", "value"], :name => "uniq_index_on_container_group_id_tag_id_and_value", :unique => true
     end
 
-    # TODO add similar mapping tables for all other entities, containers_tags, container_images_tags, etc.
+    create_table "container_image_tags", id: :serial, force: :cascade do |t|
+      t.references :tenant, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
+      t.references :source, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
+      t.references :tag, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
+
+      t.string "value", :null => false, :default => ''
+
+      t.references :container_image, :type => :bigint, :index => false, :null => false, :foreign_key => {:on_delete => :cascade}
+
+      t.index ["container_image_id", "tag_id", "value"], :name => "uniq_index_on_container_image_id_tag_id_and_value", :unique => true
+    end
   end
 end
