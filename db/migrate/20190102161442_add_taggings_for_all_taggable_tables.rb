@@ -1,6 +1,6 @@
 class AddTaggingsForAllTaggableTables < ActiveRecord::Migration[5.1]
   def change
-    create_table "tags", id: :serial, force: :cascade do |t|
+    create_table "tags", :id => :serial, :force => :cascade do |t|
       t.references :tenant, :type => :bigint, :index => false, :null => false, :foreign_key => {:on_delete => :cascade}
 
       t.string "name", :null => false
@@ -12,7 +12,7 @@ class AddTaggingsForAllTaggableTables < ActiveRecord::Migration[5.1]
       t.index ["tenant_id", "name"], :unique => true
     end
 
-    create_table "vm_tags", id: :serial, force: :cascade do |t|
+    create_table "vm_tags", :id => :serial, :force => :cascade do |t|
       t.references :tenant, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
       t.references :source, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
       t.references :tag, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
@@ -24,7 +24,7 @@ class AddTaggingsForAllTaggableTables < ActiveRecord::Migration[5.1]
       t.index ["vm_id", "tag_id", "value"], :name => "uniq_index_on_vm_id_tag_id_and_value", :unique => true
     end
 
-    create_table "container_group_tags", id: :serial, force: :cascade do |t|
+    create_table "container_group_tags", :id => :serial, :force => :cascade do |t|
       t.references :tenant, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
       t.references :source, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
       t.references :tag, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
@@ -36,7 +36,7 @@ class AddTaggingsForAllTaggableTables < ActiveRecord::Migration[5.1]
       t.index ["container_group_id", "tag_id", "value"], :name => "uniq_index_on_container_group_id_tag_id_and_value", :unique => true
     end
 
-    create_table "container_image_tags", id: :serial, force: :cascade do |t|
+    create_table "container_image_tags", :id => :serial, :force => :cascade do |t|
       t.references :tenant, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
       t.references :source, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
       t.references :tag, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
