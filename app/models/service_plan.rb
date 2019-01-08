@@ -12,7 +12,6 @@ class ServicePlan < ApplicationRecord
 
   has_many   :service_instances
 
-  acts_as_taggable
   acts_as_tenant(:tenant)
 
   def order(additional_parameters)

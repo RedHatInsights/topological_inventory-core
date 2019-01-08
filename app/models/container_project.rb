@@ -8,6 +8,5 @@ class ContainerProject < ApplicationRecord
   has_many   :container_groups
   has_many   :container_templates
 
-  acts_as_taggable
   acts_as_tenant(:tenant)
 end

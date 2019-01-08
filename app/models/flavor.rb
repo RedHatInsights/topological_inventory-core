@@ -8,6 +8,5 @@ class Flavor < ApplicationRecord
 
   has_many :vms
 
-  acts_as_taggable
   acts_as_tenant(:tenant)
 end

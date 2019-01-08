@@ -1,5 +1,4 @@
 class ApplicationRecord < ActiveRecord::Base
-  require 'acts-as-taggable-on'
   # Hack for running acts_as_tenant in a non Rails env.
   # See https://github.com/ErwinM/acts_as_tenant/pull/192 for proposed fix
   begin

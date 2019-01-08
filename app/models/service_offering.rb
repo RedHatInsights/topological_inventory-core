@@ -11,6 +11,5 @@ class ServiceOffering < ApplicationRecord
   has_many   :service_instances
   has_many   :service_plans
 
-  acts_as_taggable
   acts_as_tenant(:tenant)
 end

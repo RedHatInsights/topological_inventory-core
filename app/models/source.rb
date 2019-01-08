@@ -6,7 +6,6 @@ class Source < ApplicationRecord
   delegate :scheme, :scheme=, :host, :host=, :port, :port=, :path, :path=,
            :to => :default_endpoint, :allow_nil => true
 
-  acts_as_taggable
   acts_as_tenant(:tenant)
 
   def default_endpoint
