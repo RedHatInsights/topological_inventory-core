@@ -9,6 +9,6 @@ class Tag < ApplicationRecord
 
   has_many :vm_tags
   has_many :vms, :through => :vm_tags
-  
+
   acts_as_tenant(:tenant)
 end
