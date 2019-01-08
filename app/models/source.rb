@@ -19,7 +19,9 @@ class Source < ApplicationRecord
 
   # Container Inventory Objects
   has_many :container_groups
+  has_many :container_group_tags, :through => :container_groups
   has_many :container_images
+  has_many :container_image_tags, :through => :container_images
   has_many :container_templates
   has_many :container_projects
   has_many :container_nodes
@@ -36,6 +38,7 @@ class Source < ApplicationRecord
   has_many :flavors
   has_many :orchestration_stacks
   has_many :vms
+  has_many :vm_tags, :through => :vms
 
   # Storage
   has_many :volumes

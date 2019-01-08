@@ -2,7 +2,9 @@ class Tenant < ActiveRecord::Base
   has_many :authentications
   has_many :containers
   has_many :container_groups
+  has_many :container_group_tags
   has_many :container_images
+  has_many :container_image_tags
   has_many :container_projects
   has_many :container_templates
   has_many :flavors
@@ -14,8 +16,10 @@ class Tenant < ActiveRecord::Base
   has_many :source_regions
   has_many :sources
   has_many :subscriptions
+  has_many :tags
   has_many :tasks
   has_many :vms
+  has_many :vm_tags
   has_many :volumes
   has_many :volume_attachments
   has_many :volume_types
