@@ -8,7 +8,7 @@ module TopologicalInventory
         add_containers
         add_default_collection(:container_groups)
         add_default_collection(:container_images)
-        add_default_collection(:container_nodes)    { |b| add_secondary_refs_name(b) }
+        add_default_collection(:container_nodes) { |b| add_secondary_refs_name(b) }
         add_default_collection(:container_projects) { |b| add_secondary_refs_name(b) }
         add_default_collection(:container_templates)
         add_default_collection(:flavors)
@@ -19,10 +19,12 @@ module TopologicalInventory
         add_default_collection(:source_regions)
         add_default_collection(:subscriptions)
         add_default_collection(:vms)
+        add_default_collection(:vm_tags, :manager_ref => [:vm, :tag, :value])
         add_default_collection(:volumes)
         add_volume_attachments
         add_default_collection(:volume_types)
         add_cross_link_vms
+        add_tags
       end
 
       def targeted?
@@ -31,9 +33,9 @@ module TopologicalInventory
 
       private
 
-      def add_default_collection(model)
+      def add_default_collection(model, manager_ref: [:source_ref])
         add_collection(model) do |builder|
-          add_default_properties(builder)
+          add_default_properties(builder, :manager_ref => manager_ref)
           add_default_values(builder)
           yield builder if block_given?
         end
@@ -82,6 +84,25 @@ module TopologicalInventory
             :name        => :cross_link_vms,
             :manager_ref => [:uid_ems],
             :strategy    => :local_db_find_references,
+          )
+        end
+      end
+
+      def add_tags
+        add_collection(:tags) do |builder|
+          builder.add_properties(
+            :arel           => Tag.where(:tenant => manager.tenant),
+            :association    => nil,
+            :model_class    => Tag,
+            :name           => :tags,
+            :manager_ref    => [:name],
+            :create_only    => true,
+            :strategy       => :local_db_find_missing_references,
+            :saver_strategy => :concurrent_safe_batch
+          )
+
+          builder.add_default_values(
+            :tenant_id => ->(persister) { persister.manager.tenant_id },
           )
         end
       end
