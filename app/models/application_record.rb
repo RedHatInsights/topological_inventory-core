@@ -7,7 +7,7 @@ class ApplicationRecord < ActiveRecord::Base
         MAJOR = ActiveRecord::VERSION::MAJOR
       end
     end
-  end unless Rails.const_defined?("VERSION")
+  end if !defined?(::Rails) || !::Rails.const_defined?("VERSION")
   require 'acts_as_tenant'
 
   self.abstract_class = true
