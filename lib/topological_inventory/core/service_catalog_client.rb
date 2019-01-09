@@ -30,6 +30,7 @@ module TopologicalInventory
           :payload    => payload
         }
 
+        Rails.logger.info("Sending serviceinstance create with payload: #{payload}")
         RestClient::Request.new(request_options).execute
       end
 
