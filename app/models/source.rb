@@ -23,8 +23,11 @@ class Source < ApplicationRecord
   has_many :container_images
   has_many :container_image_tags, :through => :container_images
   has_many :container_templates
+  has_many :container_template_tags, :through => :container_templates
   has_many :container_projects
+  has_many :container_project_tags, :through => :container_projects
   has_many :container_nodes
+  has_many :container_node_tags, :through => :container_nodes
   has_many :containers, :through => :container_groups
 
   # Service Catalog Inventory Objects

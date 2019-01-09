@@ -5,8 +5,12 @@ class Tenant < ActiveRecord::Base
   has_many :container_group_tags
   has_many :container_images
   has_many :container_image_tags
+  has_many :container_nodes
+  has_many :container_node_tags
   has_many :container_projects
+  has_many :container_project_tags
   has_many :container_templates
+  has_many :container_template_tags
   has_many :flavors
   has_many :endpoints
   has_many :orchestration_stacks
