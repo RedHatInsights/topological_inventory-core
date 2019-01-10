@@ -4,13 +4,14 @@ class AddTaggingsForAllTaggableTables < ActiveRecord::Migration[5.1]
       t.references :tenant, :type => :bigint, :index => false, :null => false, :foreign_key => {:on_delete => :cascade}
 
       t.string "name", :null => false
+      t.string "namespace", :default => '', :null => false
       t.text "description"
       t.datetime "created_at", :null => false
 
       t.boolean "active", :default => true, :null => false
       t.boolean "multiple", :default => false, :null => false
 
-      t.index ["tenant_id", "name"], :unique => true
+      t.index ["tenant_id", "namespace", "name"], :unique => true
     end
 
     create_table "vm_tags", :id => :serial, :force => :cascade do |t|
