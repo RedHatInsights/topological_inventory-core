@@ -11,7 +11,7 @@
 /config/database.yml
 /coverage/
 /doc/
-/log/
+/log/*.log
 /pkg/
 /spec/reports/
 /tmp/

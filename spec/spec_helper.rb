@@ -14,6 +14,8 @@ require "webmock/rspec"
 require "topological_inventory/core/ar_helper"
 TopologicalInventory::Core::ArHelper.load_environment!
 
+Rails.logger = Logger.new(TopologicalInventory::Core::ArHelper.root.join("log/test.log"))
+
 RSpec.configure do |config|
   config.use_transactional_fixtures = true
   # rspec-expectations config goes here. You can use an alternate
