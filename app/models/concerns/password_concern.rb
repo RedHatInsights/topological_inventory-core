@@ -1,4 +1,4 @@
-require "manageiq/password"
+require "manageiq-password"
 
 module PasswordConcern
   extend ActiveSupport::Concern
