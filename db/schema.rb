@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181210164829) do
+ActiveRecord::Schema.define(version: 2019_01_04_213045) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,12 +20,23 @@ ActiveRecord::Schema.define(version: 20181210164829) do
     t.integer "resource_id"
     t.string "name"
     t.string "authtype"
-    t.string "userid"
+    t.string "username"
     t.string "password"
     t.string "status"
     t.string "status_details"
     t.bigint "tenant_id", null: false
     t.index ["resource_type", "resource_id"], name: "index_authentications_on_resource_type_and_resource_id"
+  end
+
+  create_table "container_group_tags", id: :serial, force: :cascade do |t|
+    t.bigint "tenant_id", null: false
+    t.bigint "tag_id", null: false
+    t.string "value", default: "", null: false
+    t.datetime "created_at", null: false
+    t.bigint "container_group_id", null: false
+    t.index ["container_group_id", "tag_id", "value"], name: "uniq_index_on_container_group_id_tag_id_and_value", unique: true
+    t.index ["tag_id"], name: "index_container_group_tags_on_tag_id"
+    t.index ["tenant_id"], name: "index_container_group_tags_on_tenant_id"
   end
 
   create_table "container_groups", force: :cascade do |t|
@@ -55,6 +66,17 @@ ActiveRecord::Schema.define(version: 20181210164829) do
     t.index ["source_id"], name: "index_container_groups_on_source_id"
   end
 
+  create_table "container_image_tags", id: :serial, force: :cascade do |t|
+    t.bigint "tenant_id", null: false
+    t.bigint "tag_id", null: false
+    t.string "value", default: "", null: false
+    t.datetime "created_at", null: false
+    t.bigint "container_image_id", null: false
+    t.index ["container_image_id", "tag_id", "value"], name: "uniq_index_on_container_image_id_tag_id_and_value", unique: true
+    t.index ["tag_id"], name: "index_container_image_tags_on_tag_id"
+    t.index ["tenant_id"], name: "index_container_image_tags_on_tenant_id"
+  end
+
   create_table "container_images", force: :cascade do |t|
     t.bigint "tenant_id", null: false
     t.bigint "source_id", null: false
@@ -75,6 +97,17 @@ ActiveRecord::Schema.define(version: 20181210164829) do
     t.index ["source_id", "source_ref"], name: "index_container_images_on_source_id_and_source_ref", unique: true
     t.index ["source_id"], name: "index_container_images_on_source_id"
     t.index ["tenant_id"], name: "index_container_images_on_tenant_id"
+  end
+
+  create_table "container_node_tags", id: :serial, force: :cascade do |t|
+    t.bigint "tenant_id", null: false
+    t.bigint "tag_id", null: false
+    t.string "value", default: "", null: false
+    t.datetime "created_at", null: false
+    t.bigint "container_node_id", null: false
+    t.index ["container_node_id", "tag_id", "value"], name: "uniq_index_on_container_node_id_tag_id_and_value", unique: true
+    t.index ["tag_id"], name: "index_container_node_tags_on_tag_id"
+    t.index ["tenant_id"], name: "index_container_node_tags_on_tenant_id"
   end
 
   create_table "container_nodes", force: :cascade do |t|
@@ -106,6 +139,17 @@ ActiveRecord::Schema.define(version: 20181210164829) do
     t.index ["tenant_id"], name: "index_container_nodes_on_tenant_id"
   end
 
+  create_table "container_project_tags", id: :serial, force: :cascade do |t|
+    t.bigint "tenant_id", null: false
+    t.bigint "tag_id", null: false
+    t.string "value", default: "", null: false
+    t.datetime "created_at", null: false
+    t.bigint "container_project_id", null: false
+    t.index ["container_project_id", "tag_id", "value"], name: "uniq_index_on_container_project_id_tag_id_and_value", unique: true
+    t.index ["tag_id"], name: "index_container_project_tags_on_tag_id"
+    t.index ["tenant_id"], name: "index_container_project_tags_on_tenant_id"
+  end
+
   create_table "container_projects", force: :cascade do |t|
     t.bigint "source_id", null: false
     t.string "source_ref"
@@ -128,6 +172,17 @@ ActiveRecord::Schema.define(version: 20181210164829) do
     t.index ["source_deleted_at"], name: "index_container_projects_on_source_deleted_at"
     t.index ["source_id", "source_ref"], name: "index_container_projects_on_source_id_and_source_ref", unique: true
     t.index ["source_id"], name: "index_container_projects_on_source_id"
+  end
+
+  create_table "container_template_tags", id: :serial, force: :cascade do |t|
+    t.bigint "tenant_id", null: false
+    t.bigint "tag_id", null: false
+    t.string "value", default: "", null: false
+    t.datetime "created_at", null: false
+    t.bigint "container_template_id", null: false
+    t.index ["container_template_id", "tag_id", "value"], name: "uniq_index_on_container_template_id_tag_id_and_value", unique: true
+    t.index ["tag_id"], name: "index_container_template_tags_on_tag_id"
+    t.index ["tenant_id"], name: "index_container_template_tags_on_tenant_id"
   end
 
   create_table "container_templates", force: :cascade do |t|
@@ -405,29 +460,13 @@ ActiveRecord::Schema.define(version: 20181210164829) do
     t.index ["tenant_id"], name: "index_subscriptions_on_tenant_id"
   end
 
-  create_table "taggings", id: :serial, force: :cascade do |t|
-    t.integer "tag_id"
-    t.string "taggable_type"
-    t.integer "taggable_id"
-    t.string "tagger_type"
-    t.integer "tagger_id"
-    t.string "context", limit: 128
-    t.datetime "created_at"
-    t.index ["context"], name: "index_taggings_on_context"
-    t.index ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true
-    t.index ["tag_id"], name: "index_taggings_on_tag_id"
-    t.index ["taggable_id", "taggable_type", "context"], name: "index_taggings_on_taggable_id_and_taggable_type_and_context"
-    t.index ["taggable_id", "taggable_type", "tagger_id", "context"], name: "taggings_idy"
-    t.index ["taggable_id"], name: "index_taggings_on_taggable_id"
-    t.index ["taggable_type"], name: "index_taggings_on_taggable_type"
-    t.index ["tagger_id", "tagger_type"], name: "index_taggings_on_tagger_id_and_tagger_type"
-    t.index ["tagger_id"], name: "index_taggings_on_tagger_id"
-  end
-
   create_table "tags", id: :serial, force: :cascade do |t|
-    t.string "name"
-    t.integer "taggings_count", default: 0
-    t.index ["name"], name: "index_tags_on_name", unique: true
+    t.bigint "tenant_id", null: false
+    t.string "name", null: false
+    t.string "namespace", default: "", null: false
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.index ["tenant_id", "namespace", "name"], name: "index_tags_on_tenant_id_and_namespace_and_name", unique: true
   end
 
   create_table "tasks", force: :cascade do |t|
@@ -448,6 +487,17 @@ ActiveRecord::Schema.define(version: 20181210164829) do
     t.string "external_tenant"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "vm_tags", id: :serial, force: :cascade do |t|
+    t.bigint "tenant_id", null: false
+    t.bigint "tag_id", null: false
+    t.string "value", default: "", null: false
+    t.datetime "created_at", null: false
+    t.bigint "vm_id", null: false
+    t.index ["tag_id"], name: "index_vm_tags_on_tag_id"
+    t.index ["tenant_id"], name: "index_vm_tags_on_tenant_id"
+    t.index ["vm_id", "tag_id", "value"], name: "uniq_index_on_vm_id_tag_id_and_value", unique: true
   end
 
   create_table "vms", force: :cascade do |t|
@@ -537,16 +587,31 @@ ActiveRecord::Schema.define(version: 20181210164829) do
   end
 
   add_foreign_key "authentications", "tenants", on_delete: :cascade
+  add_foreign_key "container_group_tags", "container_groups", on_delete: :cascade
+  add_foreign_key "container_group_tags", "tags", on_delete: :cascade
+  add_foreign_key "container_group_tags", "tenants", on_delete: :cascade
   add_foreign_key "container_groups", "container_nodes", on_delete: :cascade
   add_foreign_key "container_groups", "container_projects", on_delete: :cascade
   add_foreign_key "container_groups", "sources", on_delete: :cascade
   add_foreign_key "container_groups", "tenants", on_delete: :cascade
+  add_foreign_key "container_image_tags", "container_images", on_delete: :cascade
+  add_foreign_key "container_image_tags", "tags", on_delete: :cascade
+  add_foreign_key "container_image_tags", "tenants", on_delete: :cascade
   add_foreign_key "container_images", "sources", on_delete: :cascade
   add_foreign_key "container_images", "tenants", on_delete: :cascade
+  add_foreign_key "container_node_tags", "container_nodes", on_delete: :cascade
+  add_foreign_key "container_node_tags", "tags", on_delete: :cascade
+  add_foreign_key "container_node_tags", "tenants", on_delete: :cascade
   add_foreign_key "container_nodes", "sources", on_delete: :cascade
   add_foreign_key "container_nodes", "tenants", on_delete: :cascade
+  add_foreign_key "container_project_tags", "container_projects", on_delete: :cascade
+  add_foreign_key "container_project_tags", "tags", on_delete: :cascade
+  add_foreign_key "container_project_tags", "tenants", on_delete: :cascade
   add_foreign_key "container_projects", "sources", on_delete: :cascade
   add_foreign_key "container_projects", "tenants", on_delete: :cascade
+  add_foreign_key "container_template_tags", "container_templates", on_delete: :cascade
+  add_foreign_key "container_template_tags", "tags", on_delete: :cascade
+  add_foreign_key "container_template_tags", "tenants", on_delete: :cascade
   add_foreign_key "container_templates", "container_projects", on_delete: :cascade
   add_foreign_key "container_templates", "sources", on_delete: :cascade
   add_foreign_key "container_templates", "tenants", on_delete: :cascade
@@ -584,6 +649,10 @@ ActiveRecord::Schema.define(version: 20181210164829) do
   add_foreign_key "sources", "tenants", on_delete: :cascade
   add_foreign_key "subscriptions", "sources", on_delete: :cascade
   add_foreign_key "subscriptions", "tenants", on_delete: :cascade
+  add_foreign_key "tags", "tenants", on_delete: :cascade
+  add_foreign_key "vm_tags", "tags", on_delete: :cascade
+  add_foreign_key "vm_tags", "tenants", on_delete: :cascade
+  add_foreign_key "vm_tags", "vms", on_delete: :cascade
   add_foreign_key "vms", "flavors", on_delete: :nullify
   add_foreign_key "vms", "orchestration_stacks", on_delete: :nullify
   add_foreign_key "vms", "sources", on_delete: :cascade
