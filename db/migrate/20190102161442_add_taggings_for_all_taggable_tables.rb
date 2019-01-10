@@ -5,6 +5,7 @@ class AddTaggingsForAllTaggableTables < ActiveRecord::Migration[5.1]
 
       t.string "name", :null => false
       t.text "description"
+      t.datetime "created_at", :null => false
 
       t.boolean "active", :default => true, :null => false
       t.boolean "multiple", :default => false, :null => false
@@ -18,6 +19,7 @@ class AddTaggingsForAllTaggableTables < ActiveRecord::Migration[5.1]
       t.references :tag, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
 
       t.string "value", :null => false, :default => ''
+      t.datetime "created_at", :null => false
 
       t.references :vm, :type => :bigint, :index => false, :null => false, :foreign_key => {:on_delete => :cascade}
 
@@ -30,6 +32,7 @@ class AddTaggingsForAllTaggableTables < ActiveRecord::Migration[5.1]
       t.references :tag, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
 
       t.string "value", :null => false, :default => ''
+      t.datetime "created_at", :null => false
 
       t.references :container_group, :type => :bigint, :index => false, :null => false, :foreign_key => {:on_delete => :cascade}
 
@@ -42,6 +45,7 @@ class AddTaggingsForAllTaggableTables < ActiveRecord::Migration[5.1]
       t.references :tag, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
 
       t.string "value", :null => false, :default => ''
+      t.datetime "created_at", :null => false
 
       t.references :container_image, :type => :bigint, :index => false, :null => false, :foreign_key => {:on_delete => :cascade}
 
@@ -54,6 +58,7 @@ class AddTaggingsForAllTaggableTables < ActiveRecord::Migration[5.1]
       t.references :tag, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
 
       t.string "value", :null => false, :default => ''
+      t.datetime "created_at", :null => false
 
       t.references :container_node, :type => :bigint, :index => false, :null => false, :foreign_key => {:on_delete => :cascade}
 
@@ -66,6 +71,7 @@ class AddTaggingsForAllTaggableTables < ActiveRecord::Migration[5.1]
       t.references :tag, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
 
       t.string "value", :null => false, :default => ''
+      t.datetime "created_at", :null => false
 
       t.references :container_project, :type => :bigint, :index => false, :null => false, :foreign_key => {:on_delete => :cascade}
 
@@ -78,6 +84,7 @@ class AddTaggingsForAllTaggableTables < ActiveRecord::Migration[5.1]
       t.references :tag, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
 
       t.string "value", :null => false, :default => ''
+      t.datetime "created_at", :null => false
 
       t.references :container_template, :type => :bigint, :index => false, :null => false, :foreign_key => {:on_delete => :cascade}
 
