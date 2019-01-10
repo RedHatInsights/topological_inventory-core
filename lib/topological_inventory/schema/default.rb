@@ -108,6 +108,7 @@ module TopologicalInventory
 
           builder.add_default_values(
             :tenant_id => ->(persister) { persister.manager.tenant_id },
+            :namespace => ->(persister) { persister.manager.source_type.name },
           )
         end
       end
