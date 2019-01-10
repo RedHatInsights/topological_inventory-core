@@ -31,6 +31,10 @@ module TopologicalInventory
         ActiveRecord::Base.establish_connection(ENV["RAILS_ENV"].to_sym)
       end
 
+      def self.root
+        @root ||= Pathname.new(__dir__).join("../../..").expand_path
+      end
+
       private_class_method def self.load_models
         $LOAD_PATH << root.join("app", "models")
         $LOAD_PATH << root.join("app", "models", "concerns")
@@ -40,10 +44,6 @@ module TopologicalInventory
 
         require "application_record"
         Dir[root.join("app/models/**/*.rb")].each { |f| require f }
-      end
-
-      private_class_method def self.root
-        @root ||= Pathname.new(__dir__).join("../../..").expand_path
       end
     end
   end
