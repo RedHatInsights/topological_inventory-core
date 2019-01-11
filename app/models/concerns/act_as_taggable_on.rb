@@ -10,10 +10,14 @@ module ActAsTaggableOn
         true
       end
 
+      def self.tagging_relation_name
+        "#{self.name.underscore}_tags".to_sym
+      end
+
       def taggings
-        public_send("#{self.class.name.underscore}_tags").map do |tagging|
+        public_send(self.class.tagging_relation_name).map do |tagging|
           {
-            :tag_id => tagging.tag_id,
+            :tag_id => tagging.tag_id.to_s,
             :name   => tagging.tag.name,
             :value  => tagging.value,
           }
