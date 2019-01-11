@@ -17,4 +17,9 @@ class ApplicationRecord < ActiveRecord::Base
     options[:except] << :tag_list
     super
   end
+
+  require 'act_as_taggable_on'
+  ActiveSupport.on_load(:active_record) do
+    extend ActAsTaggableOn
+  end
 end
