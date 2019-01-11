@@ -14,7 +14,6 @@ class ApplicationRecord < ActiveRecord::Base
 
   def as_json(options = {})
     options[:except] ||= []
-    options[:except] << :tag_list
     super
   end
 
