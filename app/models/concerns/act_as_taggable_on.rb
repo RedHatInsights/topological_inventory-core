@@ -1,6 +1,6 @@
 module ActAsTaggableOn
   def acts_as_taggable_on
-    mapping_table_name = "#{self.name.underscore}_tags".to_sym
+    mapping_table_name = "#{name.underscore}_tags".to_sym
 
     class_eval do
       has_many mapping_table_name
@@ -11,7 +11,7 @@ module ActAsTaggableOn
       end
 
       def self.tagging_relation_name
-        "#{self.name.underscore}_tags".to_sym
+        "#{name.underscore}_tags".to_sym
       end
 
       def taggings
