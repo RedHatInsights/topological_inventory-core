@@ -16,7 +16,6 @@ class AddTaggingsForAllTaggableTables < ActiveRecord::Migration[5.1]
 
     create_table "vm_tags", :id => :serial, :force => :cascade do |t|
       t.references :tenant, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
-      t.references :source, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
       t.references :tag, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
 
       t.string "value", :null => false, :default => ''
@@ -29,7 +28,6 @@ class AddTaggingsForAllTaggableTables < ActiveRecord::Migration[5.1]
 
     create_table "container_group_tags", :id => :serial, :force => :cascade do |t|
       t.references :tenant, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
-      t.references :source, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
       t.references :tag, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
 
       t.string "value", :null => false, :default => ''
@@ -42,7 +40,6 @@ class AddTaggingsForAllTaggableTables < ActiveRecord::Migration[5.1]
 
     create_table "container_image_tags", :id => :serial, :force => :cascade do |t|
       t.references :tenant, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
-      t.references :source, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
       t.references :tag, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
 
       t.string "value", :null => false, :default => ''
@@ -55,7 +52,6 @@ class AddTaggingsForAllTaggableTables < ActiveRecord::Migration[5.1]
 
     create_table "container_node_tags", :id => :serial, :force => :cascade do |t|
       t.references :tenant, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
-      t.references :source, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
       t.references :tag, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
 
       t.string "value", :null => false, :default => ''
@@ -68,7 +64,6 @@ class AddTaggingsForAllTaggableTables < ActiveRecord::Migration[5.1]
 
     create_table "container_project_tags", :id => :serial, :force => :cascade do |t|
       t.references :tenant, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
-      t.references :source, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
       t.references :tag, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
 
       t.string "value", :null => false, :default => ''
@@ -81,7 +76,6 @@ class AddTaggingsForAllTaggableTables < ActiveRecord::Migration[5.1]
 
     create_table "container_template_tags", :id => :serial, :force => :cascade do |t|
       t.references :tenant, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
-      t.references :source, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
       t.references :tag, :type => :bigint, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
 
       t.string "value", :null => false, :default => ''
