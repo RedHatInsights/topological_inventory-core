@@ -8,9 +8,6 @@ class AddTaggingsForAllTaggableTables < ActiveRecord::Migration[5.1]
       t.text "description"
       t.datetime "created_at", :null => false
 
-      t.boolean "active", :default => true, :null => false
-      t.boolean "multiple", :default => false, :null => false
-
       t.index ["tenant_id", "namespace", "name"], :unique => true
     end
 
