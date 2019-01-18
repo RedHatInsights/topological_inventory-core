@@ -11,16 +11,6 @@ module ActAsTaggableOn
       def self.taggable?
         true
       end
-
-      def taggings
-        public_send(self.class.tagging_relation_name).map do |tagging|
-          {
-            :tag_id => tagging.tag_id.to_s,
-            :name   => tagging.tag.name,
-            :value  => tagging.value,
-          }
-        end
-      end
     end
   end
 end
