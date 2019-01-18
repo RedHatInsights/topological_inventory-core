@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_04_213045) do
+ActiveRecord::Schema.define(version: 2019_01_16_164905) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -348,6 +348,17 @@ ActiveRecord::Schema.define(version: 2019_01_04_213045) do
     t.index ["subscription_id"], name: "index_service_instances_on_subscription_id"
   end
 
+  create_table "service_offering_tags", id: :serial, force: :cascade do |t|
+    t.bigint "tenant_id", null: false
+    t.bigint "tag_id", null: false
+    t.string "value", default: "", null: false
+    t.datetime "created_at", null: false
+    t.bigint "service_offering_id", null: false
+    t.index ["service_offering_id", "tag_id", "value"], name: "uniq_index_on_service_offering_id_tag_id_and_value", unique: true
+    t.index ["tag_id"], name: "index_service_offering_tags_on_tag_id"
+    t.index ["tenant_id"], name: "index_service_offering_tags_on_tenant_id"
+  end
+
   create_table "service_offerings", force: :cascade do |t|
     t.bigint "source_id", null: false
     t.string "source_ref"
@@ -366,6 +377,11 @@ ActiveRecord::Schema.define(version: 2019_01_04_213045) do
     t.bigint "source_region_id"
     t.bigint "subscription_id"
     t.datetime "last_seen_at"
+    t.string "display_name"
+    t.string "documentation_url"
+    t.text "long_description"
+    t.string "distributor"
+    t.string "support_url"
     t.index ["archived_at"], name: "index_service_offerings_on_archived_at"
     t.index ["last_seen_at"], name: "index_service_offerings_on_last_seen_at"
     t.index ["source_deleted_at"], name: "index_service_offerings_on_source_deleted_at"
@@ -634,6 +650,9 @@ ActiveRecord::Schema.define(version: 2019_01_04_213045) do
   add_foreign_key "service_instances", "sources", on_delete: :cascade
   add_foreign_key "service_instances", "subscriptions", on_delete: :cascade
   add_foreign_key "service_instances", "tenants", on_delete: :cascade
+  add_foreign_key "service_offering_tags", "service_offerings", on_delete: :cascade
+  add_foreign_key "service_offering_tags", "tags", on_delete: :cascade
+  add_foreign_key "service_offering_tags", "tenants", on_delete: :cascade
   add_foreign_key "service_offerings", "source_regions", on_delete: :cascade
   add_foreign_key "service_offerings", "sources", on_delete: :cascade
   add_foreign_key "service_offerings", "subscriptions", on_delete: :cascade
