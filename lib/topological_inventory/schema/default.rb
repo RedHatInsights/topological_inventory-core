@@ -27,6 +27,7 @@ module TopologicalInventory
         add_tagging_collection(:container_node_tags, :manager_ref => [:container_node, :tag, :value])
         add_tagging_collection(:container_project_tags, :manager_ref => [:container_project, :tag, :value])
         add_tagging_collection(:container_template_tags, :manager_ref => [:container_template, :tag, :value])
+        add_tagging_collection(:service_offering_tags, :manager_ref => [:service_offering, :tag, :value])
         add_tagging_collection(:vm_tags, :manager_ref => [:vm, :tag, :value])
         add_tags
 
