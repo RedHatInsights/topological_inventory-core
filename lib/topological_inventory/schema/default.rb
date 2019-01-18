@@ -8,7 +8,7 @@ module TopologicalInventory
         add_containers
         add_default_collection(:container_groups)
         add_default_collection(:container_images)
-        add_default_collection(:container_nodes)    { |b| add_secondary_refs_name(b) }
+        add_default_collection(:container_nodes) { |b| add_secondary_refs_name(b) }
         add_default_collection(:container_projects) { |b| add_secondary_refs_name(b) }
         add_default_collection(:container_templates)
         add_default_collection(:flavors)
@@ -20,8 +20,17 @@ module TopologicalInventory
         add_default_collection(:subscriptions)
         add_default_collection(:vms)
         add_default_collection(:volumes)
-        add_volume_attachments
         add_default_collection(:volume_types)
+
+        add_tagging_collection(:container_group_tags, :manager_ref => [:container_group, :tag, :value])
+        add_tagging_collection(:container_image_tags, :manager_ref => [:container_image, :tag, :value])
+        add_tagging_collection(:container_node_tags, :manager_ref => [:container_node, :tag, :value])
+        add_tagging_collection(:container_project_tags, :manager_ref => [:container_project, :tag, :value])
+        add_tagging_collection(:container_template_tags, :manager_ref => [:container_template, :tag, :value])
+        add_tagging_collection(:vm_tags, :manager_ref => [:vm, :tag, :value])
+        add_tags
+
+        add_volume_attachments
         add_cross_link_vms
       end
 
@@ -59,6 +68,21 @@ module TopologicalInventory
         builder.add_properties(:secondary_refs => {:by_name => [:name]})
       end
 
+      def add_tagging_collection(model, manager_ref: [:source_ref])
+        # TODO generate the manager_ref automatically?
+        add_collection(model) do |builder|
+          builder.add_properties(
+            :manager_ref    => manager_ref,
+            :strategy       => :local_db_find_missing_references,
+            :saver_strategy => :concurrent_safe_batch,
+          )
+
+          builder.add_default_values(
+            :tenant_id => ->(persister) { persister.manager.tenant_id },
+          )
+        end
+      end
+
       def add_containers
         add_collection(:containers) do |builder|
           add_default_properties(builder, manager_ref: [:container_group, :name])
@@ -82,6 +106,26 @@ module TopologicalInventory
             :name        => :cross_link_vms,
             :manager_ref => [:uid_ems],
             :strategy    => :local_db_find_references,
+          )
+        end
+      end
+
+      def add_tags
+        add_collection(:tags) do |builder|
+          builder.add_properties(
+            :arel           => Tag.where(:tenant => manager.tenant),
+            :association    => nil,
+            :model_class    => Tag,
+            :name           => :tags,
+            :manager_ref    => [:name],
+            :create_only    => true,
+            :strategy       => :local_db_find_missing_references,
+            :saver_strategy => :concurrent_safe_batch
+          )
+
+          builder.add_default_values(
+            :tenant_id => ->(persister) { persister.manager.tenant_id },
+            :namespace => ->(persister) { persister.manager.source_type.name },
           )
         end
       end

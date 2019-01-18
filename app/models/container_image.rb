@@ -9,4 +9,5 @@ class ContainerImage < ApplicationRecord
   has_many :containers
 
   acts_as_tenant(:tenant)
+  acts_as_taggable_on
 end

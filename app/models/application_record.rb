@@ -1,5 +1,4 @@
 class ApplicationRecord < ActiveRecord::Base
-  require 'acts-as-taggable-on'
   # Hack for running acts_as_tenant in a non Rails env.
   # See https://github.com/ErwinM/acts_as_tenant/pull/192 for proposed fix
   begin
@@ -8,14 +7,18 @@ class ApplicationRecord < ActiveRecord::Base
         MAJOR = ActiveRecord::VERSION::MAJOR
       end
     end
-  end unless Rails.const_defined?("VERSION")
+  end if !defined?(::Rails) || !::Rails.const_defined?("VERSION")
   require 'acts_as_tenant'
 
   self.abstract_class = true
 
   def as_json(options = {})
     options[:except] ||= []
-    options[:except] << :tag_list
     super
+  end
+
+  require 'act_as_taggable_on'
+  ActiveSupport.on_load(:active_record) do
+    extend ActAsTaggableOn
   end
 end

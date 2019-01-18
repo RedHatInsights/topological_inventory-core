@@ -10,6 +10,4 @@ class Volume < ApplicationRecord
 
   has_many :volume_attachments
   has_many :vms, :through => :volume_attachments
-
-  acts_as_taggable
 end

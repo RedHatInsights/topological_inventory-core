@@ -7,6 +7,4 @@ class VolumeType < ApplicationRecord
   belongs_to :source
 
   has_many :volumes
-
-  acts_as_taggable
 end
