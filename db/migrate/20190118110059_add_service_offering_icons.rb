@@ -8,7 +8,7 @@ class AddServiceOfferingIcons < ActiveRecord::Migration[5.2]
       t.binary "data"
       t.timestamps
 
-      t.index      %i(source_id source_ref), :unique => true
+      t.index %i(source_id source_ref), :unique => true
     end
 
     add_reference :service_offerings, :service_offering_icon, :type => :bigint, :index => true, :foreign_key => {:on_delete => :nullify}
