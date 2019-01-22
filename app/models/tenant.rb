@@ -16,6 +16,7 @@ class Tenant < ActiveRecord::Base
   has_many :orchestration_stacks
   has_many :service_instances
   has_many :service_offerings
+  has_many :service_offering_icons
   has_many :service_offering_tags
   has_many :service_plans
   has_many :source_regions
