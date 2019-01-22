@@ -6,7 +6,8 @@ describe ServicePlan do
                               :name             => "plan_name",
                               :service_offering => service_offering)
     end
-    let(:source) { Source.create!(:tenant => tenant, :uid => SecureRandom.uuid) }
+    let(:source_type) { SourceType.create!(:name => 'openshift', :product_name => 'AWS', :vendor => 'Amazon') }
+    let(:source) { Source.create!(:tenant => tenant, :uid => SecureRandom.uuid, :source_type => source_type, :name => "Amazon 1") }
     let(:service_offering) do
       ServiceOffering.create!(:source => source, :tenant => tenant, :name => "service_offering")
     end

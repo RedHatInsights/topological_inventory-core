@@ -468,7 +468,7 @@ ActiveRecord::Schema.define(version: 2019_01_18_110059) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "tenant_id", null: false
-    t.bigint "source_type_id"
+    t.bigint "source_type_id", null: false
     t.index ["source_type_id"], name: "index_sources_on_source_type_id"
     t.index ["uid"], name: "index_sources_on_uid", unique: true
   end
