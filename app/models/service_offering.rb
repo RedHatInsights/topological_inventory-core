@@ -14,8 +14,4 @@ class ServiceOffering < ApplicationRecord
 
   acts_as_tenant(:tenant)
   acts_as_taggable_on
-
-  def icon_data
-    service_offering_icon&.data
-  end
 end
