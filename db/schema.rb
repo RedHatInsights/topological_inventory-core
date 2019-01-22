@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_16_164905) do
+ActiveRecord::Schema.define(version: 2019_01_18_110059) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -348,6 +348,17 @@ ActiveRecord::Schema.define(version: 2019_01_16_164905) do
     t.index ["subscription_id"], name: "index_service_instances_on_subscription_id"
   end
 
+  create_table "service_offering_icons", id: :serial, force: :cascade do |t|
+    t.bigint "tenant_id", null: false
+    t.bigint "source_id", null: false
+    t.string "source_ref", null: false
+    t.binary "data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["source_id", "source_ref"], name: "index_service_offering_icons_on_source_id_and_source_ref", unique: true
+    t.index ["tenant_id"], name: "index_service_offering_icons_on_tenant_id"
+  end
+
   create_table "service_offering_tags", id: :serial, force: :cascade do |t|
     t.bigint "tenant_id", null: false
     t.bigint "tag_id", null: false
@@ -382,8 +393,10 @@ ActiveRecord::Schema.define(version: 2019_01_16_164905) do
     t.text "long_description"
     t.string "distributor"
     t.string "support_url"
+    t.bigint "service_offering_icon_id"
     t.index ["archived_at"], name: "index_service_offerings_on_archived_at"
     t.index ["last_seen_at"], name: "index_service_offerings_on_last_seen_at"
+    t.index ["service_offering_icon_id"], name: "index_service_offerings_on_service_offering_icon_id"
     t.index ["source_deleted_at"], name: "index_service_offerings_on_source_deleted_at"
     t.index ["source_id", "source_ref"], name: "index_service_offerings_on_source_id_and_source_ref", unique: true
     t.index ["source_id"], name: "index_service_offerings_on_source_id"
@@ -650,9 +663,12 @@ ActiveRecord::Schema.define(version: 2019_01_16_164905) do
   add_foreign_key "service_instances", "sources", on_delete: :cascade
   add_foreign_key "service_instances", "subscriptions", on_delete: :cascade
   add_foreign_key "service_instances", "tenants", on_delete: :cascade
+  add_foreign_key "service_offering_icons", "sources", on_delete: :cascade
+  add_foreign_key "service_offering_icons", "tenants", on_delete: :cascade
   add_foreign_key "service_offering_tags", "service_offerings", on_delete: :cascade
   add_foreign_key "service_offering_tags", "tags", on_delete: :cascade
   add_foreign_key "service_offering_tags", "tenants", on_delete: :cascade
+  add_foreign_key "service_offerings", "service_offering_icons", on_delete: :nullify
   add_foreign_key "service_offerings", "source_regions", on_delete: :cascade
   add_foreign_key "service_offerings", "sources", on_delete: :cascade
   add_foreign_key "service_offerings", "subscriptions", on_delete: :cascade

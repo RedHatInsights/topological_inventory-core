@@ -14,6 +14,7 @@ module TopologicalInventory
         add_default_collection(:flavors)
         add_default_collection(:orchestration_stacks)
         add_default_collection(:service_instances)
+        add_default_collection(:service_offering_icons)
         add_default_collection(:service_offerings)
         add_default_collection(:service_plans)
         add_default_collection(:source_regions)
