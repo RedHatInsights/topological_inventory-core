@@ -463,7 +463,7 @@ ActiveRecord::Schema.define(version: 2019_01_18_110059) do
   end
 
   create_table "sources", force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
     t.string "uid", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
