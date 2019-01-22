@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_18_110059) do
+ActiveRecord::Schema.define(version: 2019_01_24_154742) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(version: 2019_01_18_110059) do
     t.string "status_details"
     t.bigint "tenant_id", null: false
     t.index ["resource_type", "resource_id"], name: "index_authentications_on_resource_type_and_resource_id"
+    t.index ["tenant_id"], name: "index_authentications_on_tenant_id"
   end
 
   create_table "container_group_tags", id: :serial, force: :cascade do |t|
@@ -41,7 +42,7 @@ ActiveRecord::Schema.define(version: 2019_01_18_110059) do
 
   create_table "container_groups", force: :cascade do |t|
     t.bigint "source_id", null: false
-    t.string "source_ref"
+    t.string "source_ref", null: false
     t.string "resource_version"
     t.string "name"
     t.bigint "container_project_id"
@@ -63,7 +64,7 @@ ActiveRecord::Schema.define(version: 2019_01_18_110059) do
     t.index ["last_seen_at"], name: "index_container_groups_on_last_seen_at"
     t.index ["source_deleted_at"], name: "index_container_groups_on_source_deleted_at"
     t.index ["source_id", "source_ref"], name: "index_container_groups_on_source_id_and_source_ref", unique: true
-    t.index ["source_id"], name: "index_container_groups_on_source_id"
+    t.index ["tenant_id"], name: "index_container_groups_on_tenant_id"
   end
 
   create_table "container_image_tags", id: :serial, force: :cascade do |t|
@@ -80,7 +81,7 @@ ActiveRecord::Schema.define(version: 2019_01_18_110059) do
   create_table "container_images", force: :cascade do |t|
     t.bigint "tenant_id", null: false
     t.bigint "source_id", null: false
-    t.string "source_ref"
+    t.string "source_ref", null: false
     t.string "resource_version"
     t.string "name"
     t.string "tag"
@@ -94,8 +95,8 @@ ActiveRecord::Schema.define(version: 2019_01_18_110059) do
     t.jsonb "resource_timestamps", default: {}
     t.datetime "resource_timestamps_max"
     t.index ["archived_at"], name: "index_container_images_on_archived_at"
+    t.index ["last_seen_at"], name: "index_container_images_on_last_seen_at"
     t.index ["source_id", "source_ref"], name: "index_container_images_on_source_id_and_source_ref", unique: true
-    t.index ["source_id"], name: "index_container_images_on_source_id"
     t.index ["tenant_id"], name: "index_container_images_on_tenant_id"
   end
 
@@ -112,7 +113,7 @@ ActiveRecord::Schema.define(version: 2019_01_18_110059) do
 
   create_table "container_nodes", force: :cascade do |t|
     t.bigint "source_id", null: false
-    t.string "source_ref"
+    t.string "source_ref", null: false
     t.string "resource_version"
     t.string "name"
     t.integer "cpus"
@@ -135,7 +136,6 @@ ActiveRecord::Schema.define(version: 2019_01_18_110059) do
     t.index ["name"], name: "index_container_nodes_on_name"
     t.index ["source_deleted_at"], name: "index_container_nodes_on_source_deleted_at"
     t.index ["source_id", "source_ref"], name: "index_container_nodes_on_source_id_and_source_ref", unique: true
-    t.index ["source_id"], name: "index_container_nodes_on_source_id"
     t.index ["tenant_id"], name: "index_container_nodes_on_tenant_id"
   end
 
@@ -152,7 +152,7 @@ ActiveRecord::Schema.define(version: 2019_01_18_110059) do
 
   create_table "container_projects", force: :cascade do |t|
     t.bigint "source_id", null: false
-    t.string "source_ref"
+    t.string "source_ref", null: false
     t.string "resource_version"
     t.string "name"
     t.string "display_name"
@@ -171,7 +171,7 @@ ActiveRecord::Schema.define(version: 2019_01_18_110059) do
     t.index ["name"], name: "index_container_projects_on_name"
     t.index ["source_deleted_at"], name: "index_container_projects_on_source_deleted_at"
     t.index ["source_id", "source_ref"], name: "index_container_projects_on_source_id_and_source_ref", unique: true
-    t.index ["source_id"], name: "index_container_projects_on_source_id"
+    t.index ["tenant_id"], name: "index_container_projects_on_tenant_id"
   end
 
   create_table "container_template_tags", id: :serial, force: :cascade do |t|
@@ -187,7 +187,7 @@ ActiveRecord::Schema.define(version: 2019_01_18_110059) do
 
   create_table "container_templates", force: :cascade do |t|
     t.bigint "source_id", null: false
-    t.string "source_ref"
+    t.string "source_ref", null: false
     t.string "resource_version"
     t.bigint "container_project_id"
     t.datetime "created_at", null: false
@@ -206,13 +206,13 @@ ActiveRecord::Schema.define(version: 2019_01_18_110059) do
     t.index ["last_seen_at"], name: "index_container_templates_on_last_seen_at"
     t.index ["source_deleted_at"], name: "index_container_templates_on_source_deleted_at"
     t.index ["source_id", "source_ref"], name: "index_container_templates_on_source_id_and_source_ref", unique: true
-    t.index ["source_id"], name: "index_container_templates_on_source_id"
+    t.index ["tenant_id"], name: "index_container_templates_on_tenant_id"
   end
 
   create_table "containers", force: :cascade do |t|
     t.bigint "tenant_id", null: false
     t.bigint "container_group_id", null: false
-    t.string "name"
+    t.string "name", null: false
     t.float "cpu_limit"
     t.float "cpu_request"
     t.bigint "memory_limit"
@@ -244,12 +244,13 @@ ActiveRecord::Schema.define(version: 2019_01_18_110059) do
     t.boolean "verify_ssl"
     t.text "certificate_authority"
     t.index ["source_id"], name: "index_endpoints_on_source_id"
+    t.index ["tenant_id"], name: "index_endpoints_on_tenant_id"
   end
 
   create_table "flavors", force: :cascade do |t|
     t.bigint "tenant_id", null: false
     t.bigint "source_id", null: false
-    t.string "source_ref"
+    t.string "source_ref", null: false
     t.string "name"
     t.jsonb "extra"
     t.datetime "created_at", null: false
@@ -264,15 +265,15 @@ ActiveRecord::Schema.define(version: 2019_01_18_110059) do
     t.integer "disk_count"
     t.integer "cpus"
     t.index ["archived_at"], name: "index_flavors_on_archived_at"
+    t.index ["last_seen_at"], name: "index_flavors_on_last_seen_at"
     t.index ["source_id", "source_ref"], name: "index_flavors_on_source_id_and_source_ref", unique: true
-    t.index ["source_id"], name: "index_flavors_on_source_id"
     t.index ["tenant_id"], name: "index_flavors_on_tenant_id"
   end
 
   create_table "orchestration_stacks", force: :cascade do |t|
     t.bigint "tenant_id", null: false
     t.bigint "source_id", null: false
-    t.string "source_ref"
+    t.string "source_ref", null: false
     t.string "name"
     t.string "description"
     t.datetime "resource_timestamp"
@@ -287,7 +288,6 @@ ActiveRecord::Schema.define(version: 2019_01_18_110059) do
     t.index ["archived_at"], name: "index_orchestration_stacks_on_archived_at"
     t.index ["last_seen_at"], name: "index_orchestration_stacks_on_last_seen_at"
     t.index ["source_id", "source_ref"], name: "index_orchestration_stacks_on_source_id_and_source_ref", unique: true
-    t.index ["source_id"], name: "index_orchestration_stacks_on_source_id"
     t.index ["tenant_id"], name: "index_orchestration_stacks_on_tenant_id"
   end
 
@@ -320,7 +320,7 @@ ActiveRecord::Schema.define(version: 2019_01_18_110059) do
 
   create_table "service_instances", force: :cascade do |t|
     t.bigint "source_id", null: false
-    t.string "source_ref"
+    t.string "source_ref", null: false
     t.string "name"
     t.bigint "service_offering_id"
     t.bigint "service_plan_id"
@@ -343,9 +343,9 @@ ActiveRecord::Schema.define(version: 2019_01_18_110059) do
     t.index ["service_plan_id"], name: "index_service_instances_on_service_plan_id"
     t.index ["source_deleted_at"], name: "index_service_instances_on_source_deleted_at"
     t.index ["source_id", "source_ref"], name: "index_service_instances_on_source_id_and_source_ref", unique: true
-    t.index ["source_id"], name: "index_service_instances_on_source_id"
     t.index ["source_region_id"], name: "index_service_instances_on_source_region_id"
     t.index ["subscription_id"], name: "index_service_instances_on_subscription_id"
+    t.index ["tenant_id"], name: "index_service_instances_on_tenant_id"
   end
 
   create_table "service_offering_icons", id: :serial, force: :cascade do |t|
@@ -372,7 +372,7 @@ ActiveRecord::Schema.define(version: 2019_01_18_110059) do
 
   create_table "service_offerings", force: :cascade do |t|
     t.bigint "source_id", null: false
-    t.string "source_ref"
+    t.string "source_ref", null: false
     t.string "name"
     t.text "description"
     t.jsonb "extra"
@@ -399,14 +399,14 @@ ActiveRecord::Schema.define(version: 2019_01_18_110059) do
     t.index ["service_offering_icon_id"], name: "index_service_offerings_on_service_offering_icon_id"
     t.index ["source_deleted_at"], name: "index_service_offerings_on_source_deleted_at"
     t.index ["source_id", "source_ref"], name: "index_service_offerings_on_source_id_and_source_ref", unique: true
-    t.index ["source_id"], name: "index_service_offerings_on_source_id"
     t.index ["source_region_id"], name: "index_service_offerings_on_source_region_id"
     t.index ["subscription_id"], name: "index_service_offerings_on_subscription_id"
+    t.index ["tenant_id"], name: "index_service_offerings_on_tenant_id"
   end
 
   create_table "service_plans", force: :cascade do |t|
     t.bigint "source_id", null: false
-    t.string "source_ref"
+    t.string "source_ref", null: false
     t.string "name"
     t.text "description"
     t.bigint "service_offering_id"
@@ -430,14 +430,14 @@ ActiveRecord::Schema.define(version: 2019_01_18_110059) do
     t.index ["service_offering_id"], name: "index_service_plans_on_service_offering_id"
     t.index ["source_deleted_at"], name: "index_service_plans_on_source_deleted_at"
     t.index ["source_id", "source_ref"], name: "index_service_plans_on_source_id_and_source_ref", unique: true
-    t.index ["source_id"], name: "index_service_plans_on_source_id"
     t.index ["source_region_id"], name: "index_service_plans_on_source_region_id"
     t.index ["subscription_id"], name: "index_service_plans_on_subscription_id"
+    t.index ["tenant_id"], name: "index_service_plans_on_tenant_id"
   end
 
   create_table "source_regions", force: :cascade do |t|
     t.bigint "source_id", null: false
-    t.string "source_ref"
+    t.string "source_ref", null: false
     t.string "name"
     t.string "endpoint"
     t.datetime "created_at", null: false
@@ -448,7 +448,6 @@ ActiveRecord::Schema.define(version: 2019_01_18_110059) do
     t.index ["archived_at"], name: "index_source_regions_on_archived_at"
     t.index ["last_seen_at"], name: "index_source_regions_on_last_seen_at"
     t.index ["source_id", "source_ref"], name: "index_source_regions_on_source_id_and_source_ref", unique: true
-    t.index ["source_id"], name: "index_source_regions_on_source_id"
     t.index ["tenant_id"], name: "index_source_regions_on_tenant_id"
   end
 
@@ -470,12 +469,13 @@ ActiveRecord::Schema.define(version: 2019_01_18_110059) do
     t.bigint "tenant_id", null: false
     t.bigint "source_type_id", null: false
     t.index ["source_type_id"], name: "index_sources_on_source_type_id"
+    t.index ["tenant_id"], name: "index_sources_on_tenant_id"
     t.index ["uid"], name: "index_sources_on_uid", unique: true
   end
 
   create_table "subscriptions", force: :cascade do |t|
     t.bigint "source_id", null: false
-    t.string "source_ref"
+    t.string "source_ref", null: false
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -485,7 +485,6 @@ ActiveRecord::Schema.define(version: 2019_01_18_110059) do
     t.index ["archived_at"], name: "index_subscriptions_on_archived_at"
     t.index ["last_seen_at"], name: "index_subscriptions_on_last_seen_at"
     t.index ["source_id", "source_ref"], name: "index_subscriptions_on_source_id_and_source_ref", unique: true
-    t.index ["source_id"], name: "index_subscriptions_on_source_id"
     t.index ["tenant_id"], name: "index_subscriptions_on_tenant_id"
   end
 
@@ -532,7 +531,7 @@ ActiveRecord::Schema.define(version: 2019_01_18_110059) do
   create_table "vms", force: :cascade do |t|
     t.bigint "tenant_id", null: false
     t.bigint "source_id", null: false
-    t.string "source_ref"
+    t.string "source_ref", null: false
     t.string "uid_ems"
     t.string "name"
     t.string "hostname"
@@ -557,7 +556,6 @@ ActiveRecord::Schema.define(version: 2019_01_18_110059) do
     t.index ["last_seen_at"], name: "index_vms_on_last_seen_at"
     t.index ["orchestration_stack_id"], name: "index_vms_on_orchestration_stack_id"
     t.index ["source_id", "source_ref"], name: "index_vms_on_source_id_and_source_ref", unique: true
-    t.index ["source_id"], name: "index_vms_on_source_id"
     t.index ["tenant_id"], name: "index_vms_on_tenant_id"
     t.index ["uid_ems"], name: "index_vms_on_uid_ems"
   end
@@ -576,7 +574,7 @@ ActiveRecord::Schema.define(version: 2019_01_18_110059) do
   create_table "volume_types", force: :cascade do |t|
     t.bigint "tenant_id", null: false
     t.bigint "source_id", null: false
-    t.string "source_ref"
+    t.string "source_ref", null: false
     t.string "name"
     t.text "description"
     t.jsonb "extra"
@@ -585,6 +583,7 @@ ActiveRecord::Schema.define(version: 2019_01_18_110059) do
     t.datetime "archived_at"
     t.datetime "last_seen_at"
     t.index ["archived_at"], name: "index_volume_types_on_archived_at"
+    t.index ["last_seen_at"], name: "index_volume_types_on_last_seen_at"
     t.index ["source_id", "source_ref"], name: "index_volume_types_on_source_id_and_source_ref", unique: true
     t.index ["tenant_id"], name: "index_volume_types_on_tenant_id"
   end
@@ -594,7 +593,7 @@ ActiveRecord::Schema.define(version: 2019_01_18_110059) do
     t.bigint "source_id", null: false
     t.bigint "source_region_id"
     t.bigint "volume_type_id"
-    t.string "source_ref"
+    t.string "source_ref", null: false
     t.string "name"
     t.string "state"
     t.bigint "size"
@@ -609,6 +608,7 @@ ActiveRecord::Schema.define(version: 2019_01_18_110059) do
     t.jsonb "resource_timestamps", default: {}
     t.datetime "resource_timestamps_max"
     t.index ["archived_at"], name: "index_volumes_on_archived_at"
+    t.index ["last_seen_at"], name: "index_volumes_on_last_seen_at"
     t.index ["source_id", "source_ref"], name: "index_volumes_on_source_id_and_source_ref", unique: true
     t.index ["source_region_id"], name: "index_volumes_on_source_region_id"
     t.index ["tenant_id"], name: "index_volumes_on_tenant_id"
@@ -685,6 +685,7 @@ ActiveRecord::Schema.define(version: 2019_01_18_110059) do
   add_foreign_key "subscriptions", "sources", on_delete: :cascade
   add_foreign_key "subscriptions", "tenants", on_delete: :cascade
   add_foreign_key "tags", "tenants", on_delete: :cascade
+  add_foreign_key "tasks", "tenants", on_delete: :cascade
   add_foreign_key "vm_tags", "tags", on_delete: :cascade
   add_foreign_key "vm_tags", "tenants", on_delete: :cascade
   add_foreign_key "vm_tags", "vms", on_delete: :cascade
