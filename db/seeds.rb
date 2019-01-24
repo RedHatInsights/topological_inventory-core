@@ -1,6 +1,10 @@
 def update_or_create(model, attributes)
-  obj = model.find_or_create_by!(:name => attributes[:name])
-  obj.update_attributes!(attributes.except(:name))
+  obj = model.find_by(:name => attributes[:name])
+  if obj
+    obj.update_attributes!(attributes.except(:name))
+  else
+    model.create!(attributes)
+  end
 end
 
 update_or_create(SourceType, :name => "openshift", :product_name => "OpenShift", :vendor => "Red Hat")
