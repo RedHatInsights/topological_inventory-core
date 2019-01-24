@@ -29,6 +29,10 @@ module TopologicalInventory
         expect(missing_column_indexes("archived_at")).to be_empty
       end
 
+      it "checks all last_seen_at columns have index in all tables" do
+        expect(missing_column_indexes("last_seen_at")).to be_empty
+      end
+
       def missing_column_indexes(column_name)
         connection.tables.select do |table|
           connection.columns(table).map(&:name).include?(column_name)
