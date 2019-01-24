@@ -4,6 +4,7 @@ describe ServicePlan do
       described_class.create!(:source           => source,
                               :tenant           => tenant,
                               :name             => "plan_name",
+                              :source_ref       => "plan_source_ref",
                               :service_offering => service_offering)
     end
     let(:source_type) { SourceType.create!(:name => 'openshift', :product_name => 'AWS', :vendor => 'Amazon') }
