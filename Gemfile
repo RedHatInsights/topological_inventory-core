@@ -10,7 +10,6 @@ gemspec
 # Git. Remember to move these dependencies to your gemspec before releasing
 # your gem to rubygems.org.
 
-gem 'active_record_doctor', group: [:development, :test]
 gem "inventory_refresh", :git => "https://github.com/ManageIQ/inventory_refresh", :branch => "master"
 
 #
