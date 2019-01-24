@@ -33,6 +33,29 @@ module TopologicalInventory
         expect(missing_column_indexes("last_seen_at")).to be_empty
       end
 
+      it "checks all tables have tenant_id with NOT NULL constraint" do
+        # We have few system level tables that shouldn't have tenant id
+        exceptions = ["tenants", "source_types", "schema_migrations", "ar_internal_metadata"]
+
+        expect(not_having_column_with_not_null_constraint("tenant_id", exceptions)).to be_empty
+      end
+
+      it "check all tables having source_ref have NOT NULL constraint on it" do
+        expect(missing_not_null_constraint("source_ref")).to be_empty
+      end
+
+      def not_having_column_with_not_null_constraint(column_name, exceptions = [])
+        (connection.tables - exceptions).select do |table|
+          !connection.columns(table).detect {|column| column.name == column_name && !column.null}
+        end
+      end
+
+      def missing_not_null_constraint(column_name)
+        (connection.tables).select do |table|
+          connection.columns(table).detect {|column| column.name == column_name && column.null}
+        end
+      end
+
       def missing_column_indexes(column_name)
         connection.tables.select do |table|
           connection.columns(table).map(&:name).include?(column_name)
