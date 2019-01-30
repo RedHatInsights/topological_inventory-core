@@ -45,14 +45,14 @@ module TopologicalInventory
       end
 
       def not_having_column_with_not_null_constraint(column_name, exceptions = [])
-        (connection.tables - exceptions).select do |table|
-          !connection.columns(table).detect {|column| column.name == column_name && !column.null}
+        (connection.tables - exceptions).reject do |table|
+          connection.columns(table).detect { |column| column.name == column_name && !column.null }
         end
       end
 
       def missing_not_null_constraint(column_name)
-        (connection.tables).select do |table|
-          connection.columns(table).detect {|column| column.name == column_name && column.null}
+        connection.tables.select do |table|
+          connection.columns(table).detect { |column| column.name == column_name && column.null }
         end
       end
 
