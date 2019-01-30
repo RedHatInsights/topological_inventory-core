@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency "rails", "~> 5.2.2"
   s.add_runtime_dependency "rest-client", ">= 1.8.0"
 
+  s.add_development_dependency "active_record_doctor"
   s.add_development_dependency "rspec-rails", "~>3.8"
   s.add_development_dependency "simplecov"
   s.add_development_dependency "webmock"

@@ -4,12 +4,13 @@ describe ServicePlan do
       described_class.create!(:source           => source,
                               :tenant           => tenant,
                               :name             => "plan_name",
+                              :source_ref       => "plan_source_ref",
                               :service_offering => service_offering)
     end
     let(:source_type) { SourceType.create!(:name => 'openshift', :product_name => 'AWS', :vendor => 'Amazon') }
     let(:source) { Source.create!(:tenant => tenant, :uid => SecureRandom.uuid, :source_type => source_type, :name => "Amazon 1") }
     let(:service_offering) do
-      ServiceOffering.create!(:source => source, :tenant => tenant, :name => "service_offering")
+      ServiceOffering.create!(:source => source, :tenant => tenant, :name => "service_offering", :source_ref => "service_offering")
     end
     let(:tenant) { Tenant.create! }
 
