@@ -32,5 +32,9 @@ class Tenant < ActiveRecord::Base
 
   has_many :refresh_states
   has_many :refresh_state_parts, :through => :refresh_states
+
+  def self.tenancy_enabled?
+    ENV["BYPASS_TENANCY"].blank?
+  end
 end
 
