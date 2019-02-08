@@ -29,6 +29,18 @@ ActiveRecord::Schema.define(version: 2019_02_13_155142) do
     t.index ["tenant_id"], name: "index_authentications_on_tenant_id"
   end
 
+  create_table "availabilities", force: :cascade do |t|
+    t.string "resource_type"
+    t.bigint "resource_id"
+    t.string "action", null: false
+    t.string "identifier", null: false
+    t.string "availability", null: false
+    t.datetime "last_checked_at"
+    t.datetime "last_valid_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "container_group_tags", id: :serial, force: :cascade do |t|
     t.bigint "tenant_id", null: false
     t.bigint "tag_id", null: false
