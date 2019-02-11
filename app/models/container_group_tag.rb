@@ -1,6 +1,5 @@
 class ContainerGroupTag < ApplicationRecord
   belongs_to :tenant
-  belongs_to :source
 
   belongs_to :container_group
   belongs_to :tag

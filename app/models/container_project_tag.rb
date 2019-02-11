@@ -1,6 +1,5 @@
 class ContainerProjectTag < ApplicationRecord
   belongs_to :tenant
-  belongs_to :source
 
   belongs_to :container_project
   belongs_to :tag

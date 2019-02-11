@@ -1,6 +1,5 @@
 class ServiceOfferingTag < ApplicationRecord
   belongs_to :tenant
-  belongs_to :source
 
   belongs_to :service_offering
   belongs_to :tag
