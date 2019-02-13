@@ -74,9 +74,10 @@ module TopologicalInventory
         # TODO generate the manager_ref automatically?
         add_collection(model) do |builder|
           builder.add_properties(
-            :manager_ref    => manager_ref,
-            :strategy       => :local_db_find_missing_references,
-            :saver_strategy => :concurrent_safe_batch,
+            :manager_ref        => manager_ref,
+            :strategy           => :local_db_find_missing_references,
+            :saver_strategy     => :concurrent_safe_batch,
+            :retention_strategy => :destroy,
           )
 
           builder.add_default_values(
@@ -95,6 +96,7 @@ module TopologicalInventory
       def add_volume_attachments
         add_collection(:volume_attachments) do |builder|
           add_default_properties(builder, manager_ref: [:volume, :vm])
+          builder.add_properties(:retention_strategy => :destroy)
           builder.add_default_values(:tenant_id => ->(persister) { persister.manager.tenant_id })
         end
       end
