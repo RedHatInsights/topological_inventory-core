@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_14_170341) do
+ActiveRecord::Schema.define(version: 2019_02_15_133418) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -619,4 +619,46 @@ ActiveRecord::Schema.define(version: 2019_02_14_170341) do
   add_foreign_key "volumes", "sources", on_delete: :cascade
   add_foreign_key "volumes", "tenants", on_delete: :cascade
   add_foreign_key "volumes", "volume_types", on_delete: :cascade
+  create_trigger("container_groups_after_delete_row_tr", :generated => true, :compatibility => 1).
+      on("container_groups").
+      after(:delete) do
+    "DELETE FROM taggings WHERE resource_type='ContainerGroup' AND resource_id=OLD.id;"
+  end
+
+  create_trigger("container_projects_after_delete_row_tr", :generated => true, :compatibility => 1).
+      on("container_projects").
+      after(:delete) do
+    "DELETE FROM taggings WHERE resource_type='ContainerProject' AND resource_id=OLD.id;"
+  end
+
+  create_trigger("container_nodes_after_delete_row_tr", :generated => true, :compatibility => 1).
+      on("container_nodes").
+      after(:delete) do
+    "DELETE FROM taggings WHERE resource_type='ContainerNode' AND resource_id=OLD.id;"
+  end
+
+  create_trigger("container_images_after_delete_row_tr", :generated => true, :compatibility => 1).
+      on("container_images").
+      after(:delete) do
+    "DELETE FROM taggings WHERE resource_type='ContainerImage' AND resource_id=OLD.id;"
+  end
+
+  create_trigger("container_templates_after_delete_row_tr", :generated => true, :compatibility => 1).
+      on("container_templates").
+      after(:delete) do
+    "DELETE FROM taggings WHERE resource_type='ContainerTemplate' AND resource_id=OLD.id;"
+  end
+
+  create_trigger("service_offerings_after_delete_row_tr", :generated => true, :compatibility => 1).
+      on("service_offerings").
+      after(:delete) do
+    "DELETE FROM taggings WHERE resource_type='ServiceOffering' AND resource_id=OLD.id;"
+  end
+
+  create_trigger("vms_after_delete_row_tr", :generated => true, :compatibility => 1).
+      on("vms").
+      after(:delete) do
+    "DELETE FROM taggings WHERE resource_type='Vm' AND resource_id=OLD.id;"
+  end
+
 end
