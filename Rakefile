@@ -24,6 +24,9 @@ require "yaml"
 
 load "active_record/railties/databases.rake"
 
+require "hair_trigger"
+load "tasks/hair_trigger.rake"
+
 namespace :db do
   task :environment do
     require "topological_inventory/core/ar_helper"
