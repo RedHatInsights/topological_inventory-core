@@ -12,6 +12,9 @@ gemspec
 
 gem "inventory_refresh", :git => "https://github.com/ManageIQ/inventory_refresh", :branch => "master"
 
+# Until https://github.com/ErwinM/acts_as_tenant/pull/192 is released
+gem "acts_as_tenant", :git => "https://github.com/ErwinM/acts_as_tenant", :branch => "master"
+
 #
 # Custom Gemfile modifications
 #
