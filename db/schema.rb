@@ -604,6 +604,8 @@ ActiveRecord::Schema.define(version: 2019_02_15_133418) do
   add_foreign_key "sources", "tenants", on_delete: :cascade
   add_foreign_key "subscriptions", "sources", on_delete: :cascade
   add_foreign_key "subscriptions", "tenants", on_delete: :cascade
+  add_foreign_key "taggings", "tags", on_delete: :cascade
+  add_foreign_key "taggings", "tenants", on_delete: :cascade
   add_foreign_key "tags", "tenants", on_delete: :cascade
   add_foreign_key "tasks", "tenants", on_delete: :cascade
   add_foreign_key "vms", "flavors", on_delete: :nullify

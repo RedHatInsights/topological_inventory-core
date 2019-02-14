@@ -1,9 +1,9 @@
 class ConsolidateIntermediateTagTables < ActiveRecord::Migration[5.2]
   def up
     create_table :taggings do |t|
-      t.references :tenant,   :null => false, :index => true
+      t.references :tenant,   :null => false, :index => true, :foreign_key => {:on_delete => :cascade}
       t.references :resource, :null => false, :index => true, :polymorphic => true
-      t.references :tag,      :null => false, :index => true
+      t.references :tag,      :null => false, :index => true, :foreign_key => {:on_delete => :cascade}
       t.string     :value
       t.timestamps
     end
