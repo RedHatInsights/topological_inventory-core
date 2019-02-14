@@ -7,7 +7,7 @@ module ActAsTaggableOn
         "taggings".to_sym
       end
 
-      has_many tagging_relation_name, :as => :resource
+      has_many tagging_relation_name, :as => :resource, :inverse_of => :resource
       has_many :tags, :through => tagging_relation_name
 
       def self.taggable?
@@ -15,7 +15,7 @@ module ActAsTaggableOn
       end
 
       trigger.after(:delete) do
-        "DELETE FROM taggings WHERE resource_type='#{self.name}' AND resource_id=OLD.id"
+        "DELETE FROM taggings WHERE resource_type='#{name}' AND resource_id=OLD.id"
       end
     end
   end
