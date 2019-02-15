@@ -3,19 +3,14 @@ module ActAsTaggableOn
     class_eval do
       require "hair_trigger"
 
-      def self.tagging_relation_name
-        "taggings".to_sym
-      end
-
-      has_many tagging_relation_name, :as => :resource, :inverse_of => :resource
-      has_many :tags, :through => tagging_relation_name
+      has_many :tags, :as => :resource
 
       def self.taggable?
         true
       end
 
       trigger.after(:delete) do
-        "DELETE FROM taggings WHERE resource_type='#{name}' AND resource_id=OLD.id"
+        "DELETE FROM tags WHERE resource_type='#{name}' AND resource_id=OLD.id"
       end
     end
   end

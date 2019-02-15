@@ -7,49 +7,49 @@ class CreateTriggersMultipleTables < ActiveRecord::Migration[5.2]
     create_trigger("container_groups_after_delete_row_tr", :generated => true, :compatibility => 1)
       .on("container_groups")
       .after(:delete) do
-      "DELETE FROM taggings WHERE resource_type='ContainerGroup' AND resource_id=OLD.id;"
+      "DELETE FROM tags WHERE resource_type='ContainerGroup' AND resource_id=OLD.id;"
     end
 
     create_trigger("container_projects_after_delete_row_tr", :generated => true, :compatibility => 1)
       .on("container_projects")
       .after(:delete) do
-      "DELETE FROM taggings WHERE resource_type='ContainerProject' AND resource_id=OLD.id;"
+      "DELETE FROM tags WHERE resource_type='ContainerProject' AND resource_id=OLD.id;"
     end
 
     create_trigger("container_nodes_after_delete_row_tr", :generated => true, :compatibility => 1)
       .on("container_nodes")
       .after(:delete) do
-      "DELETE FROM taggings WHERE resource_type='ContainerNode' AND resource_id=OLD.id;"
+      "DELETE FROM tags WHERE resource_type='ContainerNode' AND resource_id=OLD.id;"
     end
 
     create_trigger("container_images_after_delete_row_tr", :generated => true, :compatibility => 1)
       .on("container_images")
       .after(:delete) do
-      "DELETE FROM taggings WHERE resource_type='ContainerImage' AND resource_id=OLD.id;"
+      "DELETE FROM tags WHERE resource_type='ContainerImage' AND resource_id=OLD.id;"
     end
 
     create_trigger("container_templates_after_delete_row_tr", :generated => true, :compatibility => 1)
       .on("container_templates")
       .after(:delete) do
-      "DELETE FROM taggings WHERE resource_type='ContainerTemplate' AND resource_id=OLD.id;"
+      "DELETE FROM tags WHERE resource_type='ContainerTemplate' AND resource_id=OLD.id;"
     end
 
     create_trigger("service_offerings_after_delete_row_tr", :generated => true, :compatibility => 1)
       .on("service_offerings")
       .after(:delete) do
-      "DELETE FROM taggings WHERE resource_type='ServiceOffering' AND resource_id=OLD.id;"
+      "DELETE FROM tags WHERE resource_type='ServiceOffering' AND resource_id=OLD.id;"
     end
 
     create_trigger("service_offerings_after_delete_row_tr", :generated => true, :compatibility => 1)
       .on("service_offerings")
       .after(:delete) do
-      "DELETE FROM taggings WHERE resource_type='ServiceOffering' AND resource_id=OLD.id;"
+      "DELETE FROM tags WHERE resource_type='ServiceOffering' AND resource_id=OLD.id;"
     end
 
     create_trigger("vms_after_delete_row_tr", :generated => true, :compatibility => 1)
       .on("vms")
       .after(:delete) do
-      "DELETE FROM taggings WHERE resource_type='Vm' AND resource_id=OLD.id;"
+      "DELETE FROM tags WHERE resource_type='Vm' AND resource_id=OLD.id;"
     end
   end
 

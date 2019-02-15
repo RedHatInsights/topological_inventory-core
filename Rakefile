@@ -28,6 +28,7 @@ require "hair_trigger"
 load "tasks/hair_trigger.rake"
 
 namespace :db do
+  ENV["SCHEMA"] ||= "db/schema.rb"
   task :environment do
     require "topological_inventory/core/ar_helper"
     TopologicalInventory::Core::ArHelper.load_environment!

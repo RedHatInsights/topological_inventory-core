@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_15_133418) do
+ActiveRecord::Schema.define(version: 2019_02_15_163236) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -424,25 +424,17 @@ ActiveRecord::Schema.define(version: 2019_02_15_133418) do
     t.index ["tenant_id"], name: "index_subscriptions_on_tenant_id"
   end
 
-  create_table "taggings", force: :cascade do |t|
-    t.bigint "tenant_id", null: false
-    t.string "resource_type", null: false
-    t.bigint "resource_id", null: false
-    t.bigint "tag_id", null: false
-    t.string "value"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["resource_type", "resource_id"], name: "index_taggings_on_resource_type_and_resource_id"
-    t.index ["tag_id"], name: "index_taggings_on_tag_id"
-    t.index ["tenant_id"], name: "index_taggings_on_tenant_id"
-  end
-
   create_table "tags", id: :serial, force: :cascade do |t|
     t.bigint "tenant_id", null: false
     t.string "name", null: false
     t.string "namespace", default: "", null: false
     t.text "description"
     t.datetime "created_at", null: false
+    t.string "resource_type", null: false
+    t.bigint "resource_id", null: false
+    t.string "value"
+    t.index ["resource_type", "resource_id", "name"], name: "index_tags_on_resource_type_and_resource_id_and_name", unique: true
+    t.index ["resource_type", "resource_id"], name: "index_tags_on_resource_type_and_resource_id"
     t.index ["tenant_id", "namespace", "name"], name: "index_tags_on_tenant_id_and_namespace_and_name", unique: true
   end
 
@@ -604,8 +596,6 @@ ActiveRecord::Schema.define(version: 2019_02_15_133418) do
   add_foreign_key "sources", "tenants", on_delete: :cascade
   add_foreign_key "subscriptions", "sources", on_delete: :cascade
   add_foreign_key "subscriptions", "tenants", on_delete: :cascade
-  add_foreign_key "taggings", "tags", on_delete: :cascade
-  add_foreign_key "taggings", "tenants", on_delete: :cascade
   add_foreign_key "tags", "tenants", on_delete: :cascade
   add_foreign_key "tasks", "tenants", on_delete: :cascade
   add_foreign_key "vms", "flavors", on_delete: :nullify
@@ -624,43 +614,43 @@ ActiveRecord::Schema.define(version: 2019_02_15_133418) do
   create_trigger("container_groups_after_delete_row_tr", :generated => true, :compatibility => 1).
       on("container_groups").
       after(:delete) do
-    "DELETE FROM taggings WHERE resource_type='ContainerGroup' AND resource_id=OLD.id;"
+    "DELETE FROM tags WHERE resource_type='ContainerGroup' AND resource_id=OLD.id;"
   end
 
   create_trigger("container_projects_after_delete_row_tr", :generated => true, :compatibility => 1).
       on("container_projects").
       after(:delete) do
-    "DELETE FROM taggings WHERE resource_type='ContainerProject' AND resource_id=OLD.id;"
+    "DELETE FROM tags WHERE resource_type='ContainerProject' AND resource_id=OLD.id;"
   end
 
   create_trigger("container_nodes_after_delete_row_tr", :generated => true, :compatibility => 1).
       on("container_nodes").
       after(:delete) do
-    "DELETE FROM taggings WHERE resource_type='ContainerNode' AND resource_id=OLD.id;"
+    "DELETE FROM tags WHERE resource_type='ContainerNode' AND resource_id=OLD.id;"
   end
 
   create_trigger("container_images_after_delete_row_tr", :generated => true, :compatibility => 1).
       on("container_images").
       after(:delete) do
-    "DELETE FROM taggings WHERE resource_type='ContainerImage' AND resource_id=OLD.id;"
+    "DELETE FROM tags WHERE resource_type='ContainerImage' AND resource_id=OLD.id;"
   end
 
   create_trigger("container_templates_after_delete_row_tr", :generated => true, :compatibility => 1).
       on("container_templates").
       after(:delete) do
-    "DELETE FROM taggings WHERE resource_type='ContainerTemplate' AND resource_id=OLD.id;"
+    "DELETE FROM tags WHERE resource_type='ContainerTemplate' AND resource_id=OLD.id;"
   end
 
   create_trigger("service_offerings_after_delete_row_tr", :generated => true, :compatibility => 1).
       on("service_offerings").
       after(:delete) do
-    "DELETE FROM taggings WHERE resource_type='ServiceOffering' AND resource_id=OLD.id;"
+    "DELETE FROM tags WHERE resource_type='ServiceOffering' AND resource_id=OLD.id;"
   end
 
   create_trigger("vms_after_delete_row_tr", :generated => true, :compatibility => 1).
       on("vms").
       after(:delete) do
-    "DELETE FROM taggings WHERE resource_type='Vm' AND resource_id=OLD.id;"
+    "DELETE FROM tags WHERE resource_type='Vm' AND resource_id=OLD.id;"
   end
 
 end
