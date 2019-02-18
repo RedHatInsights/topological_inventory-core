@@ -1,6 +1,5 @@
 class VmTag < ApplicationRecord
   belongs_to :tenant
-  belongs_to :source
 
   belongs_to :vm
   belongs_to :tag
