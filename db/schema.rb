@@ -30,8 +30,8 @@ ActiveRecord::Schema.define(version: 2019_02_13_155142) do
   end
 
   create_table "availabilities", force: :cascade do |t|
-    t.string "resource_type"
-    t.bigint "resource_id"
+    t.string "resource_type", null: false
+    t.bigint "resource_id", null: false
     t.string "action", null: false
     t.string "identifier", null: false
     t.string "availability", null: false

@@ -1,7 +1,7 @@
 class AddAvailabilitiesTable < ActiveRecord::Migration[5.2]
   def change
     create_table :availabilities, :id => :bigserial, :force => :cascade do |t|
-      t.references :resource,     :polymorphic => true, :index => false
+      t.references :resource,     :polymorphic => true, :index => false, :null => false
       t.string     :action,       :null => false
       t.string     :identifier,   :null => false
       t.string     :availability, :null => false
