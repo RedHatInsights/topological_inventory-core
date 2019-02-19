@@ -39,6 +39,7 @@ ActiveRecord::Schema.define(version: 2019_02_13_155142) do
     t.datetime "last_valid_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["resource_type", "resource_id", "action", "identifier"], name: "index_on_resource_action_identifier", unique: true
   end
 
   create_table "container_group_tags", id: :serial, force: :cascade do |t|
