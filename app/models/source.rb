@@ -1,4 +1,6 @@
 class Source < ApplicationRecord
+  attribute :uid, :string, :default => -> { SecureRandom.uuid }
+
   has_many :endpoints, :autosave => true
   belongs_to :source_type
   belongs_to :tenant
