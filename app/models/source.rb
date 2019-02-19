@@ -1,5 +1,7 @@
 class Source < ApplicationRecord
   has_many :endpoints, :autosave => true
+  has_many :availabilities, :as => :resource, :dependent => :destroy, :inverse_of => :resource
+
   belongs_to :source_type
   belongs_to :tenant
 
