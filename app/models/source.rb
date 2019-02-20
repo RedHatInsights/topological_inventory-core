@@ -1,4 +1,6 @@
 class Source < ApplicationRecord
+  attribute :uid, :string, :default => -> { SecureRandom.uuid }
+
   has_many :endpoints, :autosave => true
   has_many :availabilities, :as => :resource, :dependent => :destroy, :inverse_of => :resource
 
