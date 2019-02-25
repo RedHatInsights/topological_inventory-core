@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_13_155142) do
+ActiveRecord::Schema.define(version: 2019_02_22_171042) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -566,8 +566,11 @@ ActiveRecord::Schema.define(version: 2019_02_13_155142) do
     t.bigint "orchestration_stack_id"
     t.datetime "last_seen_at"
     t.bigint "flavor_id"
+    t.uuid "host_inventory_uuid"
+    t.jsonb "mac_addresses"
     t.index ["archived_at"], name: "index_vms_on_archived_at"
     t.index ["flavor_id"], name: "index_vms_on_flavor_id"
+    t.index ["host_inventory_uuid"], name: "index_vms_on_host_inventory_uuid"
     t.index ["last_seen_at"], name: "index_vms_on_last_seen_at"
     t.index ["orchestration_stack_id"], name: "index_vms_on_orchestration_stack_id"
     t.index ["source_id", "source_ref"], name: "index_vms_on_source_id_and_source_ref", unique: true
