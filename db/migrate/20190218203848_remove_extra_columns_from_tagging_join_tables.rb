@@ -10,7 +10,7 @@ class RemoveExtraColumnsFromTaggingJoinTables < ActiveRecord::Migration[5.2]
 
     reversible do |change|
       change.up do
-        remove_reference :container_group_tags, :tenant, :index => true, :null => false,  :foreign_key => {:on_delete => :cascade}
+        remove_reference :container_group_tags, :tenant, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
         remove_reference :container_image_tags, :tenant, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
         remove_reference :container_node_tags, :tenant, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
         remove_reference :container_project_tags, :tenant, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
@@ -20,7 +20,7 @@ class RemoveExtraColumnsFromTaggingJoinTables < ActiveRecord::Migration[5.2]
       end
 
       change.down do
-        add_reference :container_group_tags, :tenant, :index => true, :null => true,  :foreign_key => {:on_delete => :cascade}
+        add_reference :container_group_tags, :tenant, :index => true, :null => true, :foreign_key => {:on_delete => :cascade}
         add_reference :container_image_tags, :tenant, :index => true, :null => true, :foreign_key => {:on_delete => :cascade}
         add_reference :container_node_tags, :tenant, :index => true, :null => true, :foreign_key => {:on_delete => :cascade}
         add_reference :container_project_tags, :tenant, :index => true, :null => true, :foreign_key => {:on_delete => :cascade}

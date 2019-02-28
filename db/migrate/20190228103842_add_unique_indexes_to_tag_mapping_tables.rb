@@ -15,7 +15,6 @@ class AddUniqueIndexesToTagMappingTables < ActiveRecord::Migration[5.2]
     add_index :vm_tags, [:vm_id, :tag_id],
               :name => "uniq_index_on_vm_id_tag_id", :unique => true
 
-
     remove_index :tags, :column => ["tenant_id", "namespace", "name"], :unique => true
     add_index :tags, ["tenant_id", "namespace", "name", "value"], :unique => true
   end
