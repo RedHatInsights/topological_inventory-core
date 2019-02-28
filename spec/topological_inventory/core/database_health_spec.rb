@@ -14,7 +14,7 @@ module TopologicalInventory
       end
 
       it "checks all foreign keys are covered by indexes" do
-        result, _success = ActiveRecordDoctor::Tasks::UnindexedForeignKeys.run
+        result, _success = EnhancedUnindexedForeignKeys.run
 
         expect(result).to be_empty
       end
@@ -70,6 +70,15 @@ module TopologicalInventory
 
       def connection
         ApplicationRecord.connection
+      end
+    end
+  end
+
+  class EnhancedUnindexedForeignKeys < ActiveRecordDoctor::Tasks::UnindexedForeignKeys
+    def indexed_as_polymorphic?(table, column)
+      type_column_name = column.name.sub(/_id\Z/, '_type')
+      connection.indexes(table).any? do |index|
+        index.columns.include?(type_column_name) && index.columns.include?(column.name)
       end
     end
   end
