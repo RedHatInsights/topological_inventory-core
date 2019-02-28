@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_22_171042) do
+ActiveRecord::Schema.define(version: 2019_02_28_103842) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,6 +45,7 @@ ActiveRecord::Schema.define(version: 2019_02_22_171042) do
   create_table "container_group_tags", id: :serial, force: :cascade do |t|
     t.bigint "tag_id", null: false
     t.bigint "container_group_id", null: false
+    t.index ["container_group_id", "tag_id"], name: "uniq_index_on_container_group_id_tag_id", unique: true
     t.index ["tag_id"], name: "index_container_group_tags_on_tag_id"
   end
 
@@ -78,6 +79,7 @@ ActiveRecord::Schema.define(version: 2019_02_22_171042) do
   create_table "container_image_tags", id: :serial, force: :cascade do |t|
     t.bigint "tag_id", null: false
     t.bigint "container_image_id", null: false
+    t.index ["container_image_id", "tag_id"], name: "uniq_index_on_container_image_id_tag_id", unique: true
     t.index ["tag_id"], name: "index_container_image_tags_on_tag_id"
   end
 
@@ -106,6 +108,7 @@ ActiveRecord::Schema.define(version: 2019_02_22_171042) do
   create_table "container_node_tags", id: :serial, force: :cascade do |t|
     t.bigint "tag_id", null: false
     t.bigint "container_node_id", null: false
+    t.index ["container_node_id", "tag_id"], name: "uniq_index_on_container_node_id_tag_id", unique: true
     t.index ["tag_id"], name: "index_container_node_tags_on_tag_id"
   end
 
@@ -140,6 +143,7 @@ ActiveRecord::Schema.define(version: 2019_02_22_171042) do
   create_table "container_project_tags", id: :serial, force: :cascade do |t|
     t.bigint "tag_id", null: false
     t.bigint "container_project_id", null: false
+    t.index ["container_project_id", "tag_id"], name: "uniq_index_on_container_project_id_tag_id", unique: true
     t.index ["tag_id"], name: "index_container_project_tags_on_tag_id"
   end
 
@@ -170,6 +174,7 @@ ActiveRecord::Schema.define(version: 2019_02_22_171042) do
   create_table "container_template_tags", id: :serial, force: :cascade do |t|
     t.bigint "tag_id", null: false
     t.bigint "container_template_id", null: false
+    t.index ["container_template_id", "tag_id"], name: "uniq_index_on_container_template_id_tag_id", unique: true
     t.index ["tag_id"], name: "index_container_template_tags_on_tag_id"
   end
 
@@ -350,6 +355,7 @@ ActiveRecord::Schema.define(version: 2019_02_22_171042) do
   create_table "service_offering_tags", id: :serial, force: :cascade do |t|
     t.bigint "tag_id", null: false
     t.bigint "service_offering_id", null: false
+    t.index ["service_offering_id", "tag_id"], name: "uniq_index_on_service_offering_id_tag_id", unique: true
     t.index ["tag_id"], name: "index_service_offering_tags_on_tag_id"
   end
 
@@ -480,7 +486,7 @@ ActiveRecord::Schema.define(version: 2019_02_22_171042) do
     t.text "description"
     t.datetime "created_at", null: false
     t.string "value", default: "", null: false
-    t.index ["tenant_id", "namespace", "name"], name: "index_tags_on_tenant_id_and_namespace_and_name", unique: true
+    t.index ["tenant_id", "namespace", "name", "value"], name: "index_tags_on_tenant_id_and_namespace_and_name_and_value", unique: true
   end
 
   create_table "tasks", force: :cascade do |t|
@@ -507,6 +513,7 @@ ActiveRecord::Schema.define(version: 2019_02_22_171042) do
     t.bigint "tag_id", null: false
     t.bigint "vm_id", null: false
     t.index ["tag_id"], name: "index_vm_tags_on_tag_id"
+    t.index ["vm_id", "tag_id"], name: "uniq_index_on_vm_id_tag_id", unique: true
   end
 
   create_table "vms", force: :cascade do |t|
