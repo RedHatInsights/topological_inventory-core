@@ -14,7 +14,7 @@ module TopologicalInventory
       end
 
       it "checks all foreign keys are covered by indexes" do
-        result, _success = ActiveRecordDoctor::Tasks::UnindexedForeignKeys.run
+        result, _success = EnhancedUnindexedForeignKeys.run
 
         expect(result).to be_empty
       end
@@ -35,7 +35,9 @@ module TopologicalInventory
 
       it "checks all tables have tenant_id with NOT NULL constraint" do
         # We have few system level tables that shouldn't have tenant id
-        exceptions = ["tenants", "source_types", "schema_migrations", "ar_internal_metadata"]
+        exceptions = ["tenants", "source_types", "schema_migrations", "ar_internal_metadata", "container_node_tags",
+                      "service_offering_tags", "container_group_tags", "container_project_tags", "container_image_tags",
+                      "container_template_tags", "vm_tags", "availabilities"]
 
         expect(not_having_column_with_not_null_constraint("tenant_id", exceptions)).to be_empty
       end
@@ -68,6 +70,15 @@ module TopologicalInventory
 
       def connection
         ApplicationRecord.connection
+      end
+    end
+  end
+
+  class EnhancedUnindexedForeignKeys < ActiveRecordDoctor::Tasks::UnindexedForeignKeys
+    def indexed_as_polymorphic?(table, column)
+      type_column_name = column.name.sub(/_id\Z/, '_type')
+      connection.indexes(table).any? do |index|
+        index.columns.include?(type_column_name) && index.columns.include?(column.name)
       end
     end
   end
