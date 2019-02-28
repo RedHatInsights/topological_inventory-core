@@ -23,13 +23,13 @@ module TopologicalInventory
         add_default_collection(:volumes)
         add_default_collection(:volume_types)
 
-        add_tagging_collection(:container_group_tags, :manager_ref => [:container_group, :tag, :value])
-        add_tagging_collection(:container_image_tags, :manager_ref => [:container_image, :tag, :value])
-        add_tagging_collection(:container_node_tags, :manager_ref => [:container_node, :tag, :value])
-        add_tagging_collection(:container_project_tags, :manager_ref => [:container_project, :tag, :value])
-        add_tagging_collection(:container_template_tags, :manager_ref => [:container_template, :tag, :value])
-        add_tagging_collection(:service_offering_tags, :manager_ref => [:service_offering, :tag, :value])
-        add_tagging_collection(:vm_tags, :manager_ref => [:vm, :tag, :value])
+        add_tagging_collection(:container_group_tags, :manager_ref => [:container_group, :tag])
+        add_tagging_collection(:container_image_tags, :manager_ref => [:container_image, :tag])
+        add_tagging_collection(:container_node_tags, :manager_ref => [:container_node, :tag])
+        add_tagging_collection(:container_project_tags, :manager_ref => [:container_project, :tag])
+        add_tagging_collection(:container_template_tags, :manager_ref => [:container_template, :tag])
+        add_tagging_collection(:service_offering_tags, :manager_ref => [:service_offering, :tag])
+        add_tagging_collection(:vm_tags, :manager_ref => [:vm, :tag])
         add_tags
 
         add_volume_attachments
@@ -79,10 +79,6 @@ module TopologicalInventory
             :saver_strategy     => :concurrent_safe_batch,
             :retention_strategy => :destroy,
           )
-
-          builder.add_default_values(
-            :tenant_id => ->(persister) { persister.manager.tenant_id },
-          )
         end
       end
 
@@ -121,7 +117,7 @@ module TopologicalInventory
             :association    => nil,
             :model_class    => Tag,
             :name           => :tags,
-            :manager_ref    => [:name],
+            :manager_ref    => [:name, :value],
             :create_only    => true,
             :strategy       => :local_db_find_missing_references,
             :saver_strategy => :concurrent_safe_batch

@@ -13,11 +13,12 @@ module ActAsTaggableOn
       end
 
       def taggings
-        public_send(self.class.tagging_relation_name).map do |tagging|
+        # TODO: legacy v0.0 API dependency, remove when v0.0 is removed
+        public_send(:tags).map do |tag|
           {
-            :tag_id => tagging.tag_id.to_s,
-            :name   => tagging.tag.name,
-            :value  => tagging.value,
+            :tag_id => tag.id.to_s,
+            :name   => tag.name,
+            :value  => tag.value,
           }
         end
       end
