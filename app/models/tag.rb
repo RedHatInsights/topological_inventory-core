@@ -16,6 +16,9 @@ class Tag < ApplicationRecord
   has_many :container_template_tags
   has_many :container_templates, :through => :container_template_tags
 
+  has_many :service_offering_tags
+  has_many :tags, :through => :service_offering_tags
+
   has_many :vm_tags
   has_many :vms, :through => :vm_tags
 
