@@ -1,7 +1,5 @@
 # TopologicalInventory
 
-Short description and motivation.
-
 [![Build Status](https://travis-ci.org/ManageIQ/topological_inventory-core.svg)](https://travis-ci.org/ManageIQ/topological_inventory-core)
 [![Maintainability](https://api.codeclimate.com/v1/badges/34f9bd9412e35c1a36fd/maintainability)](https://codeclimate.com/github/ManageIQ/topological_inventory-core/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/34f9bd9412e35c1a36fd/test_coverage)](https://codeclimate.com/github/ManageIQ/topological_inventory-core/test_coverage)
