@@ -10,10 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_28_103842) do
+ActiveRecord::Schema.define(version: 2019_03_08_145549) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "applications", force: :cascade do |t|
+    t.string "name", null: false
+    t.index ["name"], name: "index_applications_on_name", unique: true
+  end
 
   create_table "authentications", force: :cascade do |t|
     t.string "resource_type"
@@ -423,6 +428,12 @@ ActiveRecord::Schema.define(version: 2019_02_28_103842) do
     t.index ["source_region_id"], name: "index_service_plans_on_source_region_id"
     t.index ["subscription_id"], name: "index_service_plans_on_subscription_id"
     t.index ["tenant_id"], name: "index_service_plans_on_tenant_id"
+  end
+
+  create_table "source_applications", force: :cascade do |t|
+    t.bigint "source_id"
+    t.bigint "application_id"
+    t.index ["source_id", "application_id"], name: "index_source_applications_on_source_id_and_application_id", unique: true
   end
 
   create_table "source_regions", force: :cascade do |t|
