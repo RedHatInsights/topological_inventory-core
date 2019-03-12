@@ -10,10 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_28_103842) do
+ActiveRecord::Schema.define(version: 2019_03_08_145549) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "application_types", force: :cascade do |t|
+    t.string "name", null: false
+    t.index ["name"], name: "index_application_types_on_name", unique: true
+  end
+
+  create_table "applications", force: :cascade do |t|
+    t.bigint "tenant_id", null: false
+    t.bigint "source_id", null: false
+    t.bigint "application_type_id", null: false
+    t.index ["application_type_id"], name: "index_applications_on_application_type_id"
+    t.index ["source_id"], name: "index_applications_on_source_id"
+    t.index ["tenant_id"], name: "index_applications_on_tenant_id"
+  end
 
   create_table "authentications", force: :cascade do |t|
     t.string "resource_type"
@@ -606,6 +620,9 @@ ActiveRecord::Schema.define(version: 2019_02_28_103842) do
     t.index ["volume_type_id"], name: "index_volumes_on_volume_type_id"
   end
 
+  add_foreign_key "applications", "application_types", on_delete: :cascade
+  add_foreign_key "applications", "sources", on_delete: :cascade
+  add_foreign_key "applications", "tenants", on_delete: :cascade
   add_foreign_key "authentications", "tenants", on_delete: :cascade
   add_foreign_key "container_group_tags", "container_groups", on_delete: :cascade
   add_foreign_key "container_group_tags", "tags", on_delete: :cascade

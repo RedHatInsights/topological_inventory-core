@@ -3,6 +3,8 @@ class Source < ApplicationRecord
 
   has_many :endpoints, :autosave => true
   has_many :availabilities, :as => :resource, :dependent => :destroy, :inverse_of => :resource
+  has_many :applications
+  has_many :application_types, :through => :applications
 
   belongs_to :source_type
   belongs_to :tenant
