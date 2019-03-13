@@ -10,13 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_08_145549) do
+ActiveRecord::Schema.define(version: 2019_03_13_191654) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "application_types", force: :cascade do |t|
     t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "display_name"
     t.index ["name"], name: "index_application_types_on_name", unique: true
   end
 
@@ -24,6 +27,8 @@ ActiveRecord::Schema.define(version: 2019_03_08_145549) do
     t.bigint "tenant_id", null: false
     t.bigint "source_id", null: false
     t.bigint "application_type_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["application_type_id"], name: "index_applications_on_application_type_id"
     t.index ["source_id"], name: "index_applications_on_source_id"
     t.index ["tenant_id"], name: "index_applications_on_tenant_id"
