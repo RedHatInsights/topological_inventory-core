@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_13_191654) do
+ActiveRecord::Schema.define(version: 2019_03_14_133842) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -150,6 +150,13 @@ ActiveRecord::Schema.define(version: 2019_03_13_191654) do
     t.datetime "last_seen_at"
     t.string "lives_on_type"
     t.bigint "lives_on_id"
+    t.integer "pods"
+    t.bigint "allocatable_memory"
+    t.float "allocatable_cpus"
+    t.integer "allocatable_pods"
+    t.jsonb "conditions"
+    t.jsonb "addresses"
+    t.jsonb "node_info"
     t.index ["archived_at"], name: "index_container_nodes_on_archived_at"
     t.index ["last_seen_at"], name: "index_container_nodes_on_last_seen_at"
     t.index ["lives_on_type", "lives_on_id"], name: "index_container_nodes_on_lives_on_type_and_lives_on_id"
@@ -182,12 +189,38 @@ ActiveRecord::Schema.define(version: 2019_03_13_191654) do
     t.jsonb "resource_timestamps", default: {}
     t.datetime "resource_timestamps_max"
     t.datetime "last_seen_at"
+    t.string "status_phase"
     t.index ["archived_at"], name: "index_container_projects_on_archived_at"
     t.index ["last_seen_at"], name: "index_container_projects_on_last_seen_at"
     t.index ["name"], name: "index_container_projects_on_name"
     t.index ["source_deleted_at"], name: "index_container_projects_on_source_deleted_at"
     t.index ["source_id", "source_ref"], name: "index_container_projects_on_source_id_and_source_ref", unique: true
     t.index ["tenant_id"], name: "index_container_projects_on_tenant_id"
+  end
+
+  create_table "container_resource_quotas", force: :cascade do |t|
+    t.bigint "tenant_id", null: false
+    t.bigint "source_id", null: false
+    t.bigint "container_project_id"
+    t.string "source_ref", null: false
+    t.string "resource_version"
+    t.string "name"
+    t.jsonb "status"
+    t.jsonb "spec"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "archived_at"
+    t.datetime "last_seen_at"
+    t.datetime "source_deleted_at"
+    t.datetime "source_created_at"
+    t.datetime "resource_timestamp"
+    t.jsonb "resource_timestamps", default: {}
+    t.datetime "resource_timestamps_max"
+    t.index ["archived_at"], name: "index_container_resource_quotas_on_archived_at"
+    t.index ["container_project_id"], name: "index_container_resource_quotas_on_container_project_id"
+    t.index ["last_seen_at"], name: "index_container_resource_quotas_on_last_seen_at"
+    t.index ["source_id", "source_ref"], name: "index_container_resource_quotas_on_source_id_and_source_ref", unique: true
+    t.index ["tenant_id"], name: "index_container_resource_quotas_on_tenant_id"
   end
 
   create_table "container_template_tags", id: :serial, force: :cascade do |t|
@@ -647,6 +680,9 @@ ActiveRecord::Schema.define(version: 2019_03_13_191654) do
   add_foreign_key "container_project_tags", "tags", on_delete: :cascade
   add_foreign_key "container_projects", "sources", on_delete: :cascade
   add_foreign_key "container_projects", "tenants", on_delete: :cascade
+  add_foreign_key "container_resource_quotas", "container_projects", on_delete: :cascade
+  add_foreign_key "container_resource_quotas", "sources", on_delete: :cascade
+  add_foreign_key "container_resource_quotas", "tenants", on_delete: :cascade
   add_foreign_key "container_template_tags", "container_templates", on_delete: :cascade
   add_foreign_key "container_template_tags", "tags", on_delete: :cascade
   add_foreign_key "container_templates", "container_projects", on_delete: :cascade

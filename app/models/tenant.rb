@@ -9,6 +9,7 @@ class Tenant < ActiveRecord::Base
   has_many :container_node_tags
   has_many :container_projects
   has_many :container_project_tags
+  has_many :container_resource_quotas
   has_many :container_templates
   has_many :container_template_tags
   has_many :flavors
