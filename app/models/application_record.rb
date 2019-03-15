@@ -6,6 +6,10 @@ class ApplicationRecord < ActiveRecord::Base
       module VERSION
         MAJOR = ActiveRecord::VERSION::MAJOR
       end
+      def self.logger
+        require "topological_inventory/core/logger"
+        TopologicalInventory::Core.logger
+      end
     end
   end if !defined?(::Rails) || !::Rails.const_defined?("VERSION")
   require 'acts_as_tenant'
