@@ -28,6 +28,7 @@ class Source < ApplicationRecord
   has_many :container_group_tags, :through => :container_groups
   has_many :container_images
   has_many :container_image_tags, :through => :container_images
+  has_many :container_resource_quotas
   has_many :container_templates
   has_many :container_template_tags, :through => :container_templates
   has_many :container_projects

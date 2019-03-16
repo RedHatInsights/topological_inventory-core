@@ -10,6 +10,7 @@ module TopologicalInventory
         add_default_collection(:container_images)
         add_default_collection(:container_nodes) { |b| add_secondary_refs_name(b) }
         add_default_collection(:container_projects) { |b| add_secondary_refs_name(b) }
+        add_default_collection(:container_resource_quotas)
         add_default_collection(:container_templates)
         add_default_collection(:flavors)
         add_default_collection(:orchestration_stacks)
