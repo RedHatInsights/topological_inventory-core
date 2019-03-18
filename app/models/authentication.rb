@@ -1,7 +1,7 @@
-require "password_concern"
+require "manageiq/password/password_mixin"
 
 class Authentication < ApplicationRecord
-  include PasswordConcern
+  include ManageIQ::Password::PasswordMixin
   encrypt_column :password
 
   belongs_to :tenant
