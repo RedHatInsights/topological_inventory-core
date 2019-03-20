@@ -25,8 +25,7 @@ class ExtractSourcesToNewService < ActiveRecord::Migration[5.2]
       t.bigint "tenant_id", :null => false
       t.bigint "source_id", :null => false
       t.bigint "application_type_id", :null => false
-      t.datetime "created_at", :null => false
-      t.datetime "updated_at", :null => false
+      t.timestamps
       t.index ["application_type_id"], :name => "index_applications_on_application_type_id"
       t.index ["source_id"], :name => "index_applications_on_source_id"
       t.index ["tenant_id"], :name => "index_applications_on_tenant_id"
@@ -54,8 +53,7 @@ class ExtractSourcesToNewService < ActiveRecord::Migration[5.2]
       t.string "availability", :null => false
       t.datetime "last_checked_at"
       t.datetime "last_valid_at"
-      t.datetime "created_at", :null => false
-      t.datetime "updated_at", :null => false
+      t.timestamps
       t.index ["resource_type", "resource_id", "action", "identifier"], :name => "index_on_resource_action_identifier", :unique => true
     end
 
@@ -63,8 +61,7 @@ class ExtractSourcesToNewService < ActiveRecord::Migration[5.2]
       t.string "role"
       t.integer "port"
       t.bigint "source_id"
-      t.datetime "created_at", :null => false
-      t.datetime "updated_at", :null => false
+      t.timestamps
       t.boolean "default", :default => false
       t.string "scheme"
       t.string "host"
@@ -80,8 +77,7 @@ class ExtractSourcesToNewService < ActiveRecord::Migration[5.2]
       t.string "name", :null => false
       t.string "product_name", :null => false
       t.string "vendor", :null => false
-      t.datetime "created_at", :null => false
-      t.datetime "updated_at", :null => false
+      t.timestamps
       t.jsonb("schema")
       t.index ["name"], :name => "index_source_types_on_name", :unique => true
     end
