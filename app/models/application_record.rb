@@ -7,7 +7,7 @@ class ApplicationRecord < ActiveRecord::Base
         MAJOR = ActiveRecord::VERSION::MAJOR
       end
       def self.logger
-        require "topological_inventory/core/logger"
+        require "topological_inventory/core/logging"
         TopologicalInventory::Core.logger
       end
     end
