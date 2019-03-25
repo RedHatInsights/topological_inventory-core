@@ -37,6 +37,15 @@ module TopologicalInventory
         add_cross_link_vms
       end
 
+      def to_hash
+        {
+          "schema": {
+            "name": "Default"
+          },
+          "source": manager.uid,
+        }.merge(super)
+      end
+
       def targeted?
         true
       end
