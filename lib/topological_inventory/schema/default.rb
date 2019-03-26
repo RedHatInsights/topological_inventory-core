@@ -1,9 +1,8 @@
-require "inventory_refresh"
-require "inventory_refresh/persister"
+require "topological_inventory/schema/base"
 
 module TopologicalInventory
   module Schema
-    class Default < InventoryRefresh::Persister
+    class Default < TopologicalInventory::Schema::Base
       def initialize_inventory_collections
         add_containers
         add_default_collection(:container_groups)
@@ -35,15 +34,6 @@ module TopologicalInventory
 
         add_volume_attachments
         add_cross_link_vms
-      end
-
-      def to_hash
-        {
-          "schema": {
-            "name": "Default"
-          },
-          "source": manager.uid,
-        }.merge(super)
       end
 
       def targeted?
