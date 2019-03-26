@@ -1,5 +1,5 @@
 describe "ActsAsTaggableOn" do
-  let(:tenant) { Tenant.find_or_create_by!(:name => "default") }
+  let(:tenant) { Tenant.find_or_create_by!(:name => "default", :external_tenant => "external_tenant_uuid") }
   let(:source_type) { SourceType.find_or_create_by!(:name => 'openshift', :product_name => "OpenShift", :vendor => "Red Hat") }
   let(:source) { Source.find_or_create_by!(:name => "OCP", :uid => "9a874712-9a55-49ab-a46a-c823acc35503", :tenant => tenant, :source_type => source_type) }
   let(:container_image) { ContainerImage.find_or_create_by!(:tenant => tenant, :source_ref => "XXX", :source => source) }

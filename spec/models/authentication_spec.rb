@@ -5,7 +5,9 @@ describe Authentication do
     let(:password) { "p4$$w0rd" }
 
     it "is encrypted" do
-      auth = described_class.create!(:password => password, :tenant => Tenant.create!)
+      auth = described_class.create!(
+        :password => password, :tenant => Tenant.create!(:name => "default", :external_tenant => "external_tenant_uuid")
+      )
 
       expect(auth.password).to eq password
       expect(auth.password_encrypted).to be_encrypted(password)
