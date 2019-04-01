@@ -33,7 +33,7 @@ module TopologicalInventory
         expect(missing_column_indexes("last_seen_at")).to be_empty
       end
 
-      it "checks all tables exposed to ingress API have last_seen_on column" do
+      it "checks all tables exposed to ingress API have last_seen_at column" do
         exceptions = ["authentications", "refresh_states", "refresh_state_parts", "endpoints", "sources", "tasks",
                       "applications"]
         exceptions += internal_tables
