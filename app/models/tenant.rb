@@ -1,4 +1,4 @@
-class Tenant < ActiveRecord::Base
+class Tenant < ApplicationRecord
   has_many :authentications
   has_many :containers
   has_many :container_groups
