@@ -68,11 +68,11 @@ module TopologicalInventory
 
       def not_having_column_with_type(column_name, column_type, exceptions = [])
         (connection.tables - exceptions).reject do |table|
-          connection.columns(table).detect { |column| column.name == column_name && column.type == column_type}
+          connection.columns(table).detect { |column| column.name == column_name && column.type == column_type }
         end
       end
 
-      def missing_column_indexes(column_name, exceptions = [])
+      def missing_column_indexes(column_name)
         connection.tables.select do |table|
           connection.columns(table).map(&:name).include?(column_name)
         end.reject do |table|
