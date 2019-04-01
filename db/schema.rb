@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_25_115642) do
+ActiveRecord::Schema.define(version: 2019_04_01_134142) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -64,7 +64,9 @@ ActiveRecord::Schema.define(version: 2019_03_25_115642) do
   create_table "container_group_tags", id: :serial, force: :cascade do |t|
     t.bigint "tag_id", null: false
     t.bigint "container_group_id", null: false
+    t.datetime "last_seen_at"
     t.index ["container_group_id", "tag_id"], name: "uniq_index_on_container_group_id_tag_id", unique: true
+    t.index ["last_seen_at"], name: "index_container_group_tags_on_last_seen_at"
     t.index ["tag_id"], name: "index_container_group_tags_on_tag_id"
   end
 
@@ -98,7 +100,9 @@ ActiveRecord::Schema.define(version: 2019_03_25_115642) do
   create_table "container_image_tags", id: :serial, force: :cascade do |t|
     t.bigint "tag_id", null: false
     t.bigint "container_image_id", null: false
+    t.datetime "last_seen_at"
     t.index ["container_image_id", "tag_id"], name: "uniq_index_on_container_image_id_tag_id", unique: true
+    t.index ["last_seen_at"], name: "index_container_image_tags_on_last_seen_at"
     t.index ["tag_id"], name: "index_container_image_tags_on_tag_id"
   end
 
@@ -127,7 +131,9 @@ ActiveRecord::Schema.define(version: 2019_03_25_115642) do
   create_table "container_node_tags", id: :serial, force: :cascade do |t|
     t.bigint "tag_id", null: false
     t.bigint "container_node_id", null: false
+    t.datetime "last_seen_at"
     t.index ["container_node_id", "tag_id"], name: "uniq_index_on_container_node_id_tag_id", unique: true
+    t.index ["last_seen_at"], name: "index_container_node_tags_on_last_seen_at"
     t.index ["tag_id"], name: "index_container_node_tags_on_tag_id"
   end
 
@@ -169,7 +175,9 @@ ActiveRecord::Schema.define(version: 2019_03_25_115642) do
   create_table "container_project_tags", id: :serial, force: :cascade do |t|
     t.bigint "tag_id", null: false
     t.bigint "container_project_id", null: false
+    t.datetime "last_seen_at"
     t.index ["container_project_id", "tag_id"], name: "uniq_index_on_container_project_id_tag_id", unique: true
+    t.index ["last_seen_at"], name: "index_container_project_tags_on_last_seen_at"
     t.index ["tag_id"], name: "index_container_project_tags_on_tag_id"
   end
 
@@ -226,7 +234,9 @@ ActiveRecord::Schema.define(version: 2019_03_25_115642) do
   create_table "container_template_tags", id: :serial, force: :cascade do |t|
     t.bigint "tag_id", null: false
     t.bigint "container_template_id", null: false
+    t.datetime "last_seen_at"
     t.index ["container_template_id", "tag_id"], name: "uniq_index_on_container_template_id_tag_id", unique: true
+    t.index ["last_seen_at"], name: "index_container_template_tags_on_last_seen_at"
     t.index ["tag_id"], name: "index_container_template_tags_on_tag_id"
   end
 
@@ -269,9 +279,11 @@ ActiveRecord::Schema.define(version: 2019_03_25_115642) do
     t.datetime "updated_at", null: false
     t.datetime "archived_at"
     t.bigint "container_image_id"
+    t.datetime "last_seen_at"
     t.index ["archived_at"], name: "index_containers_on_archived_at"
     t.index ["container_group_id", "name"], name: "index_containers_on_container_group_id_and_name", unique: true
     t.index ["container_image_id"], name: "index_containers_on_container_image_id"
+    t.index ["last_seen_at"], name: "index_containers_on_last_seen_at"
     t.index ["tenant_id"], name: "index_containers_on_tenant_id"
   end
 
@@ -401,6 +413,8 @@ ActiveRecord::Schema.define(version: 2019_03_25_115642) do
     t.binary "data"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "last_seen_at"
+    t.index ["last_seen_at"], name: "index_service_offering_icons_on_last_seen_at"
     t.index ["source_id", "source_ref"], name: "index_service_offering_icons_on_source_id_and_source_ref", unique: true
     t.index ["tenant_id"], name: "index_service_offering_icons_on_tenant_id"
   end
@@ -408,6 +422,8 @@ ActiveRecord::Schema.define(version: 2019_03_25_115642) do
   create_table "service_offering_tags", id: :serial, force: :cascade do |t|
     t.bigint "tag_id", null: false
     t.bigint "service_offering_id", null: false
+    t.datetime "last_seen_at"
+    t.index ["last_seen_at"], name: "index_service_offering_tags_on_last_seen_at"
     t.index ["service_offering_id", "tag_id"], name: "uniq_index_on_service_offering_id_tag_id", unique: true
     t.index ["tag_id"], name: "index_service_offering_tags_on_tag_id"
   end
@@ -539,6 +555,8 @@ ActiveRecord::Schema.define(version: 2019_03_25_115642) do
     t.text "description"
     t.datetime "created_at", null: false
     t.string "value", default: "", null: false
+    t.datetime "last_seen_at"
+    t.index ["last_seen_at"], name: "index_tags_on_last_seen_at"
     t.index ["tenant_id", "namespace", "name", "value"], name: "index_tags_on_tenant_id_and_namespace_and_name_and_value", unique: true
   end
 
@@ -566,6 +584,8 @@ ActiveRecord::Schema.define(version: 2019_03_25_115642) do
   create_table "vm_tags", id: :serial, force: :cascade do |t|
     t.bigint "tag_id", null: false
     t.bigint "vm_id", null: false
+    t.datetime "last_seen_at"
+    t.index ["last_seen_at"], name: "index_vm_tags_on_last_seen_at"
     t.index ["tag_id"], name: "index_vm_tags_on_tag_id"
     t.index ["vm_id", "tag_id"], name: "uniq_index_on_vm_id_tag_id", unique: true
   end
@@ -611,6 +631,8 @@ ActiveRecord::Schema.define(version: 2019_03_25_115642) do
     t.bigint "volume_id", null: false
     t.string "device"
     t.string "state"
+    t.datetime "last_seen_at"
+    t.index ["last_seen_at"], name: "index_volume_attachments_on_last_seen_at"
     t.index ["tenant_id"], name: "index_volume_attachments_on_tenant_id"
     t.index ["vm_id", "volume_id"], name: "index_volume_attachments_on_vm_id_and_volume_id", unique: true
     t.index ["volume_id"], name: "index_volume_attachments_on_volume_id"

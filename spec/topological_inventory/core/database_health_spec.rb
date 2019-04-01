@@ -33,11 +33,19 @@ module TopologicalInventory
         expect(missing_column_indexes("last_seen_at")).to be_empty
       end
 
+      it "checks all tables exposed to ingress API have last_seen_at column" do
+        exceptions = ["authentications", "refresh_states", "refresh_state_parts", "endpoints", "sources", "tasks",
+                      "applications"]
+        exceptions += internal_tables
+
+        expect(not_having_column_with_type("last_seen_at", :datetime, exceptions)).to be_empty
+      end
+
       it "checks all tables have tenant_id with NOT NULL constraint" do
         # We have few system level tables that shouldn't have tenant id
-        exceptions = ["tenants", "source_types", "schema_migrations", "ar_internal_metadata", "container_node_tags",
-                      "service_offering_tags", "container_group_tags", "container_project_tags", "container_image_tags",
-                      "container_template_tags", "vm_tags", "availabilities", "application_types"]
+        exceptions = ["container_node_tags", "service_offering_tags", "container_group_tags", "container_project_tags",
+                      "container_image_tags", "container_template_tags", "vm_tags"]
+        exceptions += internal_tables
 
         expect(not_having_column_with_not_null_constraint("tenant_id", exceptions)).to be_empty
       end
@@ -58,6 +66,12 @@ module TopologicalInventory
         end
       end
 
+      def not_having_column_with_type(column_name, column_type, exceptions = [])
+        (connection.tables - exceptions).reject do |table|
+          connection.columns(table).detect { |column| column.name == column_name && column.type == column_type }
+        end
+      end
+
       def missing_column_indexes(column_name)
         connection.tables.select do |table|
           connection.columns(table).map(&:name).include?(column_name)
@@ -70,6 +84,11 @@ module TopologicalInventory
 
       def connection
         ApplicationRecord.connection
+      end
+
+      def internal_tables
+        ["tenants", "source_types", "schema_migrations", "ar_internal_metadata", "availabilities",
+         "application_types"]
       end
     end
   end
