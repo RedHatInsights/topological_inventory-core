@@ -54,7 +54,6 @@ module TopologicalInventory
         builder.add_properties(
           :manager_ref        => manager_ref,
           :strategy           => :local_db_find_missing_references,
-          :saver_strategy     => :concurrent_safe_batch,
           :retention_strategy => :archive
         )
       end
@@ -76,7 +75,6 @@ module TopologicalInventory
           builder.add_properties(
             :manager_ref        => manager_ref,
             :strategy           => :local_db_find_missing_references,
-            :saver_strategy     => :concurrent_safe_batch,
             :retention_strategy => :destroy,
           )
         end
@@ -120,7 +118,6 @@ module TopologicalInventory
             :manager_ref    => [:name, :value],
             :create_only    => true,
             :strategy       => :local_db_find_missing_references,
-            :saver_strategy => :concurrent_safe_batch
           )
 
           builder.add_default_values(
