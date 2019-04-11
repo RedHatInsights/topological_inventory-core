@@ -7,7 +7,6 @@ class ExtractSourcesToNewService < ActiveRecord::Migration[5.2]
     drop_table :applications
     drop_table :application_types
     drop_table :authentications
-    drop_table :availabilities
     drop_table :endpoints
     drop_table :source_types
   end
@@ -43,18 +42,6 @@ class ExtractSourcesToNewService < ActiveRecord::Migration[5.2]
       t.bigint "tenant_id", :null => false
       t.index ["resource_type", "resource_id"], :name => "index_authentications_on_resource_type_and_resource_id"
       t.index ["tenant_id"], :name => "index_authentications_on_tenant_id"
-    end
-
-    create_table "availabilities", :force => :cascade do |t|
-      t.string "resource_type", :null => false
-      t.bigint "resource_id", :null => false
-      t.string "action", :null => false
-      t.string "identifier", :null => false
-      t.string "availability", :null => false
-      t.datetime "last_checked_at"
-      t.datetime "last_valid_at"
-      t.timestamps
-      t.index ["resource_type", "resource_id", "action", "identifier"], :name => "index_on_resource_action_identifier", :unique => true
     end
 
     create_table "endpoints", :force => :cascade do |t|

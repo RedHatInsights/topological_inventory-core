@@ -1,6 +1,8 @@
 class Source < ApplicationRecord
   attribute :uid, :string, :default => -> { SecureRandom.uuid }
 
+  has_many :availabilities, :as => :resource, :dependent => :destroy, :inverse_of => :resource
+
   belongs_to :tenant
   acts_as_tenant(:tenant)
 

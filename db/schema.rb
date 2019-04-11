@@ -15,6 +15,19 @@ ActiveRecord::Schema.define(version: 2019_04_01_134142) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "availabilities", force: :cascade do |t|
+    t.string "resource_type", null: false
+    t.bigint "resource_id", null: false
+    t.string "action", null: false
+    t.string "identifier", null: false
+    t.string "availability", null: false
+    t.datetime "last_checked_at"
+    t.datetime "last_valid_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["resource_type", "resource_id", "action", "identifier"], name: "index_on_resource_action_identifier", unique: true
+  end
+
   create_table "container_group_tags", id: :serial, force: :cascade do |t|
     t.bigint "tag_id", null: false
     t.bigint "container_group_id", null: false
