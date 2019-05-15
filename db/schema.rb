@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_01_134142) do
+ActiveRecord::Schema.define(version: 2019_05_14_165841) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,6 +26,38 @@ ActiveRecord::Schema.define(version: 2019_04_01_134142) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["resource_type", "resource_id", "action", "identifier"], name: "index_on_resource_action_identifier", unique: true
+  end
+
+  create_table "cluster_tags", id: :serial, force: :cascade do |t|
+    t.bigint "tag_id", null: false
+    t.bigint "cluster_id", null: false
+    t.datetime "last_seen_at"
+    t.index ["cluster_id"], name: "index_cluster_tags_on_cluster_id"
+    t.index ["last_seen_at"], name: "index_cluster_tags_on_last_seen_at"
+    t.index ["tag_id", "cluster_id"], name: "index_cluster_tags_on_tag_id_and_cluster_id", unique: true
+  end
+
+  create_table "clusters", force: :cascade do |t|
+    t.bigint "tenant_id", null: false
+    t.bigint "source_id", null: false
+    t.string "source_ref", null: false
+    t.string "uid_ems"
+    t.string "name"
+    t.jsonb "extra"
+    t.datetime "resource_timestamp"
+    t.jsonb "resource_timestamps", default: {}
+    t.datetime "resource_timestamps_max"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "archived_at"
+    t.datetime "source_created_at"
+    t.datetime "source_deleted_at"
+    t.datetime "last_seen_at"
+    t.index ["archived_at"], name: "index_clusters_on_archived_at"
+    t.index ["last_seen_at"], name: "index_clusters_on_last_seen_at"
+    t.index ["source_id", "source_ref"], name: "index_clusters_on_source_id_and_source_ref", unique: true
+    t.index ["tenant_id"], name: "index_clusters_on_tenant_id"
+    t.index ["uid_ems"], name: "index_clusters_on_uid_ems"
   end
 
   create_table "container_group_tags", id: :serial, force: :cascade do |t|
@@ -275,6 +307,45 @@ ActiveRecord::Schema.define(version: 2019_04_01_134142) do
     t.index ["last_seen_at"], name: "index_flavors_on_last_seen_at"
     t.index ["source_id", "source_ref"], name: "index_flavors_on_source_id_and_source_ref", unique: true
     t.index ["tenant_id"], name: "index_flavors_on_tenant_id"
+  end
+
+  create_table "host_tags", id: :serial, force: :cascade do |t|
+    t.bigint "tag_id", null: false
+    t.bigint "host_id", null: false
+    t.datetime "last_seen_at"
+    t.index ["host_id"], name: "index_host_tags_on_host_id"
+    t.index ["last_seen_at"], name: "index_host_tags_on_last_seen_at"
+    t.index ["tag_id", "host_id"], name: "index_host_tags_on_tag_id_and_host_id", unique: true
+  end
+
+  create_table "hosts", force: :cascade do |t|
+    t.bigint "tenant_id", null: false
+    t.bigint "source_id", null: false
+    t.bigint "cluster_id"
+    t.string "source_ref", null: false
+    t.string "uid_ems"
+    t.string "name"
+    t.string "hostname"
+    t.string "description"
+    t.string "power_state"
+    t.bigint "cpus"
+    t.bigint "memory"
+    t.jsonb "extra"
+    t.datetime "resource_timestamp"
+    t.jsonb "resource_timestamps", default: {}
+    t.datetime "resource_timestamps_max"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "archived_at"
+    t.datetime "source_created_at"
+    t.datetime "source_deleted_at"
+    t.datetime "last_seen_at"
+    t.index ["archived_at"], name: "index_hosts_on_archived_at"
+    t.index ["cluster_id"], name: "index_hosts_on_cluster_id"
+    t.index ["last_seen_at"], name: "index_hosts_on_last_seen_at"
+    t.index ["source_id", "source_ref"], name: "index_hosts_on_source_id_and_source_ref", unique: true
+    t.index ["tenant_id"], name: "index_hosts_on_tenant_id"
+    t.index ["uid_ems"], name: "index_hosts_on_uid_ems"
   end
 
   create_table "orchestration_stacks", force: :cascade do |t|
@@ -618,6 +689,10 @@ ActiveRecord::Schema.define(version: 2019_04_01_134142) do
     t.index ["volume_type_id"], name: "index_volumes_on_volume_type_id"
   end
 
+  add_foreign_key "cluster_tags", "clusters", on_delete: :cascade
+  add_foreign_key "cluster_tags", "tags", on_delete: :cascade
+  add_foreign_key "clusters", "sources", on_delete: :cascade
+  add_foreign_key "clusters", "tenants", on_delete: :cascade
   add_foreign_key "container_group_tags", "container_groups", on_delete: :cascade
   add_foreign_key "container_group_tags", "tags", on_delete: :cascade
   add_foreign_key "container_groups", "container_nodes", on_delete: :cascade
@@ -649,6 +724,11 @@ ActiveRecord::Schema.define(version: 2019_04_01_134142) do
   add_foreign_key "containers", "tenants", on_delete: :cascade
   add_foreign_key "flavors", "sources", on_delete: :cascade
   add_foreign_key "flavors", "tenants", on_delete: :cascade
+  add_foreign_key "host_tags", "hosts", on_delete: :cascade
+  add_foreign_key "host_tags", "tags", on_delete: :cascade
+  add_foreign_key "hosts", "clusters", on_delete: :nullify
+  add_foreign_key "hosts", "sources", on_delete: :cascade
+  add_foreign_key "hosts", "tenants", on_delete: :cascade
   add_foreign_key "orchestration_stacks", "sources", on_delete: :cascade
   add_foreign_key "orchestration_stacks", "tenants", on_delete: :cascade
   add_foreign_key "refresh_state_parts", "refresh_states", on_delete: :cascade

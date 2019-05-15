@@ -4,6 +4,7 @@ module TopologicalInventory
   module Schema
     class Default < TopologicalInventory::Schema::Base
       def initialize_inventory_collections
+        add_default_collection(:clusters)
         add_containers
         add_default_collection(:container_groups)
         add_default_collection(:container_images)
@@ -12,6 +13,7 @@ module TopologicalInventory
         add_default_collection(:container_resource_quotas)
         add_default_collection(:container_templates)
         add_default_collection(:flavors)
+        add_default_collection(:hosts)
         add_default_collection(:orchestration_stacks)
         add_default_collection(:service_instances)
         add_default_collection(:service_offering_icons)
@@ -23,11 +25,13 @@ module TopologicalInventory
         add_default_collection(:volumes)
         add_default_collection(:volume_types)
 
+        add_tagging_collection(:cluster_tags, :manager_ref => %i[cluster tag])
         add_tagging_collection(:container_group_tags, :manager_ref => [:container_group, :tag])
         add_tagging_collection(:container_image_tags, :manager_ref => [:container_image, :tag])
         add_tagging_collection(:container_node_tags, :manager_ref => [:container_node, :tag])
         add_tagging_collection(:container_project_tags, :manager_ref => [:container_project, :tag])
         add_tagging_collection(:container_template_tags, :manager_ref => [:container_template, :tag])
+        add_tagging_collection(:host_tags, :manager_ref => %i[host tag])
         add_tagging_collection(:service_offering_tags, :manager_ref => [:service_offering, :tag])
         add_tagging_collection(:vm_tags, :manager_ref => [:vm, :tag])
         add_tags
