@@ -20,13 +20,13 @@ class AddHosts < ActiveRecord::Migration[5.2]
       t.datetime :resource_timestamps_max
 
       t.timestamps
-      t.datetime :archived_on
+      t.datetime :archived_at
       t.datetime :source_created_at
       t.datetime :source_deleted_at
       t.datetime :last_seen_at
 
       t.index %i[source_id source_ref], :unique => true
-      t.index :archived_on
+      t.index :archived_at
       t.index :last_seen_at
       t.index :uid_ems
     end

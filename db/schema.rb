@@ -49,11 +49,11 @@ ActiveRecord::Schema.define(version: 2019_05_14_165841) do
     t.datetime "resource_timestamps_max"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.datetime "archived_on"
+    t.datetime "archived_at"
     t.datetime "source_created_at"
     t.datetime "source_deleted_at"
     t.datetime "last_seen_at"
-    t.index ["archived_on"], name: "index_clusters_on_archived_on"
+    t.index ["archived_at"], name: "index_clusters_on_archived_at"
     t.index ["last_seen_at"], name: "index_clusters_on_last_seen_at"
     t.index ["source_id", "source_ref"], name: "index_clusters_on_source_id_and_source_ref", unique: true
     t.index ["tenant_id"], name: "index_clusters_on_tenant_id"
@@ -336,11 +336,11 @@ ActiveRecord::Schema.define(version: 2019_05_14_165841) do
     t.datetime "resource_timestamps_max"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.datetime "archived_on"
+    t.datetime "archived_at"
     t.datetime "source_created_at"
     t.datetime "source_deleted_at"
     t.datetime "last_seen_at"
-    t.index ["archived_on"], name: "index_hosts_on_archived_on"
+    t.index ["archived_at"], name: "index_hosts_on_archived_at"
     t.index ["cluster_id"], name: "index_hosts_on_cluster_id"
     t.index ["last_seen_at"], name: "index_hosts_on_last_seen_at"
     t.index ["source_id", "source_ref"], name: "index_hosts_on_source_id_and_source_ref", unique: true
