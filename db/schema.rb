@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_22_170940) do
+ActiveRecord::Schema.define(version: 2019_05_22_172440) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -284,6 +284,17 @@ ActiveRecord::Schema.define(version: 2019_05_22_170940) do
     t.index ["container_image_id"], name: "index_containers_on_container_image_id"
     t.index ["last_seen_at"], name: "index_containers_on_last_seen_at"
     t.index ["tenant_id"], name: "index_containers_on_tenant_id"
+  end
+
+  create_table "datastore_mounts", force: :cascade do |t|
+    t.bigint "datastore_id", null: false
+    t.bigint "host_id", null: false
+    t.boolean "read_only"
+    t.boolean "accessible"
+    t.datetime "last_seen_at"
+    t.index ["datastore_id", "host_id"], name: "index_datastore_mounts_on_datastore_id_and_host_id", unique: true
+    t.index ["host_id"], name: "index_datastore_mounts_on_host_id"
+    t.index ["last_seen_at"], name: "index_datastore_mounts_on_last_seen_at"
   end
 
   create_table "datastore_tags", id: :serial, force: :cascade do |t|
@@ -754,6 +765,8 @@ ActiveRecord::Schema.define(version: 2019_05_22_170940) do
   add_foreign_key "containers", "container_groups", on_delete: :cascade
   add_foreign_key "containers", "container_images", on_delete: :nullify
   add_foreign_key "containers", "tenants", on_delete: :cascade
+  add_foreign_key "datastore_mounts", "datastores", on_delete: :cascade
+  add_foreign_key "datastore_mounts", "hosts", on_delete: :cascade
   add_foreign_key "datastore_tags", "datastores", on_delete: :cascade
   add_foreign_key "datastore_tags", "tags", on_delete: :cascade
   add_foreign_key "datastores", "sources", on_delete: :cascade
