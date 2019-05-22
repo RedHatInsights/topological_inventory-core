@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_14_165841) do
+ActiveRecord::Schema.define(version: 2019_05_22_170940) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -284,6 +284,38 @@ ActiveRecord::Schema.define(version: 2019_05_14_165841) do
     t.index ["container_image_id"], name: "index_containers_on_container_image_id"
     t.index ["last_seen_at"], name: "index_containers_on_last_seen_at"
     t.index ["tenant_id"], name: "index_containers_on_tenant_id"
+  end
+
+  create_table "datastore_tags", id: :serial, force: :cascade do |t|
+    t.bigint "tag_id", null: false
+    t.bigint "datastore_id", null: false
+    t.datetime "last_seen_at"
+    t.index ["datastore_id"], name: "index_datastore_tags_on_datastore_id"
+    t.index ["last_seen_at"], name: "index_datastore_tags_on_last_seen_at"
+    t.index ["tag_id", "datastore_id"], name: "index_datastore_tags_on_tag_id_and_datastore_id", unique: true
+  end
+
+  create_table "datastores", force: :cascade do |t|
+    t.bigint "tenant_id", null: false
+    t.bigint "source_id", null: false
+    t.string "source_ref", null: false
+    t.string "name"
+    t.string "location"
+    t.bigint "total_space"
+    t.bigint "free_space"
+    t.string "status"
+    t.boolean "accessible"
+    t.jsonb "extra"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "archived_at"
+    t.datetime "source_created_at"
+    t.datetime "source_deleted_at"
+    t.datetime "last_seen_at"
+    t.index ["archived_at"], name: "index_datastores_on_archived_at"
+    t.index ["last_seen_at"], name: "index_datastores_on_last_seen_at"
+    t.index ["source_id", "source_ref"], name: "index_datastores_on_source_id_and_source_ref", unique: true
+    t.index ["tenant_id"], name: "index_datastores_on_tenant_id"
   end
 
   create_table "flavors", force: :cascade do |t|
@@ -722,6 +754,10 @@ ActiveRecord::Schema.define(version: 2019_05_14_165841) do
   add_foreign_key "containers", "container_groups", on_delete: :cascade
   add_foreign_key "containers", "container_images", on_delete: :nullify
   add_foreign_key "containers", "tenants", on_delete: :cascade
+  add_foreign_key "datastore_tags", "datastores", on_delete: :cascade
+  add_foreign_key "datastore_tags", "tags", on_delete: :cascade
+  add_foreign_key "datastores", "sources", on_delete: :cascade
+  add_foreign_key "datastores", "tenants", on_delete: :cascade
   add_foreign_key "flavors", "sources", on_delete: :cascade
   add_foreign_key "flavors", "tenants", on_delete: :cascade
   add_foreign_key "host_tags", "hosts", on_delete: :cascade
