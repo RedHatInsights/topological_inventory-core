@@ -12,6 +12,7 @@ class Tenant < ApplicationRecord
   has_many :container_resource_quotas
   has_many :container_templates
   has_many :container_template_tags
+  has_many :datastores
   has_many :flavors
   has_many :endpoints
   has_many :orchestration_stacks
@@ -38,4 +39,3 @@ class Tenant < ApplicationRecord
     ENV["BYPASS_TENANCY"].blank?
   end
 end
-

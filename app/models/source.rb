@@ -36,6 +36,9 @@ class Source < ApplicationRecord
   # Infra/Cloud
   has_many :clusters
   has_many :cluster_tags, :through => :clusters
+  has_many :datastores
+  has_many :datastore_tags, :through => :datastores
+  has_many :datastore_mounts, :through => :hosts
   has_many :flavors
   has_many :hosts
   has_many :host_tags, :through => :hosts
