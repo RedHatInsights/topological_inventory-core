@@ -12,5 +12,3 @@ gemspec
 # your gemspec. These might include edge Rails or gems from your path or
 # Git. Remember to move these dependencies to your gemspec before releasing
 # your gem to rubygems.org.
-
-gem "inventory_refresh", :git => "https://github.com/ManageIQ/inventory_refresh", :branch => "master"
