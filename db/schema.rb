@@ -15,6 +15,39 @@ ActiveRecord::Schema.define(version: 2019_08_07_183701) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "application_types", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "display_name"
+    t.index ["name"], name: "index_application_types_on_name", unique: true
+  end
+
+  create_table "applications", force: :cascade do |t|
+    t.bigint "tenant_id", null: false
+    t.bigint "source_id", null: false
+    t.bigint "application_type_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["application_type_id"], name: "index_applications_on_application_type_id"
+    t.index ["source_id"], name: "index_applications_on_source_id"
+    t.index ["tenant_id"], name: "index_applications_on_tenant_id"
+  end
+
+  create_table "authentications", force: :cascade do |t|
+    t.string "resource_type"
+    t.integer "resource_id"
+    t.string "name"
+    t.string "authtype"
+    t.string "username"
+    t.string "password"
+    t.string "status"
+    t.string "status_details"
+    t.bigint "tenant_id", null: false
+    t.index ["resource_type", "resource_id"], name: "index_authentications_on_resource_type_and_resource_id"
+    t.index ["tenant_id"], name: "index_authentications_on_tenant_id"
+  end
+
   create_table "availabilities", force: :cascade do |t|
     t.string "resource_type", null: false
     t.bigint "resource_id", null: false
@@ -327,6 +360,23 @@ ActiveRecord::Schema.define(version: 2019_08_07_183701) do
     t.index ["last_seen_at"], name: "index_datastores_on_last_seen_at"
     t.index ["source_id", "source_ref"], name: "index_datastores_on_source_id_and_source_ref", unique: true
     t.index ["tenant_id"], name: "index_datastores_on_tenant_id"
+  end
+
+  create_table "endpoints", force: :cascade do |t|
+    t.string "role"
+    t.integer "port"
+    t.bigint "source_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "default", default: false
+    t.string "scheme"
+    t.string "host"
+    t.string "path"
+    t.bigint "tenant_id", null: false
+    t.boolean "verify_ssl"
+    t.text "certificate_authority"
+    t.index ["source_id"], name: "index_endpoints_on_source_id"
+    t.index ["tenant_id"], name: "index_endpoints_on_tenant_id"
   end
 
   create_table "flavors", force: :cascade do |t|
@@ -737,6 +787,16 @@ ActiveRecord::Schema.define(version: 2019_08_07_183701) do
     t.index ["tenant_id"], name: "index_source_regions_on_tenant_id"
   end
 
+  create_table "source_types", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "product_name", null: false
+    t.string "vendor", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.jsonb "schema"
+    t.index ["name"], name: "index_source_types_on_name", unique: true
+  end
+
   create_table "sources", force: :cascade do |t|
     t.string "uid", null: false
     t.datetime "created_at", null: false
@@ -953,6 +1013,7 @@ ActiveRecord::Schema.define(version: 2019_08_07_183701) do
     t.index ["volume_type_id"], name: "index_volumes_on_volume_type_id"
   end
 
+  add_foreign_key "applications", "application_types", on_delete: :cascade
   add_foreign_key "cluster_tags", "clusters", on_delete: :cascade
   add_foreign_key "cluster_tags", "tags", on_delete: :cascade
   add_foreign_key "clusters", "sources", on_delete: :cascade
