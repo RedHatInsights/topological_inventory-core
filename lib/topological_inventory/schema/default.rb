@@ -119,7 +119,7 @@ module TopologicalInventory
             :association    => nil,
             :model_class    => Tag,
             :name           => :tags,
-            :manager_ref    => [:name, :value],
+            :manager_ref    => [:name, :value, :namespace],
             :create_only    => true,
             :strategy       => :local_db_find_missing_references,
           )
