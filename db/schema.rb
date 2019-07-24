@@ -411,7 +411,6 @@ ActiveRecord::Schema.define(version: 2019_07_24_194551) do
     t.index ["archived_at"], name: "index_network_adapters_on_archived_at"
     t.index ["last_seen_at"], name: "index_network_adapters_on_last_seen_at"
     t.index ["resource_type", "resource_id", "source_ref"], name: "index_network_adapters_on_resource_and_source_ref", unique: true
-    t.index ["resource_type", "resource_id"], name: "index_network_adapters_on_resource_type_and_resource_id"
     t.index ["tenant_id"], name: "index_network_adapters_on_tenant_id"
   end
 
