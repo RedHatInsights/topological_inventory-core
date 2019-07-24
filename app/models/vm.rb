@@ -11,6 +11,8 @@ class Vm < ApplicationRecord
   has_many :volume_attachments
   has_many :volumes, :through => :volume_attachments
 
+  has_many :network_adapters, :as => :resource
+
   acts_as_tenant(:tenant)
   acts_as_taggable_on
 end

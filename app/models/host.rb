@@ -10,6 +10,8 @@ class Host < ApplicationRecord
   has_many :datastore_mounts
   has_many :datastores, :through => :datastore_mounts
 
+  has_many :network_adapters, :as => :resource
+
   acts_as_tenant(:tenant)
   acts_as_taggable_on
 end

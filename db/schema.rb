@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_22_172440) do
+ActiveRecord::Schema.define(version: 2019_07_24_194551) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -389,6 +389,30 @@ ActiveRecord::Schema.define(version: 2019_05_22_172440) do
     t.index ["source_id", "source_ref"], name: "index_hosts_on_source_id_and_source_ref", unique: true
     t.index ["tenant_id"], name: "index_hosts_on_tenant_id"
     t.index ["uid_ems"], name: "index_hosts_on_uid_ems"
+  end
+
+  create_table "network_adapters", force: :cascade do |t|
+    t.string "resource_type", null: false
+    t.bigint "resource_id", null: false
+    t.bigint "tenant_id", null: false
+    t.string "source_ref", null: false
+    t.string "mac_address"
+    t.jsonb "ipaddresses"
+    t.jsonb "extra"
+    t.datetime "resource_timestamp"
+    t.jsonb "resource_timestamps", default: {}
+    t.datetime "resource_timestamps_max"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "archived_at"
+    t.datetime "source_created_at"
+    t.datetime "source_deleted_at"
+    t.datetime "last_seen_at"
+    t.index ["archived_at"], name: "index_network_adapters_on_archived_at"
+    t.index ["last_seen_at"], name: "index_network_adapters_on_last_seen_at"
+    t.index ["resource_type", "resource_id", "source_ref"], name: "index_network_adapters_on_resource_and_source_ref", unique: true
+    t.index ["resource_type", "resource_id"], name: "index_network_adapters_on_resource_type_and_resource_id"
+    t.index ["tenant_id"], name: "index_network_adapters_on_tenant_id"
   end
 
   create_table "orchestration_stacks", force: :cascade do |t|
@@ -778,6 +802,7 @@ ActiveRecord::Schema.define(version: 2019_05_22_172440) do
   add_foreign_key "hosts", "clusters", on_delete: :nullify
   add_foreign_key "hosts", "sources", on_delete: :cascade
   add_foreign_key "hosts", "tenants", on_delete: :cascade
+  add_foreign_key "network_adapters", "tenants", on_delete: :cascade
   add_foreign_key "orchestration_stacks", "sources", on_delete: :cascade
   add_foreign_key "orchestration_stacks", "tenants", on_delete: :cascade
   add_foreign_key "refresh_state_parts", "refresh_states", on_delete: :cascade
