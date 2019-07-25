@@ -1,7 +1,6 @@
 class AddNetworkAdapters < ActiveRecord::Migration[5.2]
   def change
     create_table :network_adapters do |t|
-      t.references :resource, :polymorphic => true, :null => false, :index => false
       t.references :tenant, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
 
       t.string :source_ref, :null => false
@@ -21,8 +20,20 @@ class AddNetworkAdapters < ActiveRecord::Migration[5.2]
 
       t.index :archived_at
       t.index :last_seen_at
-      t.index %i[resource_type resource_id source_ref], :unique => true,
-        :name => "index_network_adapters_on_resource_and_source_ref"
+    end
+
+    create_table :vm_network_adapters do |t|
+      t.references :vm,              :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
+      t.references :network_adapter, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
+      t.datetime   :last_seen_at
+      t.index      :last_seen_at
+    end
+
+    create_table :host_network_adapters do |t|
+      t.references :host,            :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
+      t.references :network_adapter, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
+      t.datetime   :last_seen_at
+      t.index      :last_seen_at
     end
   end
 end

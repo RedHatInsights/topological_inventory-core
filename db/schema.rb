@@ -352,6 +352,15 @@ ActiveRecord::Schema.define(version: 2019_07_24_194551) do
     t.index ["tenant_id"], name: "index_flavors_on_tenant_id"
   end
 
+  create_table "host_network_adapters", force: :cascade do |t|
+    t.bigint "host_id", null: false
+    t.bigint "network_adapter_id", null: false
+    t.datetime "last_seen_at"
+    t.index ["host_id"], name: "index_host_network_adapters_on_host_id"
+    t.index ["last_seen_at"], name: "index_host_network_adapters_on_last_seen_at"
+    t.index ["network_adapter_id"], name: "index_host_network_adapters_on_network_adapter_id"
+  end
+
   create_table "host_tags", id: :serial, force: :cascade do |t|
     t.bigint "tag_id", null: false
     t.bigint "host_id", null: false
@@ -392,8 +401,6 @@ ActiveRecord::Schema.define(version: 2019_07_24_194551) do
   end
 
   create_table "network_adapters", force: :cascade do |t|
-    t.string "resource_type", null: false
-    t.bigint "resource_id", null: false
     t.bigint "tenant_id", null: false
     t.string "source_ref", null: false
     t.string "mac_address"
@@ -410,7 +417,6 @@ ActiveRecord::Schema.define(version: 2019_07_24_194551) do
     t.datetime "last_seen_at"
     t.index ["archived_at"], name: "index_network_adapters_on_archived_at"
     t.index ["last_seen_at"], name: "index_network_adapters_on_last_seen_at"
-    t.index ["resource_type", "resource_id", "source_ref"], name: "index_network_adapters_on_resource_and_source_ref", unique: true
     t.index ["tenant_id"], name: "index_network_adapters_on_tenant_id"
   end
 
@@ -654,6 +660,15 @@ ActiveRecord::Schema.define(version: 2019_07_24_194551) do
     t.index ["external_tenant"], name: "index_tenants_on_external_tenant", unique: true
   end
 
+  create_table "vm_network_adapters", force: :cascade do |t|
+    t.bigint "vm_id", null: false
+    t.bigint "network_adapter_id", null: false
+    t.datetime "last_seen_at"
+    t.index ["last_seen_at"], name: "index_vm_network_adapters_on_last_seen_at"
+    t.index ["network_adapter_id"], name: "index_vm_network_adapters_on_network_adapter_id"
+    t.index ["vm_id"], name: "index_vm_network_adapters_on_vm_id"
+  end
+
   create_table "vm_tags", id: :serial, force: :cascade do |t|
     t.bigint "tag_id", null: false
     t.bigint "vm_id", null: false
@@ -796,6 +811,8 @@ ActiveRecord::Schema.define(version: 2019_07_24_194551) do
   add_foreign_key "datastores", "tenants", on_delete: :cascade
   add_foreign_key "flavors", "sources", on_delete: :cascade
   add_foreign_key "flavors", "tenants", on_delete: :cascade
+  add_foreign_key "host_network_adapters", "hosts", on_delete: :cascade
+  add_foreign_key "host_network_adapters", "network_adapters", on_delete: :cascade
   add_foreign_key "host_tags", "hosts", on_delete: :cascade
   add_foreign_key "host_tags", "tags", on_delete: :cascade
   add_foreign_key "hosts", "clusters", on_delete: :nullify
@@ -835,6 +852,8 @@ ActiveRecord::Schema.define(version: 2019_07_24_194551) do
   add_foreign_key "subscriptions", "tenants", on_delete: :cascade
   add_foreign_key "tags", "tenants", on_delete: :cascade
   add_foreign_key "tasks", "tenants", on_delete: :cascade
+  add_foreign_key "vm_network_adapters", "network_adapters", on_delete: :cascade
+  add_foreign_key "vm_network_adapters", "vms", on_delete: :cascade
   add_foreign_key "vm_tags", "tags", on_delete: :cascade
   add_foreign_key "vm_tags", "vms", on_delete: :cascade
   add_foreign_key "vms", "flavors", on_delete: :nullify
