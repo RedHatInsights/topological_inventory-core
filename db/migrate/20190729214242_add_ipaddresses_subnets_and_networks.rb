@@ -146,5 +146,55 @@ class AddIpaddressesSubnetsAndNetworks < ActiveRecord::Migration[5.2]
       t.index :last_seen_at
       t.index %i[vm_id security_group_id], :unique => true
     end
+
+    create_table :network_adapter_tags, id: :serial, force: :cascade do |t|
+      t.references :tag,  :index => false, :null => false, :foreign_key => {:on_delete => :cascade}
+      t.references :network_adapter, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
+
+      t.datetime :last_seen_at
+
+      t.index %i[last_seen_at]
+      t.index %i[tag_id network_adapter_id], unique: true
+    end
+
+    create_table :network_tags, id: :serial, force: :cascade do |t|
+      t.references :tag,  :index => false, :null => false, :foreign_key => {:on_delete => :cascade}
+      t.references :network, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
+
+      t.datetime :last_seen_at
+
+      t.index %i[last_seen_at]
+      t.index %i[tag_id network_id], unique: true
+    end
+
+    create_table :subnet_tags, id: :serial, force: :cascade do |t|
+      t.references :tag,  :index => false, :null => false, :foreign_key => {:on_delete => :cascade}
+      t.references :subnet, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
+
+      t.datetime :last_seen_at
+
+      t.index %i[last_seen_at]
+      t.index %i[tag_id subnet_id], unique: true
+    end
+
+    create_table :security_group_tags, id: :serial, force: :cascade do |t|
+      t.references :tag,  :index => false, :null => false, :foreign_key => {:on_delete => :cascade}
+      t.references :security_group, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
+
+      t.datetime :last_seen_at
+
+      t.index %i[last_seen_at]
+      t.index %i[tag_id security_group_id], unique: true
+    end
+
+    create_table :floating_ip_tags, id: :serial, force: :cascade do |t|
+      t.references :tag,  :index => false, :null => false, :foreign_key => {:on_delete => :cascade}
+      t.references :floating_ip, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
+
+      t.datetime :last_seen_at
+
+      t.index %i[last_seen_at]
+      t.index %i[tag_id floating_ip_id], unique: true
+    end
   end
 end
