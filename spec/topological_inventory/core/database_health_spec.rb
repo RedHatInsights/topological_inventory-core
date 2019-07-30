@@ -45,7 +45,8 @@ module TopologicalInventory
         # We have few system level tables that shouldn't have tenant id
         exceptions = ["cluster_tags", "container_node_tags", "container_group_tags", "container_project_tags",
                       "container_image_tags", "container_template_tags", "datastore_mounts", "datastore_tags",
-                      "host_network_adapters", "host_tags", "service_offering_tags", "vm_network_adapters", "vm_tags"]
+                      "host_network_adapters", "host_tags", "service_offering_tags", "vm_network_adapters", "vm_tags",
+                      "ipaddresses", "vm_security_groups"]
         exceptions += internal_tables
 
         expect(not_having_column_with_not_null_constraint("tenant_id", exceptions)).to be_empty
