@@ -11,5 +11,9 @@ class NetworkAdapter < ApplicationRecord
 
   belongs_to :device, :polymorphic => true
 
+  has_many :ipaddresses
+  has_many :floating_ips
+  has_many :network_adapter_tags
+
   acts_as_tenant(:tenant)
 end

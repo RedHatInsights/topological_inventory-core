@@ -12,6 +12,8 @@ class FloatingIp < ApplicationRecord
   belongs_to :network_adapter, :optional => true
   belongs_to :network, :optional => true
 
+  has_many :floating_ip_tags
+
   acts_as_tenant(:tenant)
   acts_as_taggable_on
 end

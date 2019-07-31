@@ -11,6 +11,8 @@ class Subnet < ApplicationRecord
 
   belongs_to :network, :optional => true
 
+  has_many :subnet_tags
+
   acts_as_tenant(:tenant)
   acts_as_taggable_on
 end

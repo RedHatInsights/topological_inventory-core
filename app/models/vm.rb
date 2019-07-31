@@ -12,6 +12,10 @@ class Vm < ApplicationRecord
   has_many :volumes, :through => :volume_attachments
 
   has_many :network_adapters, :as => :device
+  has_many :ipaddresses, :through => :network_adapters
+  has_many :floating_ips, :through => :network_adapters
+  has_many :vm_security_groups
+  has_many :security_groups, :through => :vm_security_groups
 
   acts_as_tenant(:tenant)
   acts_as_taggable_on

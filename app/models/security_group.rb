@@ -9,6 +9,10 @@ class SecurityGroup < ApplicationRecord
   belongs_to :subscription, :optional => true
   belongs_to :orchestration_stack, :optional => true
 
+  has_many :security_group_tags
+  has_many :vm_security_groups
+  has_many :vms, :through => :vm_security_groups
+
   acts_as_tenant(:tenant)
   acts_as_taggable_on
 end
