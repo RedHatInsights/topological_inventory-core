@@ -9,13 +9,17 @@ class Tenant < ApplicationRecord
   has_many :container_templates
   has_many :datastores
   has_many :flavors
+  has_many :floating_ips
   has_many :network_adapters
+  has_many :networks
   has_many :orchestration_stacks
+  has_many :security_groups
   has_many :service_instances
   has_many :service_offerings
   has_many :service_offering_icons
   has_many :service_plans
   has_many :source_regions
+  has_many :subnets
   has_many :sources
   has_many :subscriptions
   has_many :tags
