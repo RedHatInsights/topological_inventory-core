@@ -352,6 +352,15 @@ ActiveRecord::Schema.define(version: 2019_07_29_214242) do
     t.index ["tenant_id"], name: "index_flavors_on_tenant_id"
   end
 
+  create_table "floating_ip_tags", id: :serial, force: :cascade do |t|
+    t.bigint "tag_id", null: false
+    t.bigint "floating_ip_id", null: false
+    t.datetime "last_seen_at"
+    t.index ["floating_ip_id"], name: "index_floating_ip_tags_on_floating_ip_id"
+    t.index ["last_seen_at"], name: "index_floating_ip_tags_on_last_seen_at"
+    t.index ["tag_id", "floating_ip_id"], name: "index_floating_ip_tags_on_tag_id_and_floating_ip_id", unique: true
+  end
+
   create_table "floating_ips", force: :cascade do |t|
     t.bigint "tenant_id", null: false
     t.bigint "source_id", null: false
@@ -433,6 +442,15 @@ ActiveRecord::Schema.define(version: 2019_07_29_214242) do
     t.index ["subnet_id"], name: "index_ipaddresses_on_subnet_id"
   end
 
+  create_table "network_adapter_tags", id: :serial, force: :cascade do |t|
+    t.bigint "tag_id", null: false
+    t.bigint "network_adapter_id", null: false
+    t.datetime "last_seen_at"
+    t.index ["last_seen_at"], name: "index_network_adapter_tags_on_last_seen_at"
+    t.index ["network_adapter_id"], name: "index_network_adapter_tags_on_network_adapter_id"
+    t.index ["tag_id", "network_adapter_id"], name: "index_network_adapter_tags_on_tag_id_and_network_adapter_id", unique: true
+  end
+
   create_table "network_adapters", force: :cascade do |t|
     t.bigint "tenant_id", null: false
     t.string "source_ref", null: false
@@ -459,6 +477,15 @@ ActiveRecord::Schema.define(version: 2019_07_29_214242) do
     t.index ["source_id", "source_ref", "device_id", "device_type"], name: "unique_index_network_adapters_with_device_id_and_type", unique: true
     t.index ["source_id", "source_ref"], name: "unique_index_network_adapters", unique: true, where: "((device_id IS NULL) AND (device_type IS NULL))"
     t.index ["tenant_id"], name: "index_network_adapters_on_tenant_id"
+  end
+
+  create_table "network_tags", id: :serial, force: :cascade do |t|
+    t.bigint "tag_id", null: false
+    t.bigint "network_id", null: false
+    t.datetime "last_seen_at"
+    t.index ["last_seen_at"], name: "index_network_tags_on_last_seen_at"
+    t.index ["network_id"], name: "index_network_tags_on_network_id"
+    t.index ["tag_id", "network_id"], name: "index_network_tags_on_tag_id_and_network_id", unique: true
   end
 
   create_table "networks", force: :cascade do |t|
@@ -536,6 +563,15 @@ ActiveRecord::Schema.define(version: 2019_07_29_214242) do
     t.datetime "updated_at", null: false
     t.index ["source_id", "uuid"], name: "index_refresh_states_on_source_id_and_uuid", unique: true
     t.index ["tenant_id"], name: "index_refresh_states_on_tenant_id"
+  end
+
+  create_table "security_group_tags", id: :serial, force: :cascade do |t|
+    t.bigint "tag_id", null: false
+    t.bigint "security_group_id", null: false
+    t.datetime "last_seen_at"
+    t.index ["last_seen_at"], name: "index_security_group_tags_on_last_seen_at"
+    t.index ["security_group_id"], name: "index_security_group_tags_on_security_group_id"
+    t.index ["tag_id", "security_group_id"], name: "index_security_group_tags_on_tag_id_and_security_group_id", unique: true
   end
 
   create_table "security_groups", force: :cascade do |t|
@@ -711,6 +747,15 @@ ActiveRecord::Schema.define(version: 2019_07_29_214242) do
     t.bigint "tenant_id", null: false
     t.index ["tenant_id"], name: "index_sources_on_tenant_id"
     t.index ["uid"], name: "index_sources_on_uid", unique: true
+  end
+
+  create_table "subnet_tags", id: :serial, force: :cascade do |t|
+    t.bigint "tag_id", null: false
+    t.bigint "subnet_id", null: false
+    t.datetime "last_seen_at"
+    t.index ["last_seen_at"], name: "index_subnet_tags_on_last_seen_at"
+    t.index ["subnet_id"], name: "index_subnet_tags_on_subnet_id"
+    t.index ["tag_id", "subnet_id"], name: "index_subnet_tags_on_tag_id_and_subnet_id", unique: true
   end
 
   create_table "subnets", force: :cascade do |t|
@@ -943,6 +988,8 @@ ActiveRecord::Schema.define(version: 2019_07_29_214242) do
   add_foreign_key "datastores", "tenants", on_delete: :cascade
   add_foreign_key "flavors", "sources", on_delete: :cascade
   add_foreign_key "flavors", "tenants", on_delete: :cascade
+  add_foreign_key "floating_ip_tags", "floating_ips", on_delete: :cascade
+  add_foreign_key "floating_ip_tags", "tags", on_delete: :cascade
   add_foreign_key "floating_ips", "network_adapters", on_delete: :nullify
   add_foreign_key "floating_ips", "networks", on_delete: :cascade
   add_foreign_key "floating_ips", "orchestration_stacks", on_delete: :cascade
@@ -957,9 +1004,13 @@ ActiveRecord::Schema.define(version: 2019_07_29_214242) do
   add_foreign_key "hosts", "tenants", on_delete: :cascade
   add_foreign_key "ipaddresses", "network_adapters", on_delete: :cascade
   add_foreign_key "ipaddresses", "subnets", on_delete: :cascade
+  add_foreign_key "network_adapter_tags", "network_adapters", on_delete: :cascade
+  add_foreign_key "network_adapter_tags", "tags", on_delete: :cascade
   add_foreign_key "network_adapters", "orchestration_stacks", on_delete: :cascade
   add_foreign_key "network_adapters", "sources", on_delete: :cascade
   add_foreign_key "network_adapters", "tenants", on_delete: :cascade
+  add_foreign_key "network_tags", "networks", on_delete: :cascade
+  add_foreign_key "network_tags", "tags", on_delete: :cascade
   add_foreign_key "networks", "orchestration_stacks", on_delete: :cascade
   add_foreign_key "networks", "source_regions", on_delete: :cascade
   add_foreign_key "networks", "sources", on_delete: :cascade
@@ -971,6 +1022,8 @@ ActiveRecord::Schema.define(version: 2019_07_29_214242) do
   add_foreign_key "refresh_state_parts", "tenants", on_delete: :cascade
   add_foreign_key "refresh_states", "sources", on_delete: :cascade
   add_foreign_key "refresh_states", "tenants", on_delete: :cascade
+  add_foreign_key "security_group_tags", "security_groups", on_delete: :cascade
+  add_foreign_key "security_group_tags", "tags", on_delete: :cascade
   add_foreign_key "security_groups", "network_adapters", on_delete: :nullify
   add_foreign_key "security_groups", "networks", on_delete: :cascade
   add_foreign_key "security_groups", "orchestration_stacks", on_delete: :cascade
@@ -1001,6 +1054,8 @@ ActiveRecord::Schema.define(version: 2019_07_29_214242) do
   add_foreign_key "source_regions", "sources", on_delete: :cascade
   add_foreign_key "source_regions", "tenants", on_delete: :cascade
   add_foreign_key "sources", "tenants", on_delete: :cascade
+  add_foreign_key "subnet_tags", "subnets", on_delete: :cascade
+  add_foreign_key "subnet_tags", "tags", on_delete: :cascade
   add_foreign_key "subnets", "networks", on_delete: :cascade
   add_foreign_key "subnets", "orchestration_stacks", on_delete: :cascade
   add_foreign_key "subnets", "source_regions", on_delete: :cascade
