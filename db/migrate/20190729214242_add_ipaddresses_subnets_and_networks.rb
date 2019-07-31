@@ -84,7 +84,7 @@ class AddIpaddressesSubnetsAndNetworks < ActiveRecord::Migration[5.2]
       t.references :subscription, :index => true, :null => true, :foreign_key => {:on_delete => :cascade}
       t.references :orchestration_stack, :index => true, :null => true, :foreign_key => {:on_delete => :cascade}
 
-      t.references :network_adapter, :index => true, :null => false, :foreign_key => {:on_delete => :nullify}
+      t.references :network_adapter, :index => true, :null => true, :foreign_key => {:on_delete => :nullify}
       t.references :network, :index => true, :null => true, :foreign_key => {:on_delete => :cascade}
 
       t.string :source_ref, :null => false
@@ -114,11 +114,11 @@ class AddIpaddressesSubnetsAndNetworks < ActiveRecord::Migration[5.2]
       t.references :subscription, :index => true, :null => true, :foreign_key => {:on_delete => :cascade}
       t.references :orchestration_stack, :index => true, :null => true, :foreign_key => {:on_delete => :cascade}
 
-      t.references :network_adapter, :index => true, :null => false, :foreign_key => {:on_delete => :nullify}
       t.references :network, :index => true, :null => true, :foreign_key => {:on_delete => :cascade}
 
       t.string :source_ref, :null => false
       t.string :name
+      t.string :description
       t.jsonb :extra
 
       t.datetime :resource_timestamp
