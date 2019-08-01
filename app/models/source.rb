@@ -47,9 +47,7 @@ class Source < ApplicationRecord
   has_many :vm_tags, :through => :vms
 
   # Network
-  has_many :floating_ips
-  has_many :floating_ip_tags, :through => :floating_ips
-  has_many :ipaddresses, :through => :network_adapters
+  has_many :ipaddresses
   has_many :network_adapters
   has_many :network_adapter_tags, :through => :network_adapters
   has_many :networks

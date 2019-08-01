@@ -6,7 +6,6 @@ class OrchestrationStack < ApplicationRecord
   belongs_to :tenant
   belongs_to :source
 
-  has_many :floating_ips
   has_many :network_adapters
   has_many :networks
   has_many :security_groups

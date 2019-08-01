@@ -14,7 +14,7 @@ module TopologicalInventory
         add_default_collection(:container_templates)
         add_default_collection(:datastores)
         add_default_collection(:flavors)
-        add_default_collection(:floating_ips)
+        add_default_collection(:ipaddresses)
         add_default_collection(:hosts)
         add_default_collection(:network_adapters)
         add_default_collection(:networks)
@@ -38,7 +38,7 @@ module TopologicalInventory
         add_tagging_collection(:container_project_tags, :manager_ref => [:container_project, :tag])
         add_tagging_collection(:container_template_tags, :manager_ref => [:container_template, :tag])
         add_tagging_collection(:datastore_tags, :manager_ref => [:datastore, :tag])
-        add_tagging_collection(:floating_ip_tags, :manager_ref => [:floating_ip, :tag])
+        add_tagging_collection(:ipaddress_tags, :manager_ref => [:ipaddress, :tag])
         add_tagging_collection(:host_tags, :manager_ref => %i[host tag])
         add_tagging_collection(:network_adapter_tags, :manager_ref => [:network_adapter, :tag])
         add_tagging_collection(:network_tags, :manager_ref => [:network, :tag])
@@ -51,7 +51,6 @@ module TopologicalInventory
         add_datastore_mounts
         add_volume_attachments
         add_cross_link_vms
-        add_ipaddresses
         add_vm_security_groups
       end
 
@@ -95,16 +94,6 @@ module TopologicalInventory
             :manager_ref        => manager_ref,
             :strategy           => :local_db_find_missing_references,
             :retention_strategy => :destroy,
-          )
-        end
-      end
-
-      def add_ipaddresses
-        add_collection(:ipaddresses) do |builder|
-          add_default_properties(builder, manager_ref: [:network_adapter, :subnet])
-          builder.add_properties(
-            :retention_strategy      => :destroy,
-            :manager_ref_allowed_nil => [:subnet]
           )
         end
       end

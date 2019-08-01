@@ -9,7 +9,6 @@ class Tenant < ApplicationRecord
   has_many :container_templates
   has_many :datastores
   has_many :flavors
-  has_many :floating_ips
   has_many :network_adapters
   has_many :networks
   has_many :orchestration_stacks
