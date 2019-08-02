@@ -47,7 +47,7 @@ module TopologicalInventory
                       "container_image_tags", "container_template_tags", "datastore_mounts", "datastore_tags",
                       "host_network_adapters", "host_tags", "service_offering_tags", "vm_network_adapters", "vm_tags",
                       "ipaddresses", "vm_security_groups", "network_adapter_tags", "network_tags", "subnet_tags",
-                      "security_group_tags", "floating_ip_tags"]
+                      "security_group_tags", "ipaddress_tags"]
         exceptions += internal_tables
 
         expect(not_having_column_with_not_null_constraint("tenant_id", exceptions)).to be_empty
