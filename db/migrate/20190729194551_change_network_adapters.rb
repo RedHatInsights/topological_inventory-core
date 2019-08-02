@@ -5,9 +5,7 @@ class ChangeNetworkAdapters < ActiveRecord::Migration[5.2]
 
     # Relations to VMs, Hosts, etc.
     add_reference :network_adapters, :device, :index => true, :polymorphic => true, :null => true
-    add_index :network_adapters,
-              %i(source_id source_ref),
-              :unique => true
+    add_index :network_adapters, %i[source_id source_ref], :unique => true
 
     remove_column :network_adapters, :ipaddresses, :jsonb
 
