@@ -32,11 +32,13 @@ module TopologicalInventory
         add_tagging_collection(:container_node_tags, :manager_ref => [:container_node, :tag])
         add_tagging_collection(:container_project_tags, :manager_ref => [:container_project, :tag])
         add_tagging_collection(:container_template_tags, :manager_ref => [:container_template, :tag])
+        add_tagging_collection(:datastore_tags, :manager_ref => [:datastore, :tag])
         add_tagging_collection(:host_tags, :manager_ref => %i[host tag])
         add_tagging_collection(:service_offering_tags, :manager_ref => [:service_offering, :tag])
         add_tagging_collection(:vm_tags, :manager_ref => [:vm, :tag])
         add_tags
 
+        add_datastore_mounts
         add_volume_attachments
         add_cross_link_vms
       end
@@ -97,6 +99,13 @@ module TopologicalInventory
           add_default_properties(builder, manager_ref: [:volume, :vm])
           builder.add_properties(:retention_strategy => :destroy)
           builder.add_default_values(:tenant_id => ->(persister) { persister.manager.tenant_id })
+        end
+      end
+
+      def add_datastore_mounts
+        add_collection(:datastore_mounts) do |builder|
+          add_default_properties(builder, manager_ref: [:datastore, :host])
+          builder.add_properties(:retention_strategy => :destroy)
         end
       end
 
