@@ -41,12 +41,22 @@ class Source < ApplicationRecord
   has_many :datastore_mounts, :through => :hosts
   has_many :flavors
   has_many :hosts
-  has_many :host_network_adapters, :through => :hosts, :source => :network_adapters
   has_many :host_tags, :through => :hosts
   has_many :orchestration_stacks
   has_many :vms
-  has_many :vm_network_adapters, :through => :vms, :source => :network_adapters
   has_many :vm_tags, :through => :vms
+
+  # Network
+  has_many :ipaddresses
+  has_many :network_adapters
+  has_many :network_adapter_tags, :through => :network_adapters
+  has_many :networks
+  has_many :network_tags, :through => :networks
+  has_many :security_groups
+  has_many :security_group_tags, :through => :security_groups
+  has_many :subnets
+  has_many :subnet_tags, :through => :subnets
+  has_many :vm_security_groups, :through => :vms
 
   # Storage
   has_many :volumes
