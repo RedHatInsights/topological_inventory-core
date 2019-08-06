@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_29_214242) do
+ActiveRecord::Schema.define(version: 2019_08_06_112121) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -520,9 +520,15 @@ ActiveRecord::Schema.define(version: 2019_07_29_214242) do
     t.datetime "source_created_at"
     t.datetime "source_deleted_at"
     t.datetime "last_seen_at"
+    t.bigint "source_region_id"
+    t.bigint "subscription_id"
+    t.bigint "parent_orchestration_stack_id"
     t.index ["archived_at"], name: "index_orchestration_stacks_on_archived_at"
     t.index ["last_seen_at"], name: "index_orchestration_stacks_on_last_seen_at"
+    t.index ["parent_orchestration_stack_id"], name: "index_orchestration_stacks_on_parent_orchestration_stack_id"
     t.index ["source_id", "source_ref"], name: "index_orchestration_stacks_on_source_id_and_source_ref", unique: true
+    t.index ["source_region_id"], name: "index_orchestration_stacks_on_source_region_id"
+    t.index ["subscription_id"], name: "index_orchestration_stacks_on_subscription_id"
     t.index ["tenant_id"], name: "index_orchestration_stacks_on_tenant_id"
   end
 
@@ -867,12 +873,16 @@ ActiveRecord::Schema.define(version: 2019_07_29_214242) do
     t.bigint "flavor_id"
     t.uuid "host_inventory_uuid"
     t.jsonb "mac_addresses"
+    t.bigint "source_region_id"
+    t.bigint "subscription_id"
     t.index ["archived_at"], name: "index_vms_on_archived_at"
     t.index ["flavor_id"], name: "index_vms_on_flavor_id"
     t.index ["host_inventory_uuid"], name: "index_vms_on_host_inventory_uuid"
     t.index ["last_seen_at"], name: "index_vms_on_last_seen_at"
     t.index ["orchestration_stack_id"], name: "index_vms_on_orchestration_stack_id"
     t.index ["source_id", "source_ref"], name: "index_vms_on_source_id_and_source_ref", unique: true
+    t.index ["source_region_id"], name: "index_vms_on_source_region_id"
+    t.index ["subscription_id"], name: "index_vms_on_subscription_id"
     t.index ["tenant_id"], name: "index_vms_on_tenant_id"
     t.index ["uid_ems"], name: "index_vms_on_uid_ems"
   end
@@ -926,10 +936,14 @@ ActiveRecord::Schema.define(version: 2019_07_29_214242) do
     t.datetime "resource_timestamp"
     t.jsonb "resource_timestamps", default: {}
     t.datetime "resource_timestamps_max"
+    t.bigint "orchestration_stack_id"
+    t.bigint "subscription_id"
     t.index ["archived_at"], name: "index_volumes_on_archived_at"
     t.index ["last_seen_at"], name: "index_volumes_on_last_seen_at"
+    t.index ["orchestration_stack_id"], name: "index_volumes_on_orchestration_stack_id"
     t.index ["source_id", "source_ref"], name: "index_volumes_on_source_id_and_source_ref", unique: true
     t.index ["source_region_id"], name: "index_volumes_on_source_region_id"
+    t.index ["subscription_id"], name: "index_volumes_on_subscription_id"
     t.index ["tenant_id"], name: "index_volumes_on_tenant_id"
     t.index ["volume_type_id"], name: "index_volumes_on_volume_type_id"
   end
@@ -1001,7 +1015,10 @@ ActiveRecord::Schema.define(version: 2019_07_29_214242) do
   add_foreign_key "networks", "sources", on_delete: :cascade
   add_foreign_key "networks", "subscriptions", on_delete: :cascade
   add_foreign_key "networks", "tenants", on_delete: :cascade
+  add_foreign_key "orchestration_stacks", "orchestration_stacks", column: "parent_orchestration_stack_id", on_delete: :cascade
+  add_foreign_key "orchestration_stacks", "source_regions", on_delete: :cascade
   add_foreign_key "orchestration_stacks", "sources", on_delete: :cascade
+  add_foreign_key "orchestration_stacks", "subscriptions", on_delete: :cascade
   add_foreign_key "orchestration_stacks", "tenants", on_delete: :cascade
   add_foreign_key "refresh_state_parts", "refresh_states", on_delete: :cascade
   add_foreign_key "refresh_state_parts", "tenants", on_delete: :cascade
@@ -1056,15 +1073,19 @@ ActiveRecord::Schema.define(version: 2019_07_29_214242) do
   add_foreign_key "vm_tags", "vms", on_delete: :cascade
   add_foreign_key "vms", "flavors", on_delete: :nullify
   add_foreign_key "vms", "orchestration_stacks", on_delete: :nullify
+  add_foreign_key "vms", "source_regions", on_delete: :cascade
   add_foreign_key "vms", "sources", on_delete: :cascade
+  add_foreign_key "vms", "subscriptions", on_delete: :cascade
   add_foreign_key "vms", "tenants", on_delete: :cascade
   add_foreign_key "volume_attachments", "tenants", on_delete: :cascade
   add_foreign_key "volume_attachments", "vms", on_delete: :cascade
   add_foreign_key "volume_attachments", "volumes", on_delete: :cascade
   add_foreign_key "volume_types", "sources", on_delete: :cascade
   add_foreign_key "volume_types", "tenants", on_delete: :cascade
+  add_foreign_key "volumes", "orchestration_stacks", on_delete: :cascade
   add_foreign_key "volumes", "source_regions", on_delete: :cascade
   add_foreign_key "volumes", "sources", on_delete: :cascade
+  add_foreign_key "volumes", "subscriptions", on_delete: :cascade
   add_foreign_key "volumes", "tenants", on_delete: :cascade
   add_foreign_key "volumes", "volume_types", on_delete: :cascade
 end
