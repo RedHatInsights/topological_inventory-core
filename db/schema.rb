@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_06_112121) do
+ActiveRecord::Schema.define(version: 2019_08_07_102142) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -459,11 +459,15 @@ ActiveRecord::Schema.define(version: 2019_08_06_112121) do
     t.bigint "orchestration_stack_id"
     t.string "device_type"
     t.bigint "device_id"
+    t.bigint "source_region_id"
+    t.bigint "subscription_id"
     t.index ["archived_at"], name: "index_network_adapters_on_archived_at"
     t.index ["device_type", "device_id"], name: "index_network_adapters_on_device_type_and_device_id"
     t.index ["last_seen_at"], name: "index_network_adapters_on_last_seen_at"
     t.index ["orchestration_stack_id"], name: "index_network_adapters_on_orchestration_stack_id"
     t.index ["source_id", "source_ref"], name: "index_network_adapters_on_source_id_and_source_ref", unique: true
+    t.index ["source_region_id"], name: "index_network_adapters_on_source_region_id"
+    t.index ["subscription_id"], name: "index_network_adapters_on_subscription_id"
     t.index ["tenant_id"], name: "index_network_adapters_on_tenant_id"
   end
 
@@ -1006,7 +1010,9 @@ ActiveRecord::Schema.define(version: 2019_08_06_112121) do
   add_foreign_key "network_adapter_tags", "network_adapters", on_delete: :cascade
   add_foreign_key "network_adapter_tags", "tags", on_delete: :cascade
   add_foreign_key "network_adapters", "orchestration_stacks", on_delete: :cascade
+  add_foreign_key "network_adapters", "source_regions", on_delete: :cascade
   add_foreign_key "network_adapters", "sources", on_delete: :cascade
+  add_foreign_key "network_adapters", "subscriptions", on_delete: :cascade
   add_foreign_key "network_adapters", "tenants", on_delete: :cascade
   add_foreign_key "network_tags", "networks", on_delete: :cascade
   add_foreign_key "network_tags", "tags", on_delete: :cascade
