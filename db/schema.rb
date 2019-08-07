@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_07_102142) do
+ActiveRecord::Schema.define(version: 2019_08_07_183701) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -742,6 +742,7 @@ ActiveRecord::Schema.define(version: 2019_08_07_102142) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "tenant_id", null: false
+    t.string "refresh_status"
     t.index ["tenant_id"], name: "index_sources_on_tenant_id"
     t.index ["uid"], name: "index_sources_on_uid", unique: true
   end
