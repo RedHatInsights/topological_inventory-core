@@ -48,6 +48,7 @@ class Source < ApplicationRecord
 
   # Network
   has_many :ipaddresses
+  has_many :ipaddress_tags, :through => :ipaddresses
   has_many :network_adapters
   has_many :network_adapter_tags, :through => :network_adapters
   has_many :networks

@@ -15,6 +15,8 @@ class Vm < ApplicationRecord
 
   has_many :network_adapters, :as => :device
   has_many :ipaddresses, :through => :network_adapters
+  has_many :subnets, :through => :ipaddresses
+  has_many :networks, :through => :subnets
   has_many :vm_security_groups
   has_many :security_groups, :through => :vm_security_groups
 
