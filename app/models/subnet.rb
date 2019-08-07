@@ -11,7 +11,9 @@ class Subnet < ApplicationRecord
 
   belongs_to :network, :optional => true
 
-  has_many :subnet_tags
+  has_many :ipaddresses
+  has_many :network_adapters, :through => :ipaddresses
+  has_many :vms, :through => :network_adapters, :source => :device, :source_type => "Vm"
 
   acts_as_tenant(:tenant)
   acts_as_taggable_on

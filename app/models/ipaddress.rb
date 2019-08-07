@@ -12,8 +12,6 @@ class Ipaddress < ApplicationRecord
   belongs_to :network_adapter, :optional => true
   belongs_to :subnet, :optional => true
 
-  has_many :ip_address_tags
-
   acts_as_tenant(:tenant)
   acts_as_taggable_on
 end
