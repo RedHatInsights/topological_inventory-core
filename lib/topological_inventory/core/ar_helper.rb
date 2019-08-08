@@ -40,7 +40,7 @@ module TopologicalInventory
         $LOAD_PATH << root.join("app", "models", "concerns")
 
         ActiveSupport::Dependencies.autoload_paths << root.join("app", "models")
-        ActiveSupport::Dependencies.autoload_paths << root.join("app", "models", "concenrs")
+        ActiveSupport::Dependencies.autoload_paths << root.join("app", "models", "concerns")
       end
     end
   end
