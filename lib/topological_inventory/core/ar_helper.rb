@@ -32,7 +32,10 @@ module TopologicalInventory
       end
 
       def self.root
-        @root ||= Pathname.new(__dir__).join("../../..").expand_path
+        @root ||= begin
+          require 'pathname'
+          Pathname.new(__dir__).join("../../..").expand_path
+        end
       end
 
       private_class_method def self.autoload_models
