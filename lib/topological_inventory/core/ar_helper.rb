@@ -21,7 +21,7 @@ module TopologicalInventory
         ActiveRecord::Tasks::DatabaseTasks.db_dir = root.join("db")
         ActiveRecord::Tasks::DatabaseTasks.migrations_paths = [root.join("db/migrate")]
 
-        load_models
+        autoload_models
 
         require "topological_inventory/core/seed_loader"
         ActiveRecord::Tasks::DatabaseTasks.seed_loader = TopologicalInventory::Core::SeedLoader
@@ -32,18 +32,18 @@ module TopologicalInventory
       end
 
       def self.root
-        @root ||= Pathname.new(__dir__).join("../../..").expand_path
+        @root ||= begin
+          require 'pathname'
+          Pathname.new(__dir__).join("../../..").expand_path
+        end
       end
 
-      private_class_method def self.load_models
+      private_class_method def self.autoload_models
         $LOAD_PATH << root.join("app", "models")
         $LOAD_PATH << root.join("app", "models", "concerns")
 
         ActiveSupport::Dependencies.autoload_paths << root.join("app", "models")
-        ActiveSupport::Dependencies.autoload_paths << root.join("app", "models", "concenrs")
-
-        require "application_record"
-        Dir[root.join("app/models/**/*.rb")].each { |f| require f }
+        ActiveSupport::Dependencies.autoload_paths << root.join("app", "models", "concerns")
       end
     end
   end

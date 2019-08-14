@@ -1,6 +1,6 @@
 require "archived_concern"
 
-class NetworkAdapter < ApplicationRecord
+class SecurityGroup < ApplicationRecord
   include ArchivedConcern
 
   belongs_to :tenant
@@ -9,9 +9,8 @@ class NetworkAdapter < ApplicationRecord
   belongs_to :subscription, :optional => true
   belongs_to :orchestration_stack, :optional => true
 
-  belongs_to :device, :polymorphic => true, :optional => true
-
-  has_many :ipaddresses
+  has_many :vm_security_groups
+  has_many :vms, :through => :vm_security_groups
 
   acts_as_tenant(:tenant)
   acts_as_taggable_on

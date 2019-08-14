@@ -12,14 +12,20 @@ module TopologicalInventory
         add_default_collection(:container_projects) { |b| add_secondary_refs_name(b) }
         add_default_collection(:container_resource_quotas)
         add_default_collection(:container_templates)
+        add_default_collection(:datastores)
         add_default_collection(:flavors)
+        add_default_collection(:ipaddresses)
         add_default_collection(:hosts)
+        add_default_collection(:network_adapters)
+        add_default_collection(:networks)
         add_default_collection(:orchestration_stacks)
         add_default_collection(:service_instances)
+        add_default_collection(:security_groups)
         add_default_collection(:service_offering_icons)
         add_default_collection(:service_offerings)
         add_default_collection(:service_plans)
         add_default_collection(:source_regions)
+        add_default_collection(:subnets)
         add_default_collection(:subscriptions)
         add_default_collection(:vms)
         add_default_collection(:volumes)
@@ -31,13 +37,21 @@ module TopologicalInventory
         add_tagging_collection(:container_node_tags, :manager_ref => [:container_node, :tag])
         add_tagging_collection(:container_project_tags, :manager_ref => [:container_project, :tag])
         add_tagging_collection(:container_template_tags, :manager_ref => [:container_template, :tag])
+        add_tagging_collection(:datastore_tags, :manager_ref => [:datastore, :tag])
+        add_tagging_collection(:ipaddress_tags, :manager_ref => [:ipaddress, :tag])
         add_tagging_collection(:host_tags, :manager_ref => %i[host tag])
+        add_tagging_collection(:network_adapter_tags, :manager_ref => [:network_adapter, :tag])
+        add_tagging_collection(:network_tags, :manager_ref => [:network, :tag])
+        add_tagging_collection(:security_group_tags, :manager_ref => [:security_group, :tag])
         add_tagging_collection(:service_offering_tags, :manager_ref => [:service_offering, :tag])
+        add_tagging_collection(:subnet_tags, :manager_ref => [:subnet, :tag])
         add_tagging_collection(:vm_tags, :manager_ref => [:vm, :tag])
         add_tags
 
+        add_datastore_mounts
         add_volume_attachments
         add_cross_link_vms
+        add_vm_security_groups
       end
 
       def targeted?
@@ -84,6 +98,13 @@ module TopologicalInventory
         end
       end
 
+      def add_vm_security_groups
+        add_collection(:vm_security_groups) do |builder|
+          add_default_properties(builder, manager_ref: [:vm, :security_group])
+          builder.add_properties(:retention_strategy => :destroy)
+        end
+      end
+
       def add_containers
         add_collection(:containers) do |builder|
           add_default_properties(builder, manager_ref: [:container_group, :name])
@@ -96,6 +117,13 @@ module TopologicalInventory
           add_default_properties(builder, manager_ref: [:volume, :vm])
           builder.add_properties(:retention_strategy => :destroy)
           builder.add_default_values(:tenant_id => ->(persister) { persister.manager.tenant_id })
+        end
+      end
+
+      def add_datastore_mounts
+        add_collection(:datastore_mounts) do |builder|
+          add_default_properties(builder, manager_ref: [:datastore, :host])
+          builder.add_properties(:retention_strategy => :destroy)
         end
       end
 
