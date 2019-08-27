@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
 
   s.files = Dir["{app,config,db,lib}/**/*", "LICENSE.txt", "Rakefile", "README.md"]
 
-  s.add_runtime_dependency "acts_as_tenant"
+  s.add_runtime_dependency "acts_as_tenant",    "~> 0.4.4"
   s.add_runtime_dependency "inventory_refresh", "~> 0.3.0"
   s.add_runtime_dependency "manageiq-messaging", "~> 0.1.0"
   s.add_runtime_dependency "manageiq-password",  "~> 0.3"
