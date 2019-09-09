@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_09_113726) do
+ActiveRecord::Schema.define(version: 2019_09_09_114533) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -735,16 +735,6 @@ ActiveRecord::Schema.define(version: 2019_09_09_113726) do
     t.index ["last_seen_at"], name: "index_source_regions_on_last_seen_at"
     t.index ["source_id", "source_ref"], name: "index_source_regions_on_source_id_and_source_ref", unique: true
     t.index ["tenant_id"], name: "index_source_regions_on_tenant_id"
-  end
-
-  create_table "source_types", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "product_name", null: false
-    t.string "vendor", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.jsonb "schema"
-    t.index ["name"], name: "index_source_types_on_name", unique: true
   end
 
   create_table "sources", force: :cascade do |t|
