@@ -43,6 +43,8 @@ class Source < ApplicationRecord
   has_many :hosts
   has_many :host_tags, :through => :hosts
   has_many :orchestration_stacks
+  has_many :reservations
+  has_many :reservation_tags, :through => :reservations
   has_many :vms
   has_many :vm_tags, :through => :vms
 

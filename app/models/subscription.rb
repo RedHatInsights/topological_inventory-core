@@ -16,6 +16,7 @@ class Subscription < ApplicationRecord
   has_many :source_regions
   has_many :subnets
   has_many :vms
+  has_many :reservations
   has_many :volumes
 
   acts_as_tenant(:tenant)

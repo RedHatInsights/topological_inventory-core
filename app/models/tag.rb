@@ -22,6 +22,9 @@ class Tag < ApplicationRecord
   has_many :vm_tags
   has_many :vms, :through => :vm_tags
 
+  has_many :reservation_tags
+  has_many :reservations, :through => :reservation_tags
+
   # Network
   has_many :ipaddress_tags
   has_many :ipaddresses, :through => :ipaddress_tags
