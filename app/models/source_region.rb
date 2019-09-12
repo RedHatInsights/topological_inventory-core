@@ -15,6 +15,7 @@ class SourceRegion < ApplicationRecord
   has_many :service_plans
   has_many :subnets
   has_many :vms
+  has_many :reservations
   has_many :volumes
 
   acts_as_tenant(:tenant)

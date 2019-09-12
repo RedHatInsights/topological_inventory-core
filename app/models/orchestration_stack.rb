@@ -16,6 +16,7 @@ class OrchestrationStack < ApplicationRecord
   has_many :security_groups
   has_many :subnets
   has_many :vms
+  has_many :reservations
   has_many :volumes
 
   acts_as_tenant(:tenant)
