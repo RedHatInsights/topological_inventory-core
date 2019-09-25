@@ -7,6 +7,7 @@ class Flavor < ApplicationRecord
   belongs_to :source
 
   has_many :vms
+  has_many :reservations
 
   acts_as_tenant(:tenant)
 end

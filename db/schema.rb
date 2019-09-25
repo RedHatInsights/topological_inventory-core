@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_07_183701) do
+ActiveRecord::Schema.define(version: 2019_08_15_194221) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -563,6 +563,44 @@ ActiveRecord::Schema.define(version: 2019_08_07_183701) do
     t.index ["tenant_id"], name: "index_refresh_states_on_tenant_id"
   end
 
+  create_table "reservation_tags", id: :serial, force: :cascade do |t|
+    t.bigint "tag_id", null: false
+    t.bigint "reservation_id", null: false
+    t.datetime "last_seen_at"
+    t.index ["last_seen_at"], name: "index_reservation_tags_on_last_seen_at"
+    t.index ["reservation_id"], name: "index_reservation_tags_on_reservation_id"
+    t.index ["tag_id", "reservation_id"], name: "index_reservation_tags_on_tag_id_and_reservation_id", unique: true
+  end
+
+  create_table "reservations", force: :cascade do |t|
+    t.bigint "tenant_id", null: false
+    t.bigint "source_id", null: false
+    t.bigint "source_region_id"
+    t.bigint "subscription_id"
+    t.bigint "flavor_id"
+    t.string "source_ref", null: false
+    t.string "state"
+    t.datetime "start"
+    t.datetime "end"
+    t.jsonb "extra"
+    t.datetime "resource_timestamp"
+    t.jsonb "resource_timestamps", default: {}
+    t.datetime "resource_timestamps_max"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "archived_at"
+    t.datetime "source_created_at"
+    t.datetime "source_deleted_at"
+    t.datetime "last_seen_at"
+    t.index ["archived_at"], name: "index_reservations_on_archived_at"
+    t.index ["flavor_id"], name: "index_reservations_on_flavor_id"
+    t.index ["last_seen_at"], name: "index_reservations_on_last_seen_at"
+    t.index ["source_id", "source_ref"], name: "index_reservations_on_source_id_and_source_ref", unique: true
+    t.index ["source_region_id"], name: "index_reservations_on_source_region_id"
+    t.index ["subscription_id"], name: "index_reservations_on_subscription_id"
+    t.index ["tenant_id"], name: "index_reservations_on_tenant_id"
+  end
+
   create_table "security_group_tags", id: :serial, force: :cascade do |t|
     t.bigint "tag_id", null: false
     t.bigint "security_group_id", null: false
@@ -1031,6 +1069,13 @@ ActiveRecord::Schema.define(version: 2019_08_07_183701) do
   add_foreign_key "refresh_state_parts", "tenants", on_delete: :cascade
   add_foreign_key "refresh_states", "sources", on_delete: :cascade
   add_foreign_key "refresh_states", "tenants", on_delete: :cascade
+  add_foreign_key "reservation_tags", "reservations", on_delete: :cascade
+  add_foreign_key "reservation_tags", "tags", on_delete: :cascade
+  add_foreign_key "reservations", "flavors", on_delete: :cascade
+  add_foreign_key "reservations", "source_regions", on_delete: :cascade
+  add_foreign_key "reservations", "sources", on_delete: :cascade
+  add_foreign_key "reservations", "subscriptions", on_delete: :cascade
+  add_foreign_key "reservations", "tenants", on_delete: :cascade
   add_foreign_key "security_group_tags", "security_groups", on_delete: :cascade
   add_foreign_key "security_group_tags", "tags", on_delete: :cascade
   add_foreign_key "security_groups", "networks", on_delete: :cascade
