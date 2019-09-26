@@ -21,6 +21,7 @@ module TopologicalInventory
         add_default_collection(:orchestration_stacks)
         add_default_collection(:reservations)
         add_default_collection(:service_instances)
+        add_default_collection(:service_inventories)
         add_default_collection(:security_groups)
         add_default_collection(:service_offering_icons)
         add_default_collection(:service_offerings)

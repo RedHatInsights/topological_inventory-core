@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_15_194221) do
+ActiveRecord::Schema.define(version: 2019_09_26_144242) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -671,6 +671,29 @@ ActiveRecord::Schema.define(version: 2019_08_15_194221) do
     t.index ["tenant_id"], name: "index_service_instances_on_tenant_id"
   end
 
+  create_table "service_inventories", force: :cascade do |t|
+    t.bigint "tenant_id", null: false
+    t.bigint "source_id", null: false
+    t.string "source_ref", null: false
+    t.string "name"
+    t.string "inventory_type"
+    t.text "description"
+    t.jsonb "extra"
+    t.datetime "resource_timestamp"
+    t.jsonb "resource_timestamps", default: {}
+    t.datetime "resource_timestamps_max"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "archived_at"
+    t.datetime "source_created_at"
+    t.datetime "source_updated_at"
+    t.datetime "last_seen_at"
+    t.index ["archived_at"], name: "index_service_inventories_on_archived_at"
+    t.index ["last_seen_at"], name: "index_service_inventories_on_last_seen_at"
+    t.index ["source_id", "source_ref"], name: "index_service_inventories_on_source_id_and_source_ref", unique: true
+    t.index ["tenant_id"], name: "index_service_inventories_on_tenant_id"
+  end
+
   create_table "service_offering_icons", id: :serial, force: :cascade do |t|
     t.bigint "tenant_id", null: false
     t.bigint "source_id", null: false
@@ -1090,6 +1113,8 @@ ActiveRecord::Schema.define(version: 2019_08_15_194221) do
   add_foreign_key "service_instances", "sources", on_delete: :cascade
   add_foreign_key "service_instances", "subscriptions", on_delete: :cascade
   add_foreign_key "service_instances", "tenants", on_delete: :cascade
+  add_foreign_key "service_inventories", "sources", on_delete: :cascade
+  add_foreign_key "service_inventories", "tenants", on_delete: :cascade
   add_foreign_key "service_offering_icons", "sources", on_delete: :cascade
   add_foreign_key "service_offering_icons", "tenants", on_delete: :cascade
   add_foreign_key "service_offering_tags", "service_offerings", on_delete: :cascade
