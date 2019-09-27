@@ -676,7 +676,6 @@ ActiveRecord::Schema.define(version: 2019_09_26_144242) do
     t.bigint "source_id", null: false
     t.string "source_ref", null: false
     t.string "name"
-    t.string "inventory_type"
     t.text "description"
     t.jsonb "extra"
     t.datetime "resource_timestamp"
@@ -692,6 +691,15 @@ ActiveRecord::Schema.define(version: 2019_09_26_144242) do
     t.index ["last_seen_at"], name: "index_service_inventories_on_last_seen_at"
     t.index ["source_id", "source_ref"], name: "index_service_inventories_on_source_id_and_source_ref", unique: true
     t.index ["tenant_id"], name: "index_service_inventories_on_tenant_id"
+  end
+
+  create_table "service_inventories_tags", id: :serial, force: :cascade do |t|
+    t.bigint "tag_id", null: false
+    t.bigint "service_inventory_id", null: false
+    t.datetime "last_seen_at"
+    t.index ["last_seen_at"], name: "index_service_inventories_tags_on_last_seen_at"
+    t.index ["service_inventory_id"], name: "index_service_inventories_tags_on_service_inventory_id"
+    t.index ["tag_id", "service_inventory_id"], name: "service_inventories_tags_unique_index", unique: true
   end
 
   create_table "service_offering_icons", id: :serial, force: :cascade do |t|
@@ -1115,6 +1123,8 @@ ActiveRecord::Schema.define(version: 2019_09_26_144242) do
   add_foreign_key "service_instances", "tenants", on_delete: :cascade
   add_foreign_key "service_inventories", "sources", on_delete: :cascade
   add_foreign_key "service_inventories", "tenants", on_delete: :cascade
+  add_foreign_key "service_inventories_tags", "service_inventories", on_delete: :cascade
+  add_foreign_key "service_inventories_tags", "tags", on_delete: :cascade
   add_foreign_key "service_offering_icons", "sources", on_delete: :cascade
   add_foreign_key "service_offering_icons", "tenants", on_delete: :cascade
   add_foreign_key "service_offering_tags", "service_offerings", on_delete: :cascade
