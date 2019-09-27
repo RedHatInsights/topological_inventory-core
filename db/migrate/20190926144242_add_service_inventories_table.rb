@@ -26,7 +26,7 @@ class AddServiceInventoriesTable < ActiveRecord::Migration[5.2]
       t.index %i[source_id source_ref], :unique => true
     end
 
-    create_table :service_inventories_tags, :id => :serial, :force => :cascade do |t|
+    create_table :service_inventory_tags, :id => :serial, :force => :cascade do |t|
       t.references :tag, :index => false, :null => false, :foreign_key => {:on_delete => :cascade}
       t.references :service_inventory, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
 
