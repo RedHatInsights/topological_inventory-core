@@ -46,6 +46,7 @@ module TopologicalInventory
         add_tagging_collection(:network_tags, :manager_ref => [:network, :tag])
         add_tagging_collection(:reservation_tags, :manager_ref => [:reservation, :tag])
         add_tagging_collection(:security_group_tags, :manager_ref => [:security_group, :tag])
+        add_tagging_collection(:service_inventory_tags, :manager_ref => [:service_inventory, :tag])
         add_tagging_collection(:service_offering_tags, :manager_ref => [:service_offering, :tag])
         add_tagging_collection(:subnet_tags, :manager_ref => [:subnet, :tag])
         add_tagging_collection(:vm_tags, :manager_ref => [:vm, :tag])
