@@ -30,6 +30,7 @@ class Source < ApplicationRecord
   has_many :service_offering_tags, :through => :service_offerings
   has_many :service_instances
   has_many :service_inventories
+  has_many :service_inventory_tags, :through => :service_inventories
   has_many :service_plans
   has_many :source_regions
   has_many :subscriptions
