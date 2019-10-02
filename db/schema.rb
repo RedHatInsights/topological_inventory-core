@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_30_162142) do
+ActiveRecord::Schema.define(version: 2019_10_02_132112) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -644,6 +644,7 @@ ActiveRecord::Schema.define(version: 2019_09_30_162142) do
     t.bigint "tenant_id", null: false
     t.bigint "source_id", null: false
     t.bigint "service_inventory_id"
+    t.bigint "service_instance_id"
     t.bigint "root_service_instance_id"
     t.string "source_ref", null: false
     t.string "name"
@@ -661,6 +662,7 @@ ActiveRecord::Schema.define(version: 2019_09_30_162142) do
     t.index ["archived_at"], name: "index_service_instance_nodes_on_archived_at"
     t.index ["last_seen_at"], name: "index_service_instance_nodes_on_last_seen_at"
     t.index ["root_service_instance_id"], name: "index_service_instance_nodes_on_root_service_instance_id"
+    t.index ["service_instance_id"], name: "index_service_instance_nodes_on_service_instance_id"
     t.index ["service_inventory_id"], name: "index_service_instance_nodes_on_service_inventory_id"
     t.index ["source_id", "source_ref"], name: "index_service_instance_nodes_on_source_id_and_source_ref", unique: true
     t.index ["tenant_id"], name: "index_service_instance_nodes_on_tenant_id"
@@ -687,8 +689,10 @@ ActiveRecord::Schema.define(version: 2019_09_30_162142) do
     t.datetime "last_seen_at"
     t.string "external_url"
     t.bigint "service_inventory_id"
+    t.bigint "root_service_instance_id"
     t.index ["archived_at"], name: "index_service_instances_on_archived_at"
     t.index ["last_seen_at"], name: "index_service_instances_on_last_seen_at"
+    t.index ["root_service_instance_id"], name: "index_service_instances_on_root_service_instance_id"
     t.index ["service_inventory_id"], name: "index_service_instances_on_service_inventory_id"
     t.index ["service_offering_id"], name: "index_service_instances_on_service_offering_id"
     t.index ["service_plan_id"], name: "index_service_instances_on_service_plan_id"
@@ -747,6 +751,7 @@ ActiveRecord::Schema.define(version: 2019_09_30_162142) do
     t.bigint "tenant_id", null: false
     t.bigint "source_id", null: false
     t.bigint "service_inventory_id"
+    t.bigint "service_offering_id"
     t.bigint "root_service_offering_id"
     t.string "source_ref", null: false
     t.string "name"
@@ -765,6 +770,7 @@ ActiveRecord::Schema.define(version: 2019_09_30_162142) do
     t.index ["last_seen_at"], name: "index_service_offering_nodes_on_last_seen_at"
     t.index ["root_service_offering_id"], name: "index_service_offering_nodes_on_root_service_offering_id"
     t.index ["service_inventory_id"], name: "index_service_offering_nodes_on_service_inventory_id"
+    t.index ["service_offering_id"], name: "index_service_offering_nodes_on_service_offering_id"
     t.index ["source_id", "source_ref"], name: "index_service_offering_nodes_on_source_id_and_source_ref", unique: true
     t.index ["tenant_id"], name: "index_service_offering_nodes_on_tenant_id"
   end
@@ -1172,9 +1178,11 @@ ActiveRecord::Schema.define(version: 2019_09_30_162142) do
   add_foreign_key "security_groups", "subscriptions", on_delete: :cascade
   add_foreign_key "security_groups", "tenants", on_delete: :cascade
   add_foreign_key "service_instance_nodes", "service_instances", column: "root_service_instance_id", on_delete: :nullify
-  add_foreign_key "service_instance_nodes", "service_inventories", on_delete: :cascade
+  add_foreign_key "service_instance_nodes", "service_instances", on_delete: :nullify
+  add_foreign_key "service_instance_nodes", "service_inventories", on_delete: :nullify
   add_foreign_key "service_instance_nodes", "sources", on_delete: :cascade
   add_foreign_key "service_instance_nodes", "tenants", on_delete: :cascade
+  add_foreign_key "service_instances", "service_instances", column: "root_service_instance_id", on_delete: :nullify
   add_foreign_key "service_instances", "service_inventories", on_delete: :nullify
   add_foreign_key "service_instances", "service_offerings", on_delete: :nullify
   add_foreign_key "service_instances", "service_plans", on_delete: :nullify
@@ -1188,8 +1196,9 @@ ActiveRecord::Schema.define(version: 2019_09_30_162142) do
   add_foreign_key "service_inventory_tags", "tags", on_delete: :cascade
   add_foreign_key "service_offering_icons", "sources", on_delete: :cascade
   add_foreign_key "service_offering_icons", "tenants", on_delete: :cascade
-  add_foreign_key "service_offering_nodes", "service_inventories", on_delete: :cascade
+  add_foreign_key "service_offering_nodes", "service_inventories", on_delete: :nullify
   add_foreign_key "service_offering_nodes", "service_offerings", column: "root_service_offering_id", on_delete: :nullify
+  add_foreign_key "service_offering_nodes", "service_offerings", on_delete: :nullify
   add_foreign_key "service_offering_nodes", "sources", on_delete: :cascade
   add_foreign_key "service_offering_nodes", "tenants", on_delete: :cascade
   add_foreign_key "service_offering_tags", "service_offerings", on_delete: :cascade
