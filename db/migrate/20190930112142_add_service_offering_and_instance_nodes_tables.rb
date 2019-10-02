@@ -4,7 +4,8 @@ class AddServiceOfferingAndInstanceNodesTables < ActiveRecord::Migration[5.2]
       t.references :tenant, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
       t.references :source, :index => false, :null => false, :foreign_key => {:on_delete => :cascade}
 
-      t.references :service_inventory, :index => true, :null => true, :foreign_key => {:on_delete => :cascade}
+      t.references :service_inventory, :index => true, :null => true, :foreign_key => {:on_delete => :nullify}
+      t.references :service_offering, :index => true, :null => true, :foreign_key => {:on_delete => :nullify}
       t.references :root_service_offering,
                    :index => true,
                    :null => true,
@@ -36,7 +37,8 @@ class AddServiceOfferingAndInstanceNodesTables < ActiveRecord::Migration[5.2]
       t.references :tenant, :index => true, :null => false, :foreign_key => {:on_delete => :cascade}
       t.references :source, :index => false, :null => false, :foreign_key => {:on_delete => :cascade}
 
-      t.references :service_inventory, :index => true, :null => true, :foreign_key => {:on_delete => :cascade}
+      t.references :service_inventory, :index => true, :null => true, :foreign_key => {:on_delete => :nullify}
+      t.references :service_instance, :index => true, :null => true, :foreign_key => {:on_delete => :nullify}
       t.references :root_service_instance,
                    :index => true,
                    :null => true,
