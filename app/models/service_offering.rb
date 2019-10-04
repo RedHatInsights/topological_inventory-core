@@ -13,7 +13,6 @@ class ServiceOffering < ApplicationRecord
   has_many   :service_instances
   has_many   :service_plans
 
-  has_many :service_inventories
   has_many :service_offering_nodes
   has_many :child_service_offering_nodes, :class_name => "ServiceOfferingNode", :foreign_key => :root_service_offering
 
