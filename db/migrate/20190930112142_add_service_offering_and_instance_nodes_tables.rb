@@ -13,7 +13,6 @@ class AddServiceOfferingAndInstanceNodesTables < ActiveRecord::Migration[5.2]
 
       t.string :source_ref, :null => false
       t.string :name
-      t.text :description
 
       t.jsonb :extra
 
@@ -46,7 +45,6 @@ class AddServiceOfferingAndInstanceNodesTables < ActiveRecord::Migration[5.2]
 
       t.string :source_ref, :null => false
       t.string :name
-      t.text :description
 
       t.jsonb :extra
 

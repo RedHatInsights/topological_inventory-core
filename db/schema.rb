@@ -648,7 +648,6 @@ ActiveRecord::Schema.define(version: 2019_10_02_132112) do
     t.bigint "root_service_instance_id"
     t.string "source_ref", null: false
     t.string "name"
-    t.text "description"
     t.jsonb "extra"
     t.datetime "resource_timestamp"
     t.jsonb "resource_timestamps", default: {}
@@ -755,7 +754,6 @@ ActiveRecord::Schema.define(version: 2019_10_02_132112) do
     t.bigint "root_service_offering_id"
     t.string "source_ref", null: false
     t.string "name"
-    t.text "description"
     t.jsonb "extra"
     t.datetime "resource_timestamp"
     t.jsonb "resource_timestamps", default: {}
