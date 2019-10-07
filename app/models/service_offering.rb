@@ -8,7 +8,7 @@ class ServiceOffering < ApplicationRecord
   belongs_to :source
   belongs_to :source_region
   belongs_to :subscription
-  belongs_to :service_inventory
+  belongs_to :service_inventory, :optional => true
 
   has_many   :service_instances
   has_many   :service_plans
