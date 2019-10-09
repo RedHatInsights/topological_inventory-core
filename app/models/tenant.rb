@@ -14,7 +14,10 @@ class Tenant < ApplicationRecord
   has_many :orchestration_stacks
   has_many :security_groups
   has_many :service_instances
+  has_many :service_instance_nodes
+  has_many :service_inventories
   has_many :service_offerings
+  has_many :service_offering_nodes
   has_many :service_offering_icons
   has_many :service_plans
   has_many :source_regions
