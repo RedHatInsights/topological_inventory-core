@@ -20,6 +20,21 @@ describe "ActsAsTaggableOn" do
     end
 
     describe "#tag_add" do
+      let(:container_image_1) { ContainerImage.find_or_create_by!(:tenant => tenant, :source_ref => "YYY", :source => source) }
+
+      it "tags different objects with a same tag" do
+        container_image.tag_add("awesome")
+        container_image_1.tag_add("awesome")
+
+        expect(container_image.tags.pluck(:id)).to match_array(container_image_1.tags.pluck(:id))
+
+        expect(container_image.tag_list).to eq(["awesome"])
+        expect(container_image.tags.pluck(:name, :namespace, :value)).to eq([["awesome", "", ""]])
+
+        expect(container_image_1.tag_list).to eq(["awesome"])
+        expect(container_image_1.tags.pluck(:name, :namespace, :value)).to eq([["awesome", "", ""]])
+      end
+
       it "tags an object with a single tag" do
         container_image.tag_add("awesome")
         expect(container_image.tag_list).to eq(["awesome"])
