@@ -41,4 +41,8 @@ class Tag < ApplicationRecord
   has_many :subnets, :through => :subnet_tags
 
   acts_as_tenant(:tenant)
+
+  def to_tag_string
+    File.join("/", namespace, name).tap { |string| string << "=#{value}" if value.present? }
+  end
 end
