@@ -45,4 +45,18 @@ class Tag < ApplicationRecord
   def to_tag_string
     File.join("/", namespace, name).tap { |string| string << "=#{value}" if value.present? }
   end
+
+  def self.create!(attributes)
+    attributes = attributes.with_indifferent_access
+
+    tag_values = {}
+
+    if attributes[:tag]
+      keyspace, tag_values[:value]  = attributes[:tag].split("=")
+      *namespace, tag_values[:name] = keyspace.split("/")
+      tag_values[:namespace]        = namespace.join("/")
+    end
+
+    super(attributes.except(:tag).merge(tag_values))
+  end
 end
