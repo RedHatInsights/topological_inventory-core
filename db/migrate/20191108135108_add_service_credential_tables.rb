@@ -2,7 +2,7 @@ class AddServiceCredentialTables < ActiveRecord::Migration[5.2]
   def change
     create_table :service_credential_types, :id => :bigserial, :force => :cascade do |t|
       t.references :tenant, :index => true, :null => false, :foreign_key => { :on_delete => :cascade }
-      t.references :source, :index => true, :null => false, :foreign_key => { :on_delete => :cascade }
+      t.references :source, :index => false, :null => false, :foreign_key => { :on_delete => :cascade }
 
       t.string :source_ref, :null => false
       t.string :name
@@ -28,7 +28,7 @@ class AddServiceCredentialTables < ActiveRecord::Migration[5.2]
 
     create_table :service_credentials, :id => :bigserial, :force => :cascade do |t|
       t.references :tenant, :index => true, :null => false, :foreign_key => { :on_delete => :cascade }
-      t.references :source, :index => true, :null => false, :foreign_key => { :on_delete => :cascade }
+      t.references :source, :index => false, :null => false, :foreign_key => { :on_delete => :cascade }
 
       t.references :service_credential_type, :index => true, :null => true, :foreign_key => { :on_delete => :nullify }
 
