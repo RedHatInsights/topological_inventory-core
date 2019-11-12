@@ -28,7 +28,6 @@ module TopologicalInventory
         add_default_collection(:service_offerings)
         add_default_collection(:service_offering_nodes)
         add_default_collection(:service_credentials)
-        add_default_collection(:service_credential_types)
         add_default_collection(:service_plans)
         add_default_collection(:source_regions)
         add_default_collection(:subnets)

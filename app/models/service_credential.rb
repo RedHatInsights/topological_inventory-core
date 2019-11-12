@@ -5,7 +5,6 @@ class ServiceCredential < ApplicationRecord
 
   belongs_to :tenant
   belongs_to :source
-  belongs_to :service_credential_type
 
   has_many :service_offerings
   has_many :service_offering_nodes
