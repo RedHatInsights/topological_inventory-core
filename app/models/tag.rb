@@ -49,14 +49,17 @@ class Tag < ApplicationRecord
   def self.create!(attributes)
     attributes = attributes.with_indifferent_access
 
-    tag_values = {}
+    super(attributes.except(:tag).merge(parse(attributes[:tag])))
+  end
 
-    if attributes[:tag]
-      keyspace, tag_values[:value]  = attributes[:tag].split("=")
-      *namespace, tag_values[:name] = keyspace.split("/")
-      tag_values[:namespace]        = namespace.join("/")
+  def self.parse(tag_string)
+    return {} if tag_string.blank?
+
+    raise ArgumentError, "must start with /" unless tag_string.start_with?("/")
+
+    {}.tap do |tag_values|
+      keyspace, tag_values[:value]                    = tag_string.split("=")
+      _nil, tag_values[:namespace], tag_values[:name] = keyspace.split("/", 3)
     end
-
-    super(attributes.except(:tag).merge(tag_values))
   end
 end
