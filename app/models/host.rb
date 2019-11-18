@@ -12,6 +12,8 @@ class Host < ApplicationRecord
 
   has_many :network_adapters, :as => :device
 
+  has_many :vms
+
   acts_as_tenant(:tenant)
   acts_as_taggable_on
 end
