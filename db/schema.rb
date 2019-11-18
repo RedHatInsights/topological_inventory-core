@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_02_132112) do
+ActiveRecord::Schema.define(version: 2019_11_18_181501) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1009,8 +1009,10 @@ ActiveRecord::Schema.define(version: 2019_10_02_132112) do
     t.jsonb "mac_addresses"
     t.bigint "source_region_id"
     t.bigint "subscription_id"
+    t.bigint "host_id"
     t.index ["archived_at"], name: "index_vms_on_archived_at"
     t.index ["flavor_id"], name: "index_vms_on_flavor_id"
+    t.index ["host_id"], name: "index_vms_on_host_id"
     t.index ["host_inventory_uuid"], name: "index_vms_on_host_inventory_uuid"
     t.index ["last_seen_at"], name: "index_vms_on_last_seen_at"
     t.index ["orchestration_stack_id"], name: "index_vms_on_orchestration_stack_id"
@@ -1232,6 +1234,7 @@ ActiveRecord::Schema.define(version: 2019_10_02_132112) do
   add_foreign_key "vm_tags", "tags", on_delete: :cascade
   add_foreign_key "vm_tags", "vms", on_delete: :cascade
   add_foreign_key "vms", "flavors", on_delete: :nullify
+  add_foreign_key "vms", "hosts", on_delete: :nullify
   add_foreign_key "vms", "orchestration_stacks", on_delete: :nullify
   add_foreign_key "vms", "source_regions", on_delete: :cascade
   add_foreign_key "vms", "sources", on_delete: :cascade
