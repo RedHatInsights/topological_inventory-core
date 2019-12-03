@@ -43,7 +43,7 @@ class Tag < ApplicationRecord
   acts_as_tenant(:tenant)
 
   def to_tag_string
-    File.join("/", namespace, name).tap { |string| string << "=#{value}" if value.present? }
+    "/#{namespace}/#{name}".tap { |string| string << "=#{value}" if value.present? }
   end
 
   def self.create!(attributes)
