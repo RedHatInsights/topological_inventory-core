@@ -58,8 +58,9 @@ class Tag < ApplicationRecord
     raise ArgumentError, "must start with /" unless tag_string.start_with?("/")
 
     {}.tap do |tag_values|
-      keyspace, tag_values[:value]                    = tag_string.split("=")
-      _nil, tag_values[:namespace], tag_values[:name] = keyspace.split("/", 3)
+      keyspace, tag_values[:value]       = tag_string.split("=")
+      _nil, namespace, tag_values[:name] = keyspace.split("/", 3)
+      tag_values[:namespace]             = namespace.presence
     end
   end
 end
