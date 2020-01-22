@@ -61,6 +61,10 @@ module ActAsTaggableOn
         self.class.tagging_relation_name.to_s.classify.constantize
       end
     end
+
+    tenant_klass = ActsAsTenant.tenant_klass
+    join_klass = tagging_relation_name.to_s.singularize.classify.safe_constantize
+    join_klass.before_validation(:on => :create) { |i| i.send("#{tenant_klass}=", i.tag.send(tenant_klass)) }
   end
 
   def tagged_with(tag_name, options = {})
