@@ -1,9 +1,9 @@
 # TopologicalInventory
 
-[![Build Status](https://travis-ci.org/ManageIQ/topological_inventory-core.svg)](https://travis-ci.org/ManageIQ/topological_inventory-core)
+[![Build Status](https://travis-ci.org/RedHatInsights/topological_inventory-core.svg)](https://travis-ci.org/RedHatInsights/topological_inventory-core)
 [![Maintainability](https://api.codeclimate.com/v1/badges/34f9bd9412e35c1a36fd/maintainability)](https://codeclimate.com/github/ManageIQ/topological_inventory-core/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/34f9bd9412e35c1a36fd/test_coverage)](https://codeclimate.com/github/ManageIQ/topological_inventory-core/test_coverage)
-[![Security](https://hakiri.io/github/ManageIQ/topological_inventory-core/master.svg)](https://hakiri.io/github/ManageIQ/topological_inventory-core/master)
+[![Security](https://hakiri.io/github/RedHatInsights/topological_inventory-core/master.svg)](https://hakiri.io/github/RedHatInsights/topological_inventory-core/master)
 
 ## Usage
 

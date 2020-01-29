@@ -9,6 +9,7 @@ class Network < ApplicationRecord
   belongs_to :subscription, :optional => true
   belongs_to :orchestration_stack, :optional => true
 
+  has_many :security_groups
   has_many :subnets
 
   acts_as_tenant(:tenant)
