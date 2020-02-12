@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_18_181501) do
+ActiveRecord::Schema.define(version: 2020_01_22_181811) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,9 +32,11 @@ ActiveRecord::Schema.define(version: 2019_11_18_181501) do
     t.bigint "tag_id", null: false
     t.bigint "cluster_id", null: false
     t.datetime "last_seen_at"
+    t.bigint "tenant_id"
     t.index ["cluster_id"], name: "index_cluster_tags_on_cluster_id"
     t.index ["last_seen_at"], name: "index_cluster_tags_on_last_seen_at"
     t.index ["tag_id", "cluster_id"], name: "index_cluster_tags_on_tag_id_and_cluster_id", unique: true
+    t.index ["tenant_id"], name: "index_cluster_tags_on_tenant_id"
   end
 
   create_table "clusters", force: :cascade do |t|
@@ -64,9 +66,11 @@ ActiveRecord::Schema.define(version: 2019_11_18_181501) do
     t.bigint "tag_id", null: false
     t.bigint "container_group_id", null: false
     t.datetime "last_seen_at"
+    t.bigint "tenant_id"
     t.index ["container_group_id", "tag_id"], name: "uniq_index_on_container_group_id_tag_id", unique: true
     t.index ["last_seen_at"], name: "index_container_group_tags_on_last_seen_at"
     t.index ["tag_id"], name: "index_container_group_tags_on_tag_id"
+    t.index ["tenant_id"], name: "index_container_group_tags_on_tenant_id"
   end
 
   create_table "container_groups", force: :cascade do |t|
@@ -100,9 +104,11 @@ ActiveRecord::Schema.define(version: 2019_11_18_181501) do
     t.bigint "tag_id", null: false
     t.bigint "container_image_id", null: false
     t.datetime "last_seen_at"
+    t.bigint "tenant_id"
     t.index ["container_image_id", "tag_id"], name: "uniq_index_on_container_image_id_tag_id", unique: true
     t.index ["last_seen_at"], name: "index_container_image_tags_on_last_seen_at"
     t.index ["tag_id"], name: "index_container_image_tags_on_tag_id"
+    t.index ["tenant_id"], name: "index_container_image_tags_on_tenant_id"
   end
 
   create_table "container_images", force: :cascade do |t|
@@ -131,9 +137,11 @@ ActiveRecord::Schema.define(version: 2019_11_18_181501) do
     t.bigint "tag_id", null: false
     t.bigint "container_node_id", null: false
     t.datetime "last_seen_at"
+    t.bigint "tenant_id"
     t.index ["container_node_id", "tag_id"], name: "uniq_index_on_container_node_id_tag_id", unique: true
     t.index ["last_seen_at"], name: "index_container_node_tags_on_last_seen_at"
     t.index ["tag_id"], name: "index_container_node_tags_on_tag_id"
+    t.index ["tenant_id"], name: "index_container_node_tags_on_tenant_id"
   end
 
   create_table "container_nodes", force: :cascade do |t|
@@ -175,9 +183,11 @@ ActiveRecord::Schema.define(version: 2019_11_18_181501) do
     t.bigint "tag_id", null: false
     t.bigint "container_project_id", null: false
     t.datetime "last_seen_at"
+    t.bigint "tenant_id"
     t.index ["container_project_id", "tag_id"], name: "uniq_index_on_container_project_id_tag_id", unique: true
     t.index ["last_seen_at"], name: "index_container_project_tags_on_last_seen_at"
     t.index ["tag_id"], name: "index_container_project_tags_on_tag_id"
+    t.index ["tenant_id"], name: "index_container_project_tags_on_tenant_id"
   end
 
   create_table "container_projects", force: :cascade do |t|
@@ -234,9 +244,11 @@ ActiveRecord::Schema.define(version: 2019_11_18_181501) do
     t.bigint "tag_id", null: false
     t.bigint "container_template_id", null: false
     t.datetime "last_seen_at"
+    t.bigint "tenant_id"
     t.index ["container_template_id", "tag_id"], name: "uniq_index_on_container_template_id_tag_id", unique: true
     t.index ["last_seen_at"], name: "index_container_template_tags_on_last_seen_at"
     t.index ["tag_id"], name: "index_container_template_tags_on_tag_id"
+    t.index ["tenant_id"], name: "index_container_template_tags_on_tenant_id"
   end
 
   create_table "container_templates", force: :cascade do |t|
@@ -301,9 +313,11 @@ ActiveRecord::Schema.define(version: 2019_11_18_181501) do
     t.bigint "tag_id", null: false
     t.bigint "datastore_id", null: false
     t.datetime "last_seen_at"
+    t.bigint "tenant_id"
     t.index ["datastore_id"], name: "index_datastore_tags_on_datastore_id"
     t.index ["last_seen_at"], name: "index_datastore_tags_on_last_seen_at"
     t.index ["tag_id", "datastore_id"], name: "index_datastore_tags_on_tag_id_and_datastore_id", unique: true
+    t.index ["tenant_id"], name: "index_datastore_tags_on_tenant_id"
   end
 
   create_table "datastores", force: :cascade do |t|
@@ -356,9 +370,11 @@ ActiveRecord::Schema.define(version: 2019_11_18_181501) do
     t.bigint "tag_id", null: false
     t.bigint "host_id", null: false
     t.datetime "last_seen_at"
+    t.bigint "tenant_id"
     t.index ["host_id"], name: "index_host_tags_on_host_id"
     t.index ["last_seen_at"], name: "index_host_tags_on_last_seen_at"
     t.index ["tag_id", "host_id"], name: "index_host_tags_on_tag_id_and_host_id", unique: true
+    t.index ["tenant_id"], name: "index_host_tags_on_tenant_id"
   end
 
   create_table "hosts", force: :cascade do |t|
@@ -395,9 +411,11 @@ ActiveRecord::Schema.define(version: 2019_11_18_181501) do
     t.bigint "tag_id", null: false
     t.bigint "ipaddress_id", null: false
     t.datetime "last_seen_at"
+    t.bigint "tenant_id"
     t.index ["ipaddress_id"], name: "index_ipaddress_tags_on_ipaddress_id"
     t.index ["last_seen_at"], name: "index_ipaddress_tags_on_last_seen_at"
     t.index ["tag_id", "ipaddress_id"], name: "index_ipaddress_tags_on_tag_id_and_ipaddress_id", unique: true
+    t.index ["tenant_id"], name: "index_ipaddress_tags_on_tenant_id"
   end
 
   create_table "ipaddresses", force: :cascade do |t|
@@ -436,9 +454,11 @@ ActiveRecord::Schema.define(version: 2019_11_18_181501) do
     t.bigint "tag_id", null: false
     t.bigint "network_adapter_id", null: false
     t.datetime "last_seen_at"
+    t.bigint "tenant_id"
     t.index ["last_seen_at"], name: "index_network_adapter_tags_on_last_seen_at"
     t.index ["network_adapter_id"], name: "index_network_adapter_tags_on_network_adapter_id"
     t.index ["tag_id", "network_adapter_id"], name: "index_network_adapter_tags_on_tag_id_and_network_adapter_id", unique: true
+    t.index ["tenant_id"], name: "index_network_adapter_tags_on_tenant_id"
   end
 
   create_table "network_adapters", force: :cascade do |t|
@@ -475,9 +495,11 @@ ActiveRecord::Schema.define(version: 2019_11_18_181501) do
     t.bigint "tag_id", null: false
     t.bigint "network_id", null: false
     t.datetime "last_seen_at"
+    t.bigint "tenant_id"
     t.index ["last_seen_at"], name: "index_network_tags_on_last_seen_at"
     t.index ["network_id"], name: "index_network_tags_on_network_id"
     t.index ["tag_id", "network_id"], name: "index_network_tags_on_tag_id_and_network_id", unique: true
+    t.index ["tenant_id"], name: "index_network_tags_on_tenant_id"
   end
 
   create_table "networks", force: :cascade do |t|
@@ -567,9 +589,11 @@ ActiveRecord::Schema.define(version: 2019_11_18_181501) do
     t.bigint "tag_id", null: false
     t.bigint "reservation_id", null: false
     t.datetime "last_seen_at"
+    t.bigint "tenant_id"
     t.index ["last_seen_at"], name: "index_reservation_tags_on_last_seen_at"
     t.index ["reservation_id"], name: "index_reservation_tags_on_reservation_id"
     t.index ["tag_id", "reservation_id"], name: "index_reservation_tags_on_tag_id_and_reservation_id", unique: true
+    t.index ["tenant_id"], name: "index_reservation_tags_on_tenant_id"
   end
 
   create_table "reservations", force: :cascade do |t|
@@ -605,9 +629,11 @@ ActiveRecord::Schema.define(version: 2019_11_18_181501) do
     t.bigint "tag_id", null: false
     t.bigint "security_group_id", null: false
     t.datetime "last_seen_at"
+    t.bigint "tenant_id"
     t.index ["last_seen_at"], name: "index_security_group_tags_on_last_seen_at"
     t.index ["security_group_id"], name: "index_security_group_tags_on_security_group_id"
     t.index ["tag_id", "security_group_id"], name: "index_security_group_tags_on_tag_id_and_security_group_id", unique: true
+    t.index ["tenant_id"], name: "index_security_group_tags_on_tenant_id"
   end
 
   create_table "security_groups", force: :cascade do |t|
@@ -754,9 +780,11 @@ ActiveRecord::Schema.define(version: 2019_11_18_181501) do
     t.bigint "tag_id", null: false
     t.bigint "service_inventory_id", null: false
     t.datetime "last_seen_at"
+    t.bigint "tenant_id"
     t.index ["last_seen_at"], name: "index_service_inventory_tags_on_last_seen_at"
     t.index ["service_inventory_id"], name: "index_service_inventory_tags_on_service_inventory_id"
     t.index ["tag_id", "service_inventory_id"], name: "service_inventories_tags_unique_index", unique: true
+    t.index ["tenant_id"], name: "index_service_inventory_tags_on_tenant_id"
   end
 
   create_table "service_offering_icons", id: :serial, force: :cascade do |t|
@@ -805,9 +833,11 @@ ActiveRecord::Schema.define(version: 2019_11_18_181501) do
     t.bigint "tag_id", null: false
     t.bigint "service_offering_id", null: false
     t.datetime "last_seen_at"
+    t.bigint "tenant_id"
     t.index ["last_seen_at"], name: "index_service_offering_tags_on_last_seen_at"
     t.index ["service_offering_id", "tag_id"], name: "uniq_index_on_service_offering_id_tag_id", unique: true
     t.index ["tag_id"], name: "index_service_offering_tags_on_tag_id"
+    t.index ["tenant_id"], name: "index_service_offering_tags_on_tenant_id"
   end
 
   create_table "service_offerings", force: :cascade do |t|
@@ -910,9 +940,11 @@ ActiveRecord::Schema.define(version: 2019_11_18_181501) do
     t.bigint "tag_id", null: false
     t.bigint "subnet_id", null: false
     t.datetime "last_seen_at"
+    t.bigint "tenant_id"
     t.index ["last_seen_at"], name: "index_subnet_tags_on_last_seen_at"
     t.index ["subnet_id"], name: "index_subnet_tags_on_subnet_id"
     t.index ["tag_id", "subnet_id"], name: "index_subnet_tags_on_tag_id_and_subnet_id", unique: true
+    t.index ["tenant_id"], name: "index_subnet_tags_on_tenant_id"
   end
 
   create_table "subnets", force: :cascade do |t|
@@ -1007,8 +1039,10 @@ ActiveRecord::Schema.define(version: 2019_11_18_181501) do
     t.bigint "tag_id", null: false
     t.bigint "vm_id", null: false
     t.datetime "last_seen_at"
+    t.bigint "tenant_id"
     t.index ["last_seen_at"], name: "index_vm_tags_on_last_seen_at"
     t.index ["tag_id"], name: "index_vm_tags_on_tag_id"
+    t.index ["tenant_id"], name: "index_vm_tags_on_tenant_id"
     t.index ["vm_id", "tag_id"], name: "uniq_index_on_vm_id_tag_id", unique: true
   end
 
@@ -1116,24 +1150,29 @@ ActiveRecord::Schema.define(version: 2019_11_18_181501) do
 
   add_foreign_key "cluster_tags", "clusters", on_delete: :cascade
   add_foreign_key "cluster_tags", "tags", on_delete: :cascade
+  add_foreign_key "cluster_tags", "tenants", on_delete: :cascade
   add_foreign_key "clusters", "sources", on_delete: :cascade
   add_foreign_key "clusters", "tenants", on_delete: :cascade
   add_foreign_key "container_group_tags", "container_groups", on_delete: :cascade
   add_foreign_key "container_group_tags", "tags", on_delete: :cascade
+  add_foreign_key "container_group_tags", "tenants", on_delete: :cascade
   add_foreign_key "container_groups", "container_nodes", on_delete: :cascade
   add_foreign_key "container_groups", "container_projects", on_delete: :cascade
   add_foreign_key "container_groups", "sources", on_delete: :cascade
   add_foreign_key "container_groups", "tenants", on_delete: :cascade
   add_foreign_key "container_image_tags", "container_images", on_delete: :cascade
   add_foreign_key "container_image_tags", "tags", on_delete: :cascade
+  add_foreign_key "container_image_tags", "tenants", on_delete: :cascade
   add_foreign_key "container_images", "sources", on_delete: :cascade
   add_foreign_key "container_images", "tenants", on_delete: :cascade
   add_foreign_key "container_node_tags", "container_nodes", on_delete: :cascade
   add_foreign_key "container_node_tags", "tags", on_delete: :cascade
+  add_foreign_key "container_node_tags", "tenants", on_delete: :cascade
   add_foreign_key "container_nodes", "sources", on_delete: :cascade
   add_foreign_key "container_nodes", "tenants", on_delete: :cascade
   add_foreign_key "container_project_tags", "container_projects", on_delete: :cascade
   add_foreign_key "container_project_tags", "tags", on_delete: :cascade
+  add_foreign_key "container_project_tags", "tenants", on_delete: :cascade
   add_foreign_key "container_projects", "sources", on_delete: :cascade
   add_foreign_key "container_projects", "tenants", on_delete: :cascade
   add_foreign_key "container_resource_quotas", "container_projects", on_delete: :cascade
@@ -1141,6 +1180,7 @@ ActiveRecord::Schema.define(version: 2019_11_18_181501) do
   add_foreign_key "container_resource_quotas", "tenants", on_delete: :cascade
   add_foreign_key "container_template_tags", "container_templates", on_delete: :cascade
   add_foreign_key "container_template_tags", "tags", on_delete: :cascade
+  add_foreign_key "container_template_tags", "tenants", on_delete: :cascade
   add_foreign_key "container_templates", "container_projects", on_delete: :cascade
   add_foreign_key "container_templates", "sources", on_delete: :cascade
   add_foreign_key "container_templates", "tenants", on_delete: :cascade
@@ -1151,17 +1191,20 @@ ActiveRecord::Schema.define(version: 2019_11_18_181501) do
   add_foreign_key "datastore_mounts", "hosts", on_delete: :cascade
   add_foreign_key "datastore_tags", "datastores", on_delete: :cascade
   add_foreign_key "datastore_tags", "tags", on_delete: :cascade
+  add_foreign_key "datastore_tags", "tenants", on_delete: :cascade
   add_foreign_key "datastores", "sources", on_delete: :cascade
   add_foreign_key "datastores", "tenants", on_delete: :cascade
   add_foreign_key "flavors", "sources", on_delete: :cascade
   add_foreign_key "flavors", "tenants", on_delete: :cascade
   add_foreign_key "host_tags", "hosts", on_delete: :cascade
   add_foreign_key "host_tags", "tags", on_delete: :cascade
+  add_foreign_key "host_tags", "tenants", on_delete: :cascade
   add_foreign_key "hosts", "clusters", on_delete: :nullify
   add_foreign_key "hosts", "sources", on_delete: :cascade
   add_foreign_key "hosts", "tenants", on_delete: :cascade
   add_foreign_key "ipaddress_tags", "ipaddresses", on_delete: :cascade
   add_foreign_key "ipaddress_tags", "tags", on_delete: :cascade
+  add_foreign_key "ipaddress_tags", "tenants", on_delete: :cascade
   add_foreign_key "ipaddresses", "network_adapters", on_delete: :cascade
   add_foreign_key "ipaddresses", "orchestration_stacks", on_delete: :cascade
   add_foreign_key "ipaddresses", "source_regions", on_delete: :cascade
@@ -1171,6 +1214,7 @@ ActiveRecord::Schema.define(version: 2019_11_18_181501) do
   add_foreign_key "ipaddresses", "tenants", on_delete: :cascade
   add_foreign_key "network_adapter_tags", "network_adapters", on_delete: :cascade
   add_foreign_key "network_adapter_tags", "tags", on_delete: :cascade
+  add_foreign_key "network_adapter_tags", "tenants", on_delete: :cascade
   add_foreign_key "network_adapters", "orchestration_stacks", on_delete: :cascade
   add_foreign_key "network_adapters", "source_regions", on_delete: :cascade
   add_foreign_key "network_adapters", "sources", on_delete: :cascade
@@ -1178,6 +1222,7 @@ ActiveRecord::Schema.define(version: 2019_11_18_181501) do
   add_foreign_key "network_adapters", "tenants", on_delete: :cascade
   add_foreign_key "network_tags", "networks", on_delete: :cascade
   add_foreign_key "network_tags", "tags", on_delete: :cascade
+  add_foreign_key "network_tags", "tenants", on_delete: :cascade
   add_foreign_key "networks", "orchestration_stacks", on_delete: :cascade
   add_foreign_key "networks", "source_regions", on_delete: :cascade
   add_foreign_key "networks", "sources", on_delete: :cascade
@@ -1194,6 +1239,7 @@ ActiveRecord::Schema.define(version: 2019_11_18_181501) do
   add_foreign_key "refresh_states", "tenants", on_delete: :cascade
   add_foreign_key "reservation_tags", "reservations", on_delete: :cascade
   add_foreign_key "reservation_tags", "tags", on_delete: :cascade
+  add_foreign_key "reservation_tags", "tenants", on_delete: :cascade
   add_foreign_key "reservations", "flavors", on_delete: :cascade
   add_foreign_key "reservations", "source_regions", on_delete: :cascade
   add_foreign_key "reservations", "sources", on_delete: :cascade
@@ -1201,6 +1247,7 @@ ActiveRecord::Schema.define(version: 2019_11_18_181501) do
   add_foreign_key "reservations", "tenants", on_delete: :cascade
   add_foreign_key "security_group_tags", "security_groups", on_delete: :cascade
   add_foreign_key "security_group_tags", "tags", on_delete: :cascade
+  add_foreign_key "security_group_tags", "tenants", on_delete: :cascade
   add_foreign_key "security_groups", "networks", on_delete: :cascade
   add_foreign_key "security_groups", "orchestration_stacks", on_delete: :cascade
   add_foreign_key "security_groups", "source_regions", on_delete: :cascade
@@ -1228,6 +1275,7 @@ ActiveRecord::Schema.define(version: 2019_11_18_181501) do
   add_foreign_key "service_inventories", "tenants", on_delete: :cascade
   add_foreign_key "service_inventory_tags", "service_inventories", on_delete: :cascade
   add_foreign_key "service_inventory_tags", "tags", on_delete: :cascade
+  add_foreign_key "service_inventory_tags", "tenants", on_delete: :cascade
   add_foreign_key "service_offering_icons", "sources", on_delete: :cascade
   add_foreign_key "service_offering_icons", "tenants", on_delete: :cascade
   add_foreign_key "service_offering_nodes", "service_credentials", on_delete: :nullify
@@ -1238,6 +1286,7 @@ ActiveRecord::Schema.define(version: 2019_11_18_181501) do
   add_foreign_key "service_offering_nodes", "tenants", on_delete: :cascade
   add_foreign_key "service_offering_tags", "service_offerings", on_delete: :cascade
   add_foreign_key "service_offering_tags", "tags", on_delete: :cascade
+  add_foreign_key "service_offering_tags", "tenants", on_delete: :cascade
   add_foreign_key "service_offerings", "service_credentials", on_delete: :nullify
   add_foreign_key "service_offerings", "service_inventories", on_delete: :nullify
   add_foreign_key "service_offerings", "service_offering_icons", on_delete: :nullify
@@ -1255,6 +1304,7 @@ ActiveRecord::Schema.define(version: 2019_11_18_181501) do
   add_foreign_key "sources", "tenants", on_delete: :cascade
   add_foreign_key "subnet_tags", "subnets", on_delete: :cascade
   add_foreign_key "subnet_tags", "tags", on_delete: :cascade
+  add_foreign_key "subnet_tags", "tenants", on_delete: :cascade
   add_foreign_key "subnets", "networks", on_delete: :cascade
   add_foreign_key "subnets", "orchestration_stacks", on_delete: :cascade
   add_foreign_key "subnets", "source_regions", on_delete: :cascade
@@ -1268,6 +1318,7 @@ ActiveRecord::Schema.define(version: 2019_11_18_181501) do
   add_foreign_key "vm_security_groups", "security_groups", on_delete: :cascade
   add_foreign_key "vm_security_groups", "vms", on_delete: :cascade
   add_foreign_key "vm_tags", "tags", on_delete: :cascade
+  add_foreign_key "vm_tags", "tenants", on_delete: :cascade
   add_foreign_key "vm_tags", "vms", on_delete: :cascade
   add_foreign_key "vms", "flavors", on_delete: :nullify
   add_foreign_key "vms", "hosts", on_delete: :nullify
