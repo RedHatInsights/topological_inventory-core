@@ -8,7 +8,6 @@ class ServiceOfferingNode < ApplicationRecord
   belongs_to :service_offering,      :optional => true
   belongs_to :root_service_offering, :optional => true, :class_name => "ServiceOffering"
   belongs_to :service_inventory,     :optional => true
-  belongs_to :service_credential, :optional => true
 
   acts_as_tenant(:tenant)
 end
