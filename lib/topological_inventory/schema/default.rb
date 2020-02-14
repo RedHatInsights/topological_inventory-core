@@ -37,6 +37,9 @@ module TopologicalInventory
         add_default_collection(:volumes)
         add_default_collection(:volume_types)
 
+        add_collection_for_join_table(:service_offering_service_credentials, :manager_ref => %i[service_offering service_credential])
+        add_collection_for_join_table(:service_instance_service_credentials, :manager_ref => %i[service_instance service_credential])
+
         add_tagging_collection(:cluster_tags, :manager_ref => %i[cluster tag])
         add_tagging_collection(:container_group_tags, :manager_ref => [:container_group, :tag])
         add_tagging_collection(:container_image_tags, :manager_ref => [:container_image, :tag])
@@ -93,6 +96,17 @@ module TopologicalInventory
 
       def add_secondary_refs_name(builder)
         builder.add_properties(:secondary_refs => {:by_name => [:name]})
+      end
+
+      def add_collection_for_join_table(model, manager_ref: [:source_ref])
+        add_collection(model) do |builder|
+          builder.add_default_values(:tenant_id => ->(persister) { persister.manager.tenant_id })
+          builder.add_properties(
+            :manager_ref        => manager_ref,
+            :strategy           => :local_db_find_missing_references,
+            :retention_strategy => :destroy
+          )
+        end
       end
 
       def add_tagging_collection(model, manager_ref: [:source_ref])
