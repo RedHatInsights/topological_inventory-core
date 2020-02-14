@@ -25,6 +25,8 @@ class Source < ApplicationRecord
   has_many :containers, :through => :container_groups
 
   # Service Catalog Inventory Objects
+  has_many :service_credential_types
+  has_many :service_credentials
   has_many :service_offerings
   has_many :service_offering_nodes
   has_many :service_offering_icons
