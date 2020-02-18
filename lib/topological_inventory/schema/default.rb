@@ -98,6 +98,7 @@ module TopologicalInventory
       def add_tagging_collection(model, manager_ref: [:source_ref])
         # TODO generate the manager_ref automatically?
         add_collection(model) do |builder|
+          builder.add_default_values(:tenant_id => ->(persister) { persister.manager.tenant_id })
           builder.add_properties(
             :manager_ref        => manager_ref,
             :strategy           => :local_db_find_missing_references,
