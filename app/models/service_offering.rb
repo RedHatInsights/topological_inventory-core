@@ -16,6 +16,9 @@ class ServiceOffering < ApplicationRecord
   has_many :service_offering_nodes
   has_many :child_service_offering_nodes, :class_name => "ServiceOfferingNode", :foreign_key => :root_service_offering
 
+  has_many :service_offering_service_credentials
+  has_many :service_credentials, :through => :service_offering_service_credentials
+
   acts_as_tenant(:tenant)
   acts_as_taggable_on
 end
