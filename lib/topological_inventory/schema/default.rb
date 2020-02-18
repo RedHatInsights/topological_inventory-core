@@ -39,6 +39,8 @@ module TopologicalInventory
 
         add_collection_for_join_table(:service_offering_service_credentials, :manager_ref => %i[service_offering service_credential])
         add_collection_for_join_table(:service_instance_service_credentials, :manager_ref => %i[service_instance service_credential])
+        add_collection_for_join_table(:service_offering_node_service_credentials, :manager_ref => %i[service_offering_node service_credential])
+        add_collection_for_join_table(:service_instance_node_service_credentials, :manager_ref => %i[service_instance_node service_credential])
 
         add_tagging_collection(:cluster_tags, :manager_ref => %i[cluster tag])
         add_tagging_collection(:container_group_tags, :manager_ref => [:container_group, :tag])
