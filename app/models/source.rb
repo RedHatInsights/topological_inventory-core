@@ -35,6 +35,7 @@ class Source < ApplicationRecord
   has_many :service_instances
   has_many :service_instance_service_credentials, :through => :service_instances
   has_many :service_instance_nodes
+  has_many :service_instance_node_service_credentials, :through => :service_instance_nodes
   has_many :service_inventories
   has_many :service_inventory_tags, :through => :service_inventories
   has_many :service_plans
