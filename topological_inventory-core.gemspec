@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.version     = TopologicalInventory::Core::VERSION
   s.authors     = ["Adam Grare"]
   s.email       = ["agrare@redhat.com"]
-  s.homepage    = "https://github.com/ManageIQ/topological_inventory-core"
+  s.homepage    = "https://github.com/RedHatInsights/topological_inventory-core"
   s.summary     = "Core Models and Schema for the Topological Inventory Service."
   s.description = "Core Models and Schema for the Topological Inventory Service.."
   s.license     = "Apache-2.0"

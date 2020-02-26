@@ -1,12 +1,12 @@
 require "archived_concern"
 
-class ServiceCredential < ApplicationRecord
+class ServiceCredentialType < ApplicationRecord
   include ArchivedConcern
 
   belongs_to :tenant
   belongs_to :source
 
-  belongs_to :service_credential_type, :optional => true
+  has_many :service_credentials
 
   acts_as_tenant(:tenant)
 end

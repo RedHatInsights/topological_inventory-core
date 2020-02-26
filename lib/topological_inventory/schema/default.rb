@@ -28,6 +28,7 @@ module TopologicalInventory
         add_default_collection(:service_offerings)
         add_default_collection(:service_offering_nodes)
         add_default_collection(:service_credentials)
+        add_default_collection(:service_credential_types)
         add_default_collection(:service_plans)
         add_default_collection(:source_regions)
         add_default_collection(:subnets)
@@ -35,6 +36,11 @@ module TopologicalInventory
         add_default_collection(:vms)
         add_default_collection(:volumes)
         add_default_collection(:volume_types)
+
+        add_collection_for_join_table(:service_offering_service_credentials, :manager_ref => %i[service_offering service_credential])
+        add_collection_for_join_table(:service_instance_service_credentials, :manager_ref => %i[service_instance service_credential])
+        add_collection_for_join_table(:service_offering_node_service_credentials, :manager_ref => %i[service_offering_node service_credential])
+        add_collection_for_join_table(:service_instance_node_service_credentials, :manager_ref => %i[service_instance_node service_credential])
 
         add_tagging_collection(:cluster_tags, :manager_ref => %i[cluster tag])
         add_tagging_collection(:container_group_tags, :manager_ref => [:container_group, :tag])
@@ -94,9 +100,21 @@ module TopologicalInventory
         builder.add_properties(:secondary_refs => {:by_name => [:name]})
       end
 
+      def add_collection_for_join_table(model, manager_ref: [:source_ref])
+        add_collection(model) do |builder|
+          builder.add_default_values(:tenant_id => ->(persister) { persister.manager.tenant_id })
+          builder.add_properties(
+            :manager_ref        => manager_ref,
+            :strategy           => :local_db_find_missing_references,
+            :retention_strategy => :destroy
+          )
+        end
+      end
+
       def add_tagging_collection(model, manager_ref: [:source_ref])
         # TODO generate the manager_ref automatically?
         add_collection(model) do |builder|
+          builder.add_default_values(:tenant_id => ->(persister) { persister.manager.tenant_id })
           builder.add_properties(
             :manager_ref        => manager_ref,
             :strategy           => :local_db_find_missing_references,

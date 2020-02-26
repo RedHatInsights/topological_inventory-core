@@ -15,5 +15,8 @@ class ServiceInstance < ApplicationRecord
   has_many :service_instance_nodes
   has_many :child_service_instance_nodes, :class_name => "ServiceInstanceNode", :foreign_key => :root_service_instance
 
+  has_many :service_instance_service_credentials
+  has_many :service_credentials, :through => :service_instance_service_credentials
+
   acts_as_tenant(:tenant)
 end
