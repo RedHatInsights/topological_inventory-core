@@ -6,6 +6,7 @@ class Subscription < ApplicationRecord
   belongs_to :tenant
   belongs_to :source
 
+  has_many :ipaddresses
   has_many :network_adapters
   has_many :networks
   has_many :orchestration_stacks
