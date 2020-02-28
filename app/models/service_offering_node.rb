@@ -10,7 +10,7 @@ class ServiceOfferingNode < ApplicationRecord
   belongs_to :service_inventory,     :optional => true
 
   has_many :service_offering_node_service_credentials
-  has_many :service_credentials, :through => :service_offering_service_credentials
+  has_many :service_credentials, :through => :service_offering_node_service_credentials
 
   acts_as_tenant(:tenant)
 end
