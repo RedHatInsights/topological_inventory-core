@@ -5,6 +5,7 @@ class Host < ApplicationRecord
 
   belongs_to :tenant
   belongs_to :source
+  belongs_to :refresh_state_part, :optional => true
   belongs_to :cluster, :optional => true
 
   has_many :datastore_mounts
