@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_22_181811) do
+ActiveRecord::Schema.define(version: 2020_03_13_124806) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -666,6 +666,29 @@ ActiveRecord::Schema.define(version: 2020_01_22_181811) do
     t.index ["tenant_id"], name: "index_security_groups_on_tenant_id"
   end
 
+  create_table "service_credential_types", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.string "kind"
+    t.string "namespace"
+    t.string "source_ref", null: false
+    t.datetime "resource_timestamp"
+    t.jsonb "resource_timestamps", default: {}
+    t.datetime "resource_timestamps_max"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "archived_at"
+    t.datetime "source_created_at"
+    t.datetime "source_deleted_at"
+    t.datetime "last_seen_at"
+    t.bigint "tenant_id", null: false
+    t.bigint "source_id", null: false
+    t.index ["archived_at"], name: "index_service_credential_types_on_archived_at"
+    t.index ["last_seen_at"], name: "index_service_credential_types_on_last_seen_at"
+    t.index ["source_id", "source_ref"], name: "index_service_credential_types_on_source_id_and_source_ref", unique: true
+    t.index ["tenant_id"], name: "index_service_credential_types_on_tenant_id"
+  end
+
   create_table "service_credentials", force: :cascade do |t|
     t.bigint "tenant_id", null: false
     t.bigint "source_id", null: false
@@ -682,10 +705,25 @@ ActiveRecord::Schema.define(version: 2020_01_22_181811) do
     t.datetime "source_created_at"
     t.datetime "source_updated_at"
     t.datetime "last_seen_at"
+    t.bigint "service_credential_type_id"
     t.index ["archived_at"], name: "index_service_credentials_on_archived_at"
     t.index ["last_seen_at"], name: "index_service_credentials_on_last_seen_at"
+    t.index ["service_credential_type_id"], name: "index_service_credentials_on_service_credential_type_id"
     t.index ["source_id", "source_ref"], name: "index_service_credentials_on_source_id_and_source_ref", unique: true
     t.index ["tenant_id"], name: "index_service_credentials_on_tenant_id"
+  end
+
+  create_table "service_instance_node_service_credentials", force: :cascade do |t|
+    t.bigint "tenant_id", null: false
+    t.bigint "service_credential_id", null: false
+    t.bigint "service_instance_node_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "last_seen_at"
+    t.index ["last_seen_at"], name: "index_service_instance_node_service_credentials_on_last_seen_at"
+    t.index ["service_credential_id", "service_instance_node_id"], name: "index_service_instance_node_credential_id", unique: true
+    t.index ["service_instance_node_id"], name: "index_instance_node_credentials_on_service_offering_id"
+    t.index ["tenant_id"], name: "index_service_instance_node_service_credentials_on_tenant_id"
   end
 
   create_table "service_instance_nodes", force: :cascade do |t|
@@ -706,15 +744,26 @@ ActiveRecord::Schema.define(version: 2020_01_22_181811) do
     t.datetime "source_created_at"
     t.datetime "source_updated_at"
     t.datetime "last_seen_at"
-    t.bigint "service_credential_id"
     t.index ["archived_at"], name: "index_service_instance_nodes_on_archived_at"
     t.index ["last_seen_at"], name: "index_service_instance_nodes_on_last_seen_at"
     t.index ["root_service_instance_id"], name: "index_service_instance_nodes_on_root_service_instance_id"
-    t.index ["service_credential_id"], name: "index_service_instance_nodes_on_service_credential_id"
     t.index ["service_instance_id"], name: "index_service_instance_nodes_on_service_instance_id"
     t.index ["service_inventory_id"], name: "index_service_instance_nodes_on_service_inventory_id"
     t.index ["source_id", "source_ref"], name: "index_service_instance_nodes_on_source_id_and_source_ref", unique: true
     t.index ["tenant_id"], name: "index_service_instance_nodes_on_tenant_id"
+  end
+
+  create_table "service_instance_service_credentials", force: :cascade do |t|
+    t.bigint "tenant_id", null: false
+    t.bigint "service_credential_id", null: false
+    t.bigint "service_instance_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "last_seen_at"
+    t.index ["last_seen_at"], name: "index_service_instance_service_credentials_on_last_seen_at"
+    t.index ["service_credential_id", "service_instance_id"], name: "index_service_instance_credential_id", unique: true
+    t.index ["service_instance_id"], name: "index_service_instance_credentials_on_service_instance_id"
+    t.index ["tenant_id"], name: "index_service_instance_service_credentials_on_tenant_id"
   end
 
   create_table "service_instances", force: :cascade do |t|
@@ -739,11 +788,9 @@ ActiveRecord::Schema.define(version: 2020_01_22_181811) do
     t.string "external_url"
     t.bigint "service_inventory_id"
     t.bigint "root_service_instance_id"
-    t.bigint "service_credential_id"
     t.index ["archived_at"], name: "index_service_instances_on_archived_at"
     t.index ["last_seen_at"], name: "index_service_instances_on_last_seen_at"
     t.index ["root_service_instance_id"], name: "index_service_instances_on_root_service_instance_id"
-    t.index ["service_credential_id"], name: "index_service_instances_on_service_credential_id"
     t.index ["service_inventory_id"], name: "index_service_instances_on_service_inventory_id"
     t.index ["service_offering_id"], name: "index_service_instances_on_service_offering_id"
     t.index ["service_plan_id"], name: "index_service_instances_on_service_plan_id"
@@ -800,6 +847,19 @@ ActiveRecord::Schema.define(version: 2020_01_22_181811) do
     t.index ["tenant_id"], name: "index_service_offering_icons_on_tenant_id"
   end
 
+  create_table "service_offering_node_service_credentials", force: :cascade do |t|
+    t.bigint "tenant_id", null: false
+    t.bigint "service_credential_id", null: false
+    t.bigint "service_offering_node_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "last_seen_at"
+    t.index ["last_seen_at"], name: "index_service_offering_node_service_credentials_on_last_seen_at"
+    t.index ["service_credential_id", "service_offering_node_id"], name: "index_service_offering_node_credential_id", unique: true
+    t.index ["service_offering_node_id"], name: "index_offering_node_credentials_on_service_offering_id"
+    t.index ["tenant_id"], name: "index_service_offering_node_service_credentials_on_tenant_id"
+  end
+
   create_table "service_offering_nodes", force: :cascade do |t|
     t.bigint "tenant_id", null: false
     t.bigint "source_id", null: false
@@ -818,15 +878,26 @@ ActiveRecord::Schema.define(version: 2020_01_22_181811) do
     t.datetime "source_created_at"
     t.datetime "source_updated_at"
     t.datetime "last_seen_at"
-    t.bigint "service_credential_id"
     t.index ["archived_at"], name: "index_service_offering_nodes_on_archived_at"
     t.index ["last_seen_at"], name: "index_service_offering_nodes_on_last_seen_at"
     t.index ["root_service_offering_id"], name: "index_service_offering_nodes_on_root_service_offering_id"
-    t.index ["service_credential_id"], name: "index_service_offering_nodes_on_service_credential_id"
     t.index ["service_inventory_id"], name: "index_service_offering_nodes_on_service_inventory_id"
     t.index ["service_offering_id"], name: "index_service_offering_nodes_on_service_offering_id"
     t.index ["source_id", "source_ref"], name: "index_service_offering_nodes_on_source_id_and_source_ref", unique: true
     t.index ["tenant_id"], name: "index_service_offering_nodes_on_tenant_id"
+  end
+
+  create_table "service_offering_service_credentials", force: :cascade do |t|
+    t.bigint "tenant_id", null: false
+    t.bigint "service_credential_id", null: false
+    t.bigint "service_offering_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "last_seen_at"
+    t.index ["last_seen_at"], name: "index_service_offering_service_credentials_on_last_seen_at"
+    t.index ["service_credential_id", "service_offering_id"], name: "index_service_offering_credential_id", unique: true
+    t.index ["service_offering_id"], name: "index_service_offering_credentials_on_service_offering_id"
+    t.index ["tenant_id"], name: "index_service_offering_service_credentials_on_tenant_id"
   end
 
   create_table "service_offering_tags", id: :serial, force: :cascade do |t|
@@ -865,10 +936,8 @@ ActiveRecord::Schema.define(version: 2020_01_22_181811) do
     t.string "support_url"
     t.bigint "service_offering_icon_id"
     t.bigint "service_inventory_id"
-    t.bigint "service_credential_id"
     t.index ["archived_at"], name: "index_service_offerings_on_archived_at"
     t.index ["last_seen_at"], name: "index_service_offerings_on_last_seen_at"
-    t.index ["service_credential_id"], name: "index_service_offerings_on_service_credential_id"
     t.index ["service_inventory_id"], name: "index_service_offerings_on_service_inventory_id"
     t.index ["service_offering_icon_id"], name: "index_service_offerings_on_service_offering_icon_id"
     t.index ["source_deleted_at"], name: "index_service_offerings_on_source_deleted_at"
@@ -1254,15 +1323,22 @@ ActiveRecord::Schema.define(version: 2020_01_22_181811) do
   add_foreign_key "security_groups", "sources", on_delete: :cascade
   add_foreign_key "security_groups", "subscriptions", on_delete: :cascade
   add_foreign_key "security_groups", "tenants", on_delete: :cascade
+  add_foreign_key "service_credential_types", "sources", on_delete: :cascade
+  add_foreign_key "service_credential_types", "tenants", on_delete: :cascade
+  add_foreign_key "service_credentials", "service_credential_types", on_delete: :cascade
   add_foreign_key "service_credentials", "sources", on_delete: :cascade
   add_foreign_key "service_credentials", "tenants", on_delete: :cascade
-  add_foreign_key "service_instance_nodes", "service_credentials", on_delete: :nullify
+  add_foreign_key "service_instance_node_service_credentials", "service_credentials", on_delete: :cascade
+  add_foreign_key "service_instance_node_service_credentials", "service_instance_nodes", on_delete: :cascade
+  add_foreign_key "service_instance_node_service_credentials", "tenants", on_delete: :cascade
   add_foreign_key "service_instance_nodes", "service_instances", column: "root_service_instance_id", on_delete: :nullify
   add_foreign_key "service_instance_nodes", "service_instances", on_delete: :nullify
   add_foreign_key "service_instance_nodes", "service_inventories", on_delete: :nullify
   add_foreign_key "service_instance_nodes", "sources", on_delete: :cascade
   add_foreign_key "service_instance_nodes", "tenants", on_delete: :cascade
-  add_foreign_key "service_instances", "service_credentials", on_delete: :nullify
+  add_foreign_key "service_instance_service_credentials", "service_credentials", on_delete: :cascade
+  add_foreign_key "service_instance_service_credentials", "service_instances", on_delete: :cascade
+  add_foreign_key "service_instance_service_credentials", "tenants", on_delete: :cascade
   add_foreign_key "service_instances", "service_instances", column: "root_service_instance_id", on_delete: :nullify
   add_foreign_key "service_instances", "service_inventories", on_delete: :nullify
   add_foreign_key "service_instances", "service_offerings", on_delete: :nullify
@@ -1278,16 +1354,20 @@ ActiveRecord::Schema.define(version: 2020_01_22_181811) do
   add_foreign_key "service_inventory_tags", "tenants", on_delete: :cascade
   add_foreign_key "service_offering_icons", "sources", on_delete: :cascade
   add_foreign_key "service_offering_icons", "tenants", on_delete: :cascade
-  add_foreign_key "service_offering_nodes", "service_credentials", on_delete: :nullify
+  add_foreign_key "service_offering_node_service_credentials", "service_credentials", on_delete: :cascade
+  add_foreign_key "service_offering_node_service_credentials", "service_offering_nodes", on_delete: :cascade
+  add_foreign_key "service_offering_node_service_credentials", "tenants", on_delete: :cascade
   add_foreign_key "service_offering_nodes", "service_inventories", on_delete: :nullify
   add_foreign_key "service_offering_nodes", "service_offerings", column: "root_service_offering_id", on_delete: :nullify
   add_foreign_key "service_offering_nodes", "service_offerings", on_delete: :nullify
   add_foreign_key "service_offering_nodes", "sources", on_delete: :cascade
   add_foreign_key "service_offering_nodes", "tenants", on_delete: :cascade
+  add_foreign_key "service_offering_service_credentials", "service_credentials", on_delete: :cascade
+  add_foreign_key "service_offering_service_credentials", "service_offerings", on_delete: :cascade
+  add_foreign_key "service_offering_service_credentials", "tenants", on_delete: :cascade
   add_foreign_key "service_offering_tags", "service_offerings", on_delete: :cascade
   add_foreign_key "service_offering_tags", "tags", on_delete: :cascade
   add_foreign_key "service_offering_tags", "tenants", on_delete: :cascade
-  add_foreign_key "service_offerings", "service_credentials", on_delete: :nullify
   add_foreign_key "service_offerings", "service_inventories", on_delete: :nullify
   add_foreign_key "service_offerings", "service_offering_icons", on_delete: :nullify
   add_foreign_key "service_offerings", "source_regions", on_delete: :cascade
