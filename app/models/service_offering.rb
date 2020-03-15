@@ -4,8 +4,9 @@ class ServiceOffering < ApplicationRecord
   include ArchivedConcern
 
   belongs_to :tenant
-  belongs_to :service_offering_icon, :optional => true
   belongs_to :source
+  belongs_to :refresh_state_part, :optional => true
+  belongs_to :service_offering_icon, :optional => true
   belongs_to :source_region
   belongs_to :subscription
   belongs_to :service_inventory, :optional => true

@@ -5,6 +5,7 @@ class ServiceInstanceNode < ApplicationRecord
 
   belongs_to :tenant
   belongs_to :source
+  belongs_to :refresh_state_part, :optional => true
   belongs_to :service_instance,      :optional => true
   belongs_to :root_service_instance, :optional => true, :class_name => "ServiceInstance"
   belongs_to :service_inventory,     :optional => true
