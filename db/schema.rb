@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_13_141215) do
+ActiveRecord::Schema.define(version: 2020_03_17_082640) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -635,6 +635,8 @@ ActiveRecord::Schema.define(version: 2020_03_13_141215) do
     t.string "error_message"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "started_at"
+    t.datetime "finished_at"
     t.index ["source_id", "uuid"], name: "index_refresh_states_on_source_id_and_uuid", unique: true
     t.index ["tenant_id"], name: "index_refresh_states_on_tenant_id"
   end
