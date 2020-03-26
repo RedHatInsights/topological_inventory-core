@@ -5,6 +5,7 @@ class Reservation < ApplicationRecord
 
   belongs_to :tenant
   belongs_to :source
+  belongs_to :refresh_state_part, :optional => true
   belongs_to :source_region, :optional => true
   belongs_to :subscription, :optional => true
   belongs_to :flavor, :optional => true

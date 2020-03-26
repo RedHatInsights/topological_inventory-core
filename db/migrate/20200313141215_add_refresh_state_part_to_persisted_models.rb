@@ -1,0 +1,66 @@
+class AddRefreshStatePartToPersistedModels < ActiveRecord::Migration[5.2]
+  def change
+    %i[
+      clusters
+      containers
+      container_groups
+      container_images
+      container_nodes
+      container_projects
+      container_resource_quotas
+      container_templates
+      datastores
+      flavors
+      ipaddresses
+      hosts
+      network_adapters
+      networks
+      orchestration_stacks
+      reservations
+      service_instances
+      service_instance_nodes
+      service_inventories
+      security_groups
+      service_offering_icons
+      service_offerings
+      service_offering_nodes
+      service_credentials
+      service_credential_types
+      service_plans
+      source_regions
+      subnets
+      subscriptions
+      vms
+      volumes
+      volume_types
+      service_offering_service_credentials
+      service_instance_service_credentials
+      service_offering_node_service_credentials
+      service_instance_node_service_credentials
+      cluster_tags
+      container_group_tags
+      container_image_tags
+      container_node_tags
+      container_project_tags
+      container_template_tags
+      datastore_tags
+      ipaddress_tags
+      host_tags
+      network_adapter_tags
+      network_tags
+      reservation_tags
+      security_group_tags
+      service_inventory_tags
+      service_offering_tags
+      subnet_tags
+      vm_tags
+      tags
+      datastore_mounts
+      volume_attachments
+      vm_security_groups
+    ].each do |inventory_collection_name|
+      idx_name = "idx_#{inventory_collection_name.to_s.gsub("service", "svc")}_on_refresh_state_part_id"
+      add_reference inventory_collection_name, :refresh_state_part, :index => {:name => idx_name}, :null => true, :foreign_key => {:on_delete => :nullify}
+    end
+  end
+end

@@ -5,6 +5,7 @@ class ServiceInstance < ApplicationRecord
 
   belongs_to :tenant
   belongs_to :source
+  belongs_to :refresh_state_part, :optional => true
   belongs_to :service_offering
   belongs_to :service_plan
   belongs_to :source_region

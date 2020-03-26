@@ -5,6 +5,7 @@ class ServiceCredential < ApplicationRecord
 
   belongs_to :tenant
   belongs_to :source
+  belongs_to :refresh_state_part, :optional => true
 
   belongs_to :service_credential_type, :optional => true
 
