@@ -1,5 +1,5 @@
 require "topological_inventory/schema/base"
-
+require "pry-byebug"
 module TopologicalInventory
   module Schema
     class Default < TopologicalInventory::Schema::Base
@@ -20,7 +20,7 @@ module TopologicalInventory
         add_default_collection(:networks)
         add_default_collection(:orchestration_stacks)
         add_default_collection(:reservations)
-        add_default_collection(:service_instances)
+        add_service_instances
         add_default_collection(:service_instance_nodes)
         add_default_collection(:service_inventories)
         add_default_collection(:security_groups)
@@ -120,6 +120,66 @@ module TopologicalInventory
             :strategy           => :local_db_find_missing_references,
             :retention_strategy => :destroy,
           )
+        end
+      end
+
+      def add_service_instances
+        add_collection(:service_instances) do |builder|
+          add_default_properties(builder)
+          add_default_values(builder)
+
+          save_block = lambda do |source, inventory_collection|
+            src_refs = inventory_collection.data.collect { |inventory_object| inventory_object.source_ref }
+            return if src_refs.blank?
+
+            # Saving Service Instances as usual
+            InventoryRefresh::SaveCollection::Base.send(:save_inventory, inventory_collection)
+
+            # Get running tasks
+            # TODO: add B-tree index to "context" or make 'source_id' as a separate column
+            tasks_source_ref = Task.where(:state => 'running', :target_type => 'ServiceInstance').where("context->'service_instance'->>'source_id' = ?", source.id.to_s)
+                                 .pluck(Arel.sql("context->'service_instance'->>'source_ref'")) #target_source_ref)
+
+            # Load saved service instances (IDs needed)
+            svc_instances_values = ServiceInstance.where(:source_ref => tasks_source_ref).pluck(:id, :external_url, :source_ref, Arel.sql("extra->'finished'"), Arel.sql("extra->'status'"))
+            return if svc_instances_values.blank?
+
+            # Preparing Tasks data for mass update
+            sql_update_values = []
+            svc_instances_values.each do |attrs|
+              id, external_url, source_ref, finished_timestamp, status = attrs[0], attrs[1], attrs[2], attrs[3], attrs[4]
+
+              state = finished_timestamp.blank? ? 'running' : 'completed'
+              status = %w[error failed].include?(status) ? 'error' : 'ok' # TODO: ansible-tower specific, normalize in collector
+              context = {
+                :remote_status => status,
+                :service_instance => {
+                  :id => id,
+                  :source_id => source.id,
+                  :source_ref => source_ref,
+                  :url => external_url
+                }
+              }.to_json
+              sql_update_values << "('#{source_ref}', '#{state}', '#{status}', '#{context}'::json)"
+            end
+
+            sql = <<SQL
+UPDATE tasks AS t SET
+  state = c.state,
+  status = c.status,
+  context = c.context
+FROM (VALUES :values
+) AS c(source_ref, state, status, context)
+WHERE t.target_source_ref = c.source_ref
+  AND t.target_type = 'ServiceInstance'
+  AND t.state = 'running';
+SQL
+            sql.sub!(':values', sql_update_values.join(','))
+
+            ActiveRecord::Base.connection.execute(sql)
+          end
+
+          builder.add_properties(:custom_save_block => save_block)
         end
       end
 
