@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_03_114310) do
+ActiveRecord::Schema.define(version: 2020_04_14_123737) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1189,6 +1189,8 @@ ActiveRecord::Schema.define(version: 2020_04_03_114310) do
     t.datetime "updated_at", null: false
     t.string "target_source_ref"
     t.string "target_type"
+    t.bigint "source_id"
+    t.index ["source_id"], name: "index_tasks_on_source_id"
     t.index ["target_type", "target_source_ref"], name: "index_tasks_on_target_type_and_target_source_ref"
     t.index ["tenant_id"], name: "index_tasks_on_tenant_id"
   end
@@ -1564,6 +1566,7 @@ ActiveRecord::Schema.define(version: 2020_04_03_114310) do
   add_foreign_key "subscriptions", "tenants", on_delete: :cascade
   add_foreign_key "tags", "refresh_state_parts", on_delete: :nullify
   add_foreign_key "tags", "tenants", on_delete: :cascade
+  add_foreign_key "tasks", "sources", on_delete: :nullify
   add_foreign_key "tasks", "tenants", on_delete: :cascade
   add_foreign_key "vm_security_groups", "refresh_state_parts", on_delete: :nullify
   add_foreign_key "vm_security_groups", "security_groups", on_delete: :cascade

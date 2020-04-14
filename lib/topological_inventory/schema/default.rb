@@ -1,5 +1,5 @@
 require "topological_inventory/schema/base"
-require "pry-byebug"
+
 module TopologicalInventory
   module Schema
     class Default < TopologicalInventory::Schema::Base
@@ -136,9 +136,8 @@ module TopologicalInventory
             InventoryRefresh::SaveCollection::Base.send(:save_inventory, inventory_collection)
 
             # Get running tasks
-            # TODO: add B-tree index to "context" or make 'source_id' as a separate column
-            tasks_source_ref = Task.where(:state => 'running', :target_type => 'ServiceInstance').where("context->'service_instance'->>'source_id' = ?", source.id.to_s)
-                                 .pluck(Arel.sql("context->'service_instance'->>'source_ref'")) #target_source_ref)
+            tasks_source_ref = Task.where(:state => 'running', :target_type => 'ServiceInstance', :source_id => source.id)
+                                 .pluck(:target_source_ref)
 
             # Load saved service instances (IDs needed)
             svc_instances_values = ServiceInstance.where(:source_ref => tasks_source_ref).pluck(:id, :external_url, :source_ref, Arel.sql("extra->'finished'"), Arel.sql("extra->'status'"))
@@ -152,11 +151,9 @@ module TopologicalInventory
               state = finished_timestamp.blank? ? 'running' : 'completed'
               status = %w[error failed].include?(status) ? 'error' : 'ok' # TODO: ansible-tower specific, normalize in collector
               context = {
-                :remote_status => status,
+                :remote_status    => status,
                 :service_instance => {
-                  :id => id,
-                  :source_id => source.id,
-                  :source_ref => source_ref,
+                  :id  => id,
                   :url => external_url
                 }
               }.to_json
