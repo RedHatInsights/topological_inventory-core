@@ -20,7 +20,7 @@ module TopologicalInventory
         add_default_collection(:networks)
         add_default_collection(:orchestration_stacks)
         add_default_collection(:reservations)
-        add_service_instances
+        add_default_collection(:service_instances)
         add_default_collection(:service_instance_nodes)
         add_default_collection(:service_inventories)
         add_default_collection(:security_groups)
@@ -65,6 +65,7 @@ module TopologicalInventory
         add_volume_attachments
         add_cross_link_vms
         add_vm_security_groups
+        add_service_instance_tasks
       end
 
       def targeted?
@@ -123,17 +124,19 @@ module TopologicalInventory
         end
       end
 
-      def add_service_instances
-        add_collection(:service_instances) do |builder|
+      def add_service_instance_tasks
+        add_collection(:service_instance_tasks, inventory_collection_builder, {}, {:without_model_class => true}) do |builder|
           add_default_properties(builder)
           add_default_values(builder)
 
-          save_block = lambda do |source, inventory_collection|
-            src_refs = inventory_collection.data.collect { |inventory_object| inventory_object.source_ref }
-            return if src_refs.blank?
+          builder.add_dependency_attributes(
+            :service_instances => ->(persister) { [persister.collections[:service_instances]] }
+          )
 
-            # Saving Service Instances as usual
-            InventoryRefresh::SaveCollection::Base.send(:save_inventory, inventory_collection)
+          save_block = lambda do |source, tasks_collection|
+            service_instance_collection = tasks_collection.dependency_attributes[:service_instances]&.first
+            src_refs = service_instance_collection.data.collect { |inventory_object| inventory_object.source_ref }
+            return if src_refs.blank?
 
             # Get running tasks
             tasks_source_ref = Task.where(:state => 'running', :target_type => 'ServiceInstance', :source_id => source.id)
@@ -161,15 +164,15 @@ module TopologicalInventory
             end
 
             sql = <<SQL
-UPDATE tasks AS t SET
-  state = c.state,
-  status = c.status,
-  context = c.context
-FROM (VALUES :values
-) AS c(source_ref, state, status, context)
-WHERE t.target_source_ref = c.source_ref
-  AND t.target_type = 'ServiceInstance'
-  AND t.state = 'running';
+              UPDATE tasks AS t SET
+                state = c.state,
+                status = c.status,
+                context = c.context
+              FROM (VALUES :values
+              ) AS c(source_ref, state, status, context)
+              WHERE t.target_source_ref = c.source_ref
+                AND t.target_type = 'ServiceInstance'
+                AND t.state = 'running';
 SQL
             sql.sub!(':values', sql_update_values.join(','))
 
