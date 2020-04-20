@@ -134,36 +134,52 @@ module TopologicalInventory
           )
 
           save_block = lambda do |source, tasks_collection|
-            service_instance_collection = tasks_collection.dependency_attributes[:service_instances]&.first
-            src_refs = service_instance_collection.data.collect { |inventory_object| inventory_object.source_ref }
-            return if src_refs.blank?
+            service_instance_tasks_custom_save(source, tasks_collection)
+          end
 
-            # Get running tasks
-            tasks_source_ref = Task.where(:state => 'running', :target_type => 'ServiceInstance', :source_id => source.id)
-                                 .pluck(:target_source_ref)
+          builder.add_properties(:custom_save_block => save_block)
+        end
+      end
 
-            # Load saved service instances (IDs needed)
-            svc_instances_values = ServiceInstance.where(:source_ref => tasks_source_ref).pluck(:id, :external_url, :source_ref, Arel.sql("extra->'finished'"), Arel.sql("extra->'status'"))
-            return if svc_instances_values.blank?
+      def service_instance_tasks_custom_save(source, tasks_collection)
+        service_instance_collection = tasks_collection.dependency_attributes[:service_instances]&.first
+        src_refs = service_instance_collection&.data.to_a.collect { |inventory_object| inventory_object.source_ref }
+        return if src_refs.blank?
 
-            # Preparing Tasks data for mass update
-            sql_update_values = []
-            svc_instances_values.each do |attrs|
-              id, external_url, source_ref, finished_timestamp, status = attrs[0], attrs[1], attrs[2], attrs[3], attrs[4]
+        # Get running tasks
+        tasks_source_ref = Task.where(:state => 'running', :target_type => 'ServiceInstance', :source_id => source.id)
+                             .pluck(:target_source_ref)
 
-              state = finished_timestamp.blank? ? 'running' : 'completed'
-              status = %w[error failed].include?(status) ? 'error' : 'ok' # TODO: ansible-tower specific, normalize in collector
-              context = {
-                :remote_status    => status,
-                :service_instance => {
-                  :id  => id,
-                  :url => external_url
-                }
-              }.to_json
-              sql_update_values << "('#{source_ref}', '#{state}', '#{status}', '#{context}'::json)"
-            end
+        # Load saved service instances (IDs needed)
+        svc_instances_values = ServiceInstance.where(:source_ref => tasks_source_ref).pluck(:id, :external_url, :source_ref, Arel.sql("extra->'finished'"), Arel.sql("extra->'status'"))
+        return if svc_instances_values.blank?
 
-            sql = <<SQL
+        # Updating Tasks
+        service_instance_tasks_update(svc_instances_values)
+      end
+
+      def service_instance_tasks_update(service_instances_values)
+        sql_update_values = []
+
+        # Preparing SQL update values from loaded ServiceInstances
+        service_instances_values.each do |attrs|
+          id, external_url, source_ref, finished_timestamp, status = attrs[0], attrs[1], attrs[2], attrs[3], attrs[4]
+
+          state = finished_timestamp.blank? ? 'running' : 'completed'
+          status = %w[error failed].include?(status) ? 'error' : 'ok' # TODO: ansible-tower specific, normalize in collector
+          context = {
+            :remote_status    => status,
+            :service_instance => {
+              :id  => id,
+              :url => external_url
+            }
+          }.to_json
+          sql_update_values << "('#{source_ref}', '#{state}', '#{status}', '#{context}'::json)"
+        end
+
+        # Update query.
+        # Pairs records by `Task.target_type` and `Task.target_source_ref`
+        sql = <<SQL
               UPDATE tasks AS t SET
                 state = c.state,
                 status = c.status,
@@ -173,13 +189,9 @@ module TopologicalInventory
               WHERE t.target_source_ref = c.source_ref
                 AND t.target_type = 'ServiceInstance';
 SQL
-            sql.sub!(':values', sql_update_values.join(','))
+        sql.sub!(':values', sql_update_values.join(','))
 
-            ActiveRecord::Base.connection.execute(sql)
-          end
-
-          builder.add_properties(:custom_save_block => save_block)
-        end
+        ActiveRecord::Base.connection.execute(sql)
       end
 
       def add_vm_security_groups

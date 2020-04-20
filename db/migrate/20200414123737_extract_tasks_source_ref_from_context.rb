@@ -1,17 +1,15 @@
 class ExtractTasksSourceRefFromContext < ActiveRecord::Migration[5.2]
   def up
-    Task.find_in_batches.each do |tasks|
-      tasks.each do |task|
-        source_ref = task.context&.dig('service_instance', 'source_ref')
-        next if source_ref.nil?
+    Task.find_each do |task|
+      source_ref = task.context&.dig('service_instance', 'source_ref')
+      next if source_ref.nil?
 
-        say "Task: #{task.id}, Source ref: #{source_ref}"
-        source_id = task.context&.dig('service_instance', 'source_id')
+      say "Task: #{task.id}, Source ref: #{source_ref}"
+      source_id = task.context&.dig('service_instance', 'source_id')
 
-        task.update_attributes(:target_source_ref => source_ref.to_s,
-                               :target_type       => 'ServiceInstance',
-                               :source_id         => source_id)
-      end
+      task.update_attributes(:target_source_ref => source_ref.to_s,
+                             :target_type       => 'ServiceInstance',
+                             :source_id         => source_id)
     end
   end
 
