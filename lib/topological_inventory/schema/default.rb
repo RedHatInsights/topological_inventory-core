@@ -171,8 +171,7 @@ module TopologicalInventory
               FROM (VALUES :values
               ) AS c(source_ref, state, status, context)
               WHERE t.target_source_ref = c.source_ref
-                AND t.target_type = 'ServiceInstance'
-                AND t.state = 'running';
+                AND t.target_type = 'ServiceInstance';
 SQL
             sql.sub!(':values', sql_update_values.join(','))
 
