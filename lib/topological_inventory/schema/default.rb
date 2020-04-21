@@ -147,34 +147,60 @@ module TopologicalInventory
         return if src_refs.blank?
 
         # Get running tasks
-        tasks_source_ref = Task.where(:state => 'running', :target_type => 'ServiceInstance', :source_id => source.id)
-                             .pluck(:target_source_ref)
+        tasks_values = Task.where(:state => 'running', :target_type => 'ServiceInstance', :source_id => source.id)
+                             .pluck(:id, :target_source_ref)
+        tasks_id, tasks_source_ref = [], []
+        tasks_values.each do |attrs|
+          tasks_id << attrs[0]
+          tasks_source_ref << attrs[1]
+        end
 
         # Load saved service instances (IDs needed)
         svc_instances_values = ServiceInstance.where(:source_ref => tasks_source_ref).pluck(:id, :external_url, :source_ref, Arel.sql("extra->'finished'"), Arel.sql("extra->'status'"))
         return if svc_instances_values.blank?
 
         # Updating Tasks
-        service_instance_tasks_update(svc_instances_values)
+        # service_instance_tasks_update_effective(svc_instances_values)
+        service_instance_tasks_update_ineffective(svc_instances_values, tasks_id, tasks_source_ref)
       end
 
-      def service_instance_tasks_update(service_instances_values)
+      def task_update_values(svc_instance_id, external_url, status, finished_timestamp)
+        {
+          :state  => finished_timestamp.blank? ? 'running' : 'completed',
+          :status => %w[error failed].include?(status) ? 'error' : 'ok', # TODO: ansible-tower specific, normalize in collector
+          :context => {
+            :remote_status => status,
+            :service_instance => {
+              :id => svc_instance_id,
+              :url => external_url
+            }
+          }
+        }
+      end
+
+      # This method is updating one by one using ActiveRecord
+      def service_instance_tasks_update_ineffective(service_instances_values, tasks_id, tasks_source_ref)
+        tasks = {}
+        service_instances_values.each do |attrs|
+          id, external_url, source_ref, finished_timestamp, status = attrs[0], attrs[1], attrs[2], attrs[3], attrs[4]
+
+          task_id = tasks_id[tasks_source_ref.index(source_ref)]
+          tasks[task_id] = task_update_values(id, external_url, status, finished_timestamp)
+
+          Task.update(tasks.keys, tasks.values)
+        end
+      end
+
+      # This method is bulk updating by raw SQL query
+      def service_instance_tasks_update_effective(service_instances_values)
         sql_update_values = []
 
         # Preparing SQL update values from loaded ServiceInstances
         service_instances_values.each do |attrs|
           id, external_url, source_ref, finished_timestamp, status = attrs[0], attrs[1], attrs[2], attrs[3], attrs[4]
 
-          state = finished_timestamp.blank? ? 'running' : 'completed'
-          status = %w[error failed].include?(status) ? 'error' : 'ok' # TODO: ansible-tower specific, normalize in collector
-          context = {
-            :remote_status    => status,
-            :service_instance => {
-              :id  => id,
-              :url => external_url
-            }
-          }.to_json
-          sql_update_values << "('#{source_ref}', '#{state}', '#{status}', '#{context}'::json)"
+          values = task_update_values(id, external_url, status, finished_timestamp)
+          sql_update_values << "('#{source_ref}', '#{values[:state]}', '#{values[:status]}', '#{values[:context].to_json}'::json)"
         end
 
         # Update query.
