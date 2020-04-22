@@ -147,8 +147,8 @@ module TopologicalInventory
         return if src_refs.blank?
 
         # Updating Tasks
-        # service_instance_tasks_update_effective(source)
-        service_instance_tasks_update_ineffective(source, src_refs)
+        # service_instance_tasks_update_by_raw_sql(source)
+        service_instance_tasks_update_by_activerecord(source, src_refs)
       end
 
       def task_update_values(svc_instance_id, external_url, status, task_status, finished_timestamp)
@@ -166,7 +166,7 @@ module TopologicalInventory
       end
 
       # This method is updating one by one using ActiveRecord
-      def service_instance_tasks_update_ineffective(source, svc_instances_source_ref)
+      def service_instance_tasks_update_by_activerecord(source, svc_instances_source_ref)
         service_instances = ServiceInstance.where(:source_id => source.id, :source_ref => svc_instances_source_ref)
         tasks_by_source_ref = Task.where(:state => 'running', :target_type => 'ServiceInstance', :source_id => source.id, :target_source_ref => service_instances.pluck(:source_ref)).index_by(&:target_source_ref)
 
@@ -183,7 +183,7 @@ module TopologicalInventory
       end
 
       # This method is bulk updating by raw SQL query
-      def service_instance_tasks_update_effective(source)
+      def service_instance_tasks_update_by_raw_sql(source)
         # Get running tasks
         tasks_source_ref = Task.where(:state => 'running', :target_type => 'ServiceInstance', :source_id => source.id)
                          .pluck(:target_source_ref)
