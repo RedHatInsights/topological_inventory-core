@@ -147,19 +147,19 @@ module TopologicalInventory
         return if src_refs.blank?
 
         # Updating Tasks
-        # service_instance_tasks_update_effective()
+        # service_instance_tasks_update_effective(source)
         service_instance_tasks_update_ineffective(source, src_refs)
       end
 
-      def task_update_values(svc_instance_id, external_url, status, finished_timestamp)
+      def task_update_values(svc_instance_id, external_url, status, task_status, finished_timestamp)
         {
           :state  => finished_timestamp.blank? ? 'running' : 'completed',
-          :status => %w[error failed].include?(status) ? 'error' : 'ok', # TODO: ansible-tower specific, normalize in collector
+          :status => task_status,
           :context => {
-            :remote_status => status,
             :service_instance => {
-              :id => svc_instance_id,
-              :url => external_url
+              :id         => svc_instance_id,
+              :job_status => status,
+              :url        => external_url
             }
           }
         }
@@ -175,7 +175,7 @@ module TopologicalInventory
             group.each do |svc_instance|
               next if tasks_by_source_ref[svc_instance.source_ref].nil?
 
-              values = task_update_values(svc_instance.id, svc_instance.external_url, svc_instance.extra['status'], svc_instance.extra['finished'])
+              values = task_update_values(svc_instance.id, svc_instance.external_url, svc_instance.extra['status'], svc_instance.extra['task_status'], svc_instance.extra['finished'])
               tasks_by_source_ref[svc_instance.source_ref].update(values)
             end
           end
@@ -183,27 +183,27 @@ module TopologicalInventory
       end
 
       # This method is bulk updating by raw SQL query
-      def service_instance_tasks_update_effective
+      def service_instance_tasks_update_effective(source)
         # Get running tasks
-        tasks_values = Task.where(:state => 'running', :target_type => 'ServiceInstance', :source_id => source.id)
-                         .pluck(:id, :target_source_ref)
-        tasks_id, tasks_source_ref = [], []
-        tasks_values.each do |attrs|
-          tasks_id << attrs[0]
-          tasks_source_ref << attrs[1]
-        end
+        tasks_source_ref = Task.where(:state => 'running', :target_type => 'ServiceInstance', :source_id => source.id)
+                         .pluck(:target_source_ref)
+        return if tasks_source_ref.blank?
 
         # Load saved service instances (IDs needed)
-        service_instances_values = ServiceInstance.where(:source_ref => tasks_source_ref).pluck(:id, :external_url, :source_ref, Arel.sql("extra->'finished'"), Arel.sql("extra->'status'"))
-        return if service_instances_values.blank?
+        svc_instances_values = ServiceInstance.where(:source_ref => tasks_source_ref)
+                                 .pluck(:id, :external_url, :source_ref,
+                                        Arel.sql("extra->'finished'"),
+                                        Arel.sql("extra->'status'"),
+                                        Arel.sql("extra->'task_status'"))
+        return if svc_instances_values.blank?
 
         sql_update_values = []
 
         # Preparing SQL update values from loaded ServiceInstances
-        service_instances_values.each do |attrs|
-          id, external_url, source_ref, finished_timestamp, status = attrs[0], attrs[1], attrs[2], attrs[3], attrs[4]
+        svc_instances_values.each do |attrs|
+          id, external_url, source_ref, finished_timestamp, status, task_status = attrs[0], attrs[1], attrs[2], attrs[3], attrs[4], attrs[5]
 
-          values = task_update_values(id, external_url, status, finished_timestamp)
+          values = task_update_values(id, external_url, status, task_status, finished_timestamp)
           sql_update_values << "('#{source_ref}', '#{values[:state]}', '#{values[:status]}', '#{values[:context].to_json}'::json)"
         end
 
