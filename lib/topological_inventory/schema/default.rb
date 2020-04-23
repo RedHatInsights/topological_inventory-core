@@ -65,6 +65,7 @@ module TopologicalInventory
         add_volume_attachments
         add_cross_link_vms
         add_vm_security_groups
+        add_service_instance_tasks
       end
 
       def targeted?
@@ -121,6 +122,106 @@ module TopologicalInventory
             :retention_strategy => :destroy,
           )
         end
+      end
+
+      def add_service_instance_tasks
+        add_collection(:service_instance_tasks, inventory_collection_builder, {}, {:without_model_class => true}) do |builder|
+          add_default_properties(builder)
+          add_default_values(builder)
+
+          builder.add_dependency_attributes(
+            :service_instances => ->(persister) { [persister.collections[:service_instances]] }
+          )
+
+          save_block = lambda do |source, tasks_collection|
+            service_instance_tasks_custom_save(source, tasks_collection)
+          end
+
+          builder.add_properties(:custom_save_block => save_block)
+        end
+      end
+
+      def service_instance_tasks_custom_save(source, tasks_collection)
+        service_instance_collection = tasks_collection.dependency_attributes[:service_instances]&.first
+        src_refs = service_instance_collection&.data.to_a.collect { |inventory_object| inventory_object.source_ref }
+        return if src_refs.blank?
+
+        # Updating Tasks
+        # service_instance_tasks_update_by_raw_sql(source)
+        service_instance_tasks_update_by_activerecord(source, src_refs)
+      end
+
+      def task_update_values(svc_instance_id, external_url, status, task_status, finished_timestamp)
+        {
+          :state  => finished_timestamp.blank? ? 'running' : 'completed',
+          :status => task_status,
+          :context => {
+            :service_instance => {
+              :id         => svc_instance_id,
+              :job_status => status,
+              :url        => external_url
+            }
+          }
+        }
+      end
+
+      # This method is updating one by one using ActiveRecord
+      def service_instance_tasks_update_by_activerecord(source, svc_instances_source_ref)
+        service_instances = ServiceInstance.where(:source_id => source.id, :source_ref => svc_instances_source_ref)
+        tasks_by_source_ref = Task.where(:state => 'running', :target_type => 'ServiceInstance', :source_id => source.id, :target_source_ref => service_instances.pluck(:source_ref)).index_by(&:target_source_ref)
+
+        service_instances.select(:id, :external_url, :source_ref, :extra).find_in_batches do |group|
+          ActiveRecord::Base.transaction do
+            group.each do |svc_instance|
+              next if tasks_by_source_ref[svc_instance.source_ref].nil?
+
+              values = task_update_values(svc_instance.id, svc_instance.external_url, svc_instance.extra['status'], svc_instance.extra['task_status'], svc_instance.extra['finished'])
+              tasks_by_source_ref[svc_instance.source_ref].update(values)
+            end
+          end
+        end
+      end
+
+      # This method is bulk updating by raw SQL query
+      def service_instance_tasks_update_by_raw_sql(source)
+        # Get running tasks
+        tasks_source_ref = Task.where(:state => 'running', :target_type => 'ServiceInstance', :source_id => source.id)
+                         .pluck(:target_source_ref)
+        return if tasks_source_ref.blank?
+
+        # Load saved service instances (IDs needed)
+        svc_instances_values = ServiceInstance.where(:source_ref => tasks_source_ref)
+                                 .pluck(:id, :external_url, :source_ref,
+                                        Arel.sql("extra->'finished'"),
+                                        Arel.sql("extra->'status'"),
+                                        Arel.sql("extra->'task_status'"))
+        return if svc_instances_values.blank?
+
+        sql_update_values = []
+
+        # Preparing SQL update values from loaded ServiceInstances
+        svc_instances_values.each do |attrs|
+          id, external_url, source_ref, finished_timestamp, status, task_status = attrs[0], attrs[1], attrs[2], attrs[3], attrs[4], attrs[5]
+
+          values = task_update_values(id, external_url, status, task_status, finished_timestamp)
+          sql_update_values << "('#{source_ref}', '#{values[:state]}', '#{values[:status]}', '#{values[:context].to_json}'::json)"
+        end
+
+        # Update query.
+        # Pairs records by `Task.target_type` and `Task.target_source_ref`
+        sql = <<SQL
+              UPDATE tasks AS t SET
+                state = c.state,
+                status = c.status,
+                context = c.context
+              FROM (VALUES :values
+              ) AS c(source_ref, state, status, context)
+              WHERE t.target_source_ref = c.source_ref
+                AND t.target_type = 'ServiceInstance';
+SQL
+        sql.sub!(':values', sql_update_values.join(','))
+
+        ActiveRecord::Base.connection.execute(sql)
       end
 
       def add_vm_security_groups
