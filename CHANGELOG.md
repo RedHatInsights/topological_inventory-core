@@ -15,5 +15,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Initial release to rubygems.org
 
 [Unreleased]: https://github.com/RedHatInsights/topological_inventory-core/compare/v1.1.3...HEAD
-[1.1.3]: https://github.com/RedHatInsights/topological_inventory-core/releases/tag/v1.1.2...v1.1.3
-[1.1.2]: https://github.com/RedHatInsights/topological_inventory-core/releases/tag/v1.1.2
+[1.1.3]: https://github.com/RedHatInsights/topological_inventory-core/compare/v1.1.2...v1.1.3
+[1.1.2]: https://github.com/RedHatInsights/topological_inventory-core/releases/v1.1.2
