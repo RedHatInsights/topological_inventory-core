@@ -1,6 +1,11 @@
 class ExtractTasksSourceRefFromContext < ActiveRecord::Migration[5.2]
   def up
     Task.find_each do |task|
+      if task.context.is_a?(String)
+        say "Found legacy data in Task #{task.id}, converting String to Hash..."
+        task.context = JSON.parse(task.context)
+      end
+
       source_ref = task.context&.dig('service_instance', 'source_ref')
       next if source_ref.nil?
 
