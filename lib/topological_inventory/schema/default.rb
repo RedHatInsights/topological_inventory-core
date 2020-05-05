@@ -183,7 +183,7 @@ module TopologicalInventory
 
               # 2) Saving to updated records (will be published in Kafka)
               # - see topological_inventory-persister:Workflow.send_task_updates_to_queue!
-              tasks_collection.updated_records << values.merge(:id => task.id, :x_rh_insights_request => task.x_rh_insights_request)
+              tasks_collection.updated_records << values.merge(:id => task.id, :forwardable_headers => task.forwardable_headers)
             end
           end
         end
