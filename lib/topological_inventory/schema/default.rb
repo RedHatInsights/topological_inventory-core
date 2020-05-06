@@ -148,10 +148,10 @@ module TopologicalInventory
 
         # Updating Tasks
         # service_instance_tasks_update_by_raw_sql(source)
-        service_instance_tasks_update_by_activerecord(source, src_refs)
+        service_instance_tasks_update_by_activerecord(tasks_collection, source, src_refs)
       end
 
-      def task_update_values(svc_instance_id, external_url, status, task_status, finished_timestamp)
+      def task_update_values(svc_instance_id, source_ref, external_url, status, task_status, finished_timestamp, source_id)
         {
           :state  => finished_timestamp.blank? ? 'running' : 'completed',
           :status => task_status,
@@ -159,6 +159,8 @@ module TopologicalInventory
             :service_instance => {
               :id         => svc_instance_id,
               :job_status => status,
+              :source_id  => source_id,
+              :source_ref => source_ref,
               :url        => external_url
             }
           }
@@ -166,17 +168,22 @@ module TopologicalInventory
       end
 
       # This method is updating one by one using ActiveRecord
-      def service_instance_tasks_update_by_activerecord(source, svc_instances_source_ref)
+      def service_instance_tasks_update_by_activerecord(tasks_collection, source, svc_instances_source_ref)
         service_instances = ServiceInstance.where(:source_id => source.id, :source_ref => svc_instances_source_ref)
         tasks_by_source_ref = Task.where(:state => 'running', :target_type => 'ServiceInstance', :source_id => source.id, :target_source_ref => service_instances.pluck(:source_ref)).index_by(&:target_source_ref)
 
         service_instances.select(:id, :external_url, :source_ref, :extra).find_in_batches do |group|
           ActiveRecord::Base.transaction do
             group.each do |svc_instance|
-              next if tasks_by_source_ref[svc_instance.source_ref].nil?
+              next if (task = tasks_by_source_ref[svc_instance.source_ref]).nil?
 
-              values = task_update_values(svc_instance.id, svc_instance.external_url, svc_instance.extra['status'], svc_instance.extra['task_status'], svc_instance.extra['finished'])
-              tasks_by_source_ref[svc_instance.source_ref].update(values)
+              values = task_update_values(svc_instance.id, svc_instance.source_ref, svc_instance.external_url, svc_instance.extra['status'], svc_instance.extra['task_status'], svc_instance.extra['finished'], source.id)
+              # 1) Updating Task
+              task.update(values)
+
+              # 2) Saving to updated records (will be published in Kafka)
+              # - see topological_inventory-persister:Workflow.send_task_updates_to_queue!
+              tasks_collection.updated_records << values.merge(:id => task.id, :forwardable_headers => task.forwardable_headers)
             end
           end
         end
