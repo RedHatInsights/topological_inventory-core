@@ -1328,6 +1328,7 @@ ActiveRecord::Schema.define(version: 2020_05_05_101547) do
     t.bigint "orchestration_stack_id"
     t.bigint "subscription_id"
     t.bigint "refresh_state_part_id"
+    t.datetime "source_updated_at"
     t.index ["archived_at"], name: "index_volumes_on_archived_at"
     t.index ["last_seen_at"], name: "index_volumes_on_last_seen_at"
     t.index ["orchestration_stack_id"], name: "index_volumes_on_orchestration_stack_id"
