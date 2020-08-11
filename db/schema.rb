@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_05_101547) do
+ActiveRecord::Schema.define(version: 2020_08_11_154716) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -622,6 +622,7 @@ ActiveRecord::Schema.define(version: 2020_05_05_101547) do
     t.datetime "updated_at", null: false
     t.index ["refresh_state_id", "uuid"], name: "index_refresh_state_parts_on_refresh_state_id_and_uuid", unique: true
     t.index ["tenant_id"], name: "index_refresh_state_parts_on_tenant_id"
+    t.index ["uuid"], name: "index_refresh_state_parts_on_uuid"
   end
 
   create_table "refresh_states", force: :cascade do |t|
@@ -639,6 +640,7 @@ ActiveRecord::Schema.define(version: 2020_05_05_101547) do
     t.datetime "finished_at"
     t.index ["source_id", "uuid"], name: "index_refresh_states_on_source_id_and_uuid", unique: true
     t.index ["tenant_id"], name: "index_refresh_states_on_tenant_id"
+    t.index ["uuid"], name: "index_refresh_states_on_uuid"
   end
 
   create_table "reservation_tags", id: :serial, force: :cascade do |t|
