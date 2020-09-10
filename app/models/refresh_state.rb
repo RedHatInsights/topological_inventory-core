@@ -1,3 +1,5 @@
+require 'acts_as_tenant'
+
 class RefreshState < ActiveRecord::Base
   belongs_to :source
   belongs_to :tenant
