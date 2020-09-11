@@ -6,8 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.1.6] - 2020-9-10
+## [1.1.7] - 2020-09-11
 - Fixing RefreshState and RefreshStatePart models #205
+
+## [1.1.6] - 2020-08-11
+- Deleting Rails files #202
+- Add Index to refresh_state_parts.uuid and github workflow for auto-releases #204
 
 ## [1.1.5] - 2020-06-04
 - Adding the source_updated_at column for volumes table #200
@@ -26,7 +30,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.2] - 2020-04-28
 ### Initial release to rubygems.org
 
-[Unreleased]: https://github.com/RedHatInsights/topological_inventory-core/compare/v1.1.6...HEAD
+[Unreleased]: https://github.com/RedHatInsights/topological_inventory-core/compare/v1.1.7...HEAD
+[1.1.7]: https://github.com/RedHatInsights/topological_inventory-core/compare/v1.1.6...v1.1.7
 [1.1.6]: https://github.com/RedHatInsights/topological_inventory-core/compare/v1.1.5...v1.1.6
 [1.1.5]: https://github.com/RedHatInsights/topological_inventory-core/compare/v1.1.4...v1.1.5
 [1.1.4]: https://github.com/RedHatInsights/topological_inventory-core/compare/v1.1.3...v1.1.4
