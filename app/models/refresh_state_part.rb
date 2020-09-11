@@ -1,6 +1,6 @@
-require 'acts_as_tenant'
-
 class RefreshStatePart < ActiveRecord::Base
+  require 'acts_as_tenant'
+
   belongs_to :refresh_state
   belongs_to :tenant
 
