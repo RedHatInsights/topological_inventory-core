@@ -147,8 +147,8 @@ module TopologicalInventory
         return if src_refs.blank?
 
         # Updating Tasks
-        service_instance_tasks_update_by_raw_sql(source)
-        # service_instance_tasks_update_by_activerecord(tasks_collection, source, src_refs)
+        # service_instance_tasks_update_by_raw_sql(source)
+        service_instance_tasks_update_by_activerecord(tasks_collection, source, src_refs)
       end
 
       def task_update_values(svc_instance_id, source_ref, external_url, status, artifacts, task_status, finished_timestamp, source_id)
