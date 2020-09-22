@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency "acts_as_tenant",    "~> 0.4.4"
   s.add_runtime_dependency "inventory_refresh", "~> 0.3.5"
-  s.add_runtime_dependency "manageiq-messaging", "~> 0.2.0"
+  s.add_runtime_dependency "manageiq-messaging", "~> 1.0.0"
   s.add_runtime_dependency "manageiq-password",  "~> 0.3"
   s.add_runtime_dependency "pg", "> 0"
   s.add_runtime_dependency "rails", "~> 5.2.2"
