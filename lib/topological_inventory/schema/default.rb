@@ -151,7 +151,7 @@ module TopologicalInventory
         service_instance_tasks_update_by_activerecord(tasks_collection, source, src_refs)
       end
 
-      def task_update_values(svc_instance_id, source_ref, external_url, status, task_status, finished_timestamp, source_id)
+      def task_update_values(svc_instance_id, source_ref, external_url, status, artifacts, task_status, finished_timestamp, source_id)
         {
           :state  => finished_timestamp.blank? ? 'running' : 'completed',
           :status => task_status,
@@ -159,6 +159,7 @@ module TopologicalInventory
             :service_instance => {
               :id         => svc_instance_id,
               :job_status => status,
+              :artifacts  => artifacts,
               :source_id  => source_id,
               :source_ref => source_ref,
               :url        => external_url
@@ -177,7 +178,7 @@ module TopologicalInventory
             group.each do |svc_instance|
               next if (task = tasks_by_source_ref[svc_instance.source_ref]).nil?
 
-              values = task_update_values(svc_instance.id, svc_instance.source_ref, svc_instance.external_url, svc_instance.extra['status'], svc_instance.extra['task_status'], svc_instance.extra['finished'], source.id)
+              values = task_update_values(svc_instance.id, svc_instance.source_ref, svc_instance.external_url, svc_instance.extra['status'], svc_instance.extra['artifacts'], svc_instance.extra['task_status'], svc_instance.extra['finished'], source.id)
               # 1) Updating Task
               task.update(values)
 
@@ -201,16 +202,17 @@ module TopologicalInventory
                                  .pluck(:id, :external_url, :source_ref,
                                         Arel.sql("extra->'finished'"),
                                         Arel.sql("extra->'status'"),
-                                        Arel.sql("extra->'task_status'"))
+                                        Arel.sql("extra->'task_status'"),
+                                        Arel.sql("extra->'artifacts'"))
         return if svc_instances_values.blank?
 
         sql_update_values = []
 
         # Preparing SQL update values from loaded ServiceInstances
         svc_instances_values.each do |attrs|
-          id, external_url, source_ref, finished_timestamp, status, task_status = attrs[0], attrs[1], attrs[2], attrs[3], attrs[4], attrs[5]
+          id, external_url, source_ref, finished_timestamp, status, task_status, artifacts = attrs[0], attrs[1], attrs[2], attrs[3], attrs[4], attrs[5], attrs[6]
 
-          values = task_update_values(id, external_url, status, task_status, finished_timestamp)
+          values = task_update_values(id, source_ref, external_url, status, artifacts, task_status, finished_timestamp, source.id)
           sql_update_values << "('#{source_ref}', '#{values[:state]}', '#{values[:status]}', '#{values[:context].to_json}'::json)"
         end
 
