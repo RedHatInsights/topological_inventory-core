@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.1.8]
 - Added artifacts to tasks IC and bulk sql update #207
+- Finishing tasks with archived service_instance #210
 
 ## [1.1.7] - 2020-09-11
 - Fixing RefreshState and RefreshStatePart models #205
