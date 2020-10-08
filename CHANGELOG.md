@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.8]
+- Added artifacts to tasks IC and bulk sql update #207
+- Finishing tasks with archived service_instance #210
+
 ## [1.1.7] - 2020-09-11
 - Fixing RefreshState and RefreshStatePart models #205
 
@@ -30,7 +34,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.2] - 2020-04-28
 ### Initial release to rubygems.org
 
-[Unreleased]: https://github.com/RedHatInsights/topological_inventory-core/compare/v1.1.7...HEAD
+[Unreleased]: https://github.com/RedHatInsights/topological_inventory-core/compare/v1.1.8...HEAD
+[1.1.8]: https://github.com/RedHatInsights/topological_inventory-core/compare/v1.1.7...v1.1.8
 [1.1.7]: https://github.com/RedHatInsights/topological_inventory-core/compare/v1.1.6...v1.1.7
 [1.1.6]: https://github.com/RedHatInsights/topological_inventory-core/compare/v1.1.5...v1.1.6
 [1.1.5]: https://github.com/RedHatInsights/topological_inventory-core/compare/v1.1.4...v1.1.5
