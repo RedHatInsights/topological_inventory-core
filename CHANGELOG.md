@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2020-09-22
+- bump miq-messaging version for rdkafka changes #TBD
+
 ## [1.1.8]
 - Added artifacts to tasks IC and bulk sql update #207
 - Finishing tasks with archived service_instance #210
@@ -34,7 +37,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.2] - 2020-04-28
 ### Initial release to rubygems.org
 
-[Unreleased]: https://github.com/RedHatInsights/topological_inventory-core/compare/v1.1.8...HEAD
+[Unreleased]: https://github.com/RedHatInsights/topological_inventory-core/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/RedHatInsights/topological_inventory-core/compare/v1.1.8...v1.2.0
 [1.1.8]: https://github.com/RedHatInsights/topological_inventory-core/compare/v1.1.7...v1.1.8
 [1.1.7]: https://github.com/RedHatInsights/topological_inventory-core/compare/v1.1.6...v1.1.7
 [1.1.6]: https://github.com/RedHatInsights/topological_inventory-core/compare/v1.1.5...v1.1.6
