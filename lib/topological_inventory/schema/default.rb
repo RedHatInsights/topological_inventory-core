@@ -151,10 +151,10 @@ module TopologicalInventory
         service_instance_tasks_update_by_activerecord(tasks_collection, source, src_refs)
       end
 
-      def task_update_values(svc_instance_id, source_ref, external_url, status, artifacts, task_status, finished_timestamp, source_id)
+      def task_update_values(svc_instance_id, source_ref, external_url, status, artifacts, task_status, finished_timestamp, archived_timestamp, source_id)
         {
-          :state  => finished_timestamp.blank? ? 'running' : 'completed',
-          :status => task_status,
+          :state   => finished_timestamp.blank? && archived_timestamp.blank? ? 'running' : 'completed',
+          :status  => task_status,
           :context => {
             :service_instance => {
               :id         => svc_instance_id,
@@ -173,12 +173,12 @@ module TopologicalInventory
         service_instances = ServiceInstance.where(:source_id => source.id, :source_ref => svc_instances_source_ref)
         tasks_by_source_ref = Task.where(:state => 'running', :target_type => 'ServiceInstance', :source_id => source.id, :target_source_ref => service_instances.pluck(:source_ref)).index_by(&:target_source_ref)
 
-        service_instances.select(:id, :external_url, :source_ref, :extra).find_in_batches do |group|
+        service_instances.select(:id, :archived_at, :external_url, :source_ref, :extra).find_in_batches do |group|
           ActiveRecord::Base.transaction do
             group.each do |svc_instance|
               next if (task = tasks_by_source_ref[svc_instance.source_ref]).nil?
 
-              values = task_update_values(svc_instance.id, svc_instance.source_ref, svc_instance.external_url, svc_instance.extra['status'], svc_instance.extra['artifacts'], svc_instance.extra['task_status'], svc_instance.extra['finished'], source.id)
+              values = task_update_values(svc_instance.id, svc_instance.source_ref, svc_instance.external_url, svc_instance.extra['status'], svc_instance.extra['artifacts'], svc_instance.extra['task_status'], svc_instance.extra['finished'], svc_instance.archived_at, source.id)
               # 1) Updating Task
               task.update(values)
 
@@ -199,20 +199,20 @@ module TopologicalInventory
 
         # Load saved service instances (IDs needed)
         svc_instances_values = ServiceInstance.where(:source_ref => tasks_source_ref)
-                                 .pluck(:id, :external_url, :source_ref,
-                                        Arel.sql("extra->'finished'"),
-                                        Arel.sql("extra->'status'"),
-                                        Arel.sql("extra->'task_status'"),
-                                        Arel.sql("extra->'artifacts'"))
+                                              .pluck(:id, :archived_at, :external_url, :source_ref,
+                                                     Arel.sql("extra->'finished'"),
+                                                     Arel.sql("extra->'status'"),
+                                                     Arel.sql("extra->'task_status'"),
+                                                     Arel.sql("extra->'artifacts'"))
         return if svc_instances_values.blank?
 
         sql_update_values = []
 
         # Preparing SQL update values from loaded ServiceInstances
         svc_instances_values.each do |attrs|
-          id, external_url, source_ref, finished_timestamp, status, task_status, artifacts = attrs[0], attrs[1], attrs[2], attrs[3], attrs[4], attrs[5], attrs[6]
+          id, archived_at, external_url, source_ref, finished_timestamp, status, task_status, artifacts = attrs[0], attrs[1], attrs[2], attrs[3], attrs[4], attrs[5], attrs[6], attrs[7]
 
-          values = task_update_values(id, source_ref, external_url, status, artifacts, task_status, finished_timestamp, source.id)
+          values = task_update_values(id, source_ref, external_url, status, artifacts, task_status, finished_timestamp, archived_at, source.id)
           sql_update_values << "('#{source_ref}', '#{values[:state]}', '#{values[:status]}', '#{values[:context].to_json}'::json)"
         end
 
