@@ -26,8 +26,9 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency "active_record_doctor"
   s.add_development_dependency "rspec-rails", "~>3.8"
-  s.add_development_dependency 'rubocop', '~>0.69.0'
-  s.add_development_dependency 'rubocop-performance', '~>1.3'
+  s.add_development_dependency 'rubocop', '~> 1.0.0'
+  s.add_development_dependency 'rubocop-performance', '~>1.8'
+  s.add_development_dependency 'rubocop-rails', '~> 2.8'
   s.add_development_dependency "simplecov", "~> 0.17.1"
   s.add_development_dependency "webmock"
 end
