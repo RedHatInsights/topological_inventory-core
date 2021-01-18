@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_11_154716) do
+ActiveRecord::Schema.define(version: 2021_01_06_143551) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1260,6 +1260,7 @@ ActiveRecord::Schema.define(version: 2020_08_11_154716) do
     t.bigint "subscription_id"
     t.bigint "host_id"
     t.bigint "refresh_state_part_id"
+    t.string "guest_info"
     t.index ["archived_at"], name: "index_vms_on_archived_at"
     t.index ["flavor_id"], name: "index_vms_on_flavor_id"
     t.index ["host_id"], name: "index_vms_on_host_id"
