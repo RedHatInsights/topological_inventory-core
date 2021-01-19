@@ -40,11 +40,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.2] - 2020-04-28
 ### Initial release to rubygems.org
 
-[Unreleased]: https://github.com/RedHatInsights/topological_inventory-core/compare/v1.2.1...HEAD
-[1.2.1]: https://github.com/RedHatInsights/topological_inventory-core/compare/v1.2.0...v1.2.1
-[1.2.0]: https://github.com/RedHatInsights/topological_inventory-core/compare/v1.1.8...v1.2.0
-[1.1.8]: https://github.com/RedHatInsights/topological_inventory-core/compare/v1.1.7...v1.1.8
-[1.1.7]: https://github.com/RedHatInsights/topological_inventory-core/compare/v1.1.6...v1.1.7
+[Unreleased]: https://github.com/RedHatInsights/topological_inventory-core/compare/v'1.2.1'...HEAD
+[1.2.1]: https://github.com/RedHatInsights/topological_inventory-core/compare/v'1.2.0'...v'1.2.1'
+[1.2.0]: https://github.com/RedHatInsights/topological_inventory-core/compare/v'1.1.8'...v'1.2.0'
+[1.1.8]: https://github.com/RedHatInsights/topological_inventory-core/compare/v'1.1.7'...v'1.1.8'
+[1.1.7]: https://github.com/RedHatInsights/topological_inventory-core/compare/v1.1.6...v'1.1.7'
 [1.1.6]: https://github.com/RedHatInsights/topological_inventory-core/compare/v1.1.5...v1.1.6
 [1.1.5]: https://github.com/RedHatInsights/topological_inventory-core/compare/v1.1.4...v1.1.5
 [1.1.4]: https://github.com/RedHatInsights/topological_inventory-core/compare/v1.1.3...v1.1.4
