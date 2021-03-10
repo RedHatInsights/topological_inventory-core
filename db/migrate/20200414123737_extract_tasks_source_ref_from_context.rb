@@ -1,4 +1,6 @@
 class ExtractTasksSourceRefFromContext < ActiveRecord::Migration[5.2]
+  class Task < ActiveRecord::Base; end
+
   def up
     Task.find_each do |task|
       if task.context.is_a?(String)
